@@ -1,12 +1,9 @@
 ﻿using GymHub.Data.Models;
-using GymHub.Services;
-using GymHub.Web.InputModels;
-using GymHub.Web.ViewModels;
+using GymHub.Web.Models.InputModels;
+using GymHub.Web.Models.ViewModels;
+using GymHub.Web.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GymHub.Web.Controllers
 {
@@ -20,11 +17,17 @@ namespace GymHub.Web.Controllers
             this.genderService = genderService;
         }
 
-        public IActionResult Register(RegisterUserViewModel viewModel)
+        public IActionResult Register()
         {
-            viewModel.Genders = new List<Gender>();
-            viewModel.Genders.Add(new Gender { Name = "Male" });
-            viewModel.Genders.Add(new Gender { Name = "Female" });
+            if(this.User.Identity.IsAuthenticated == false)
+            {
+                return this.Redirect("/");
+            }
+
+            var viewModel = new RegisterUserViewModel
+            {
+                Genders = this.genderService.GetAllGenders()
+            };
             return this.View(viewModel);
         }
 

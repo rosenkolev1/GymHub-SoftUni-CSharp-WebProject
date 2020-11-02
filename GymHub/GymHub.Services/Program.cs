@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GymHub.Services.SeederFolder;
+using System;
 
 namespace GymHub.Services
 {
@@ -6,7 +7,7 @@ namespace GymHub.Services
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            
         }
     }
 }

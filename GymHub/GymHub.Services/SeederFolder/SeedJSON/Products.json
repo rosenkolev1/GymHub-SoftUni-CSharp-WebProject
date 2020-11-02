@@ -1,0 +1,18 @@
+[
+    {
+        "Name": "Leg Extension Machine",
+        "MainImage": "LegExtensionMachine.jpeg",
+        "Price": 60.59,
+        "Description": "Leg Extension Machine for personal and home use",
+        "Warranty": 12,
+        "QuantityInStock": 1000
+    },
+    {
+        "Name": "Leg Curl Machine",
+        "MainImage": "LegCurlMachine.jpg",
+        "Price": 80.76,
+        "Description": "Leg Curl Machine for personal and home use",
+        "Warranty": 24,
+        "QuantityInStock": 500
+    }
+]

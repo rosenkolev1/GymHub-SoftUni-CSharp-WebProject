@@ -1,20 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace GymHub.Data.Models
 {
     public class Role : IdentityRole<string>
     {
-        public Role()
-            :base(null)
-        {
-
-        }
         public Role(string name)
-            :base(name)
+            : base(name)
         {
             this.Id = Guid.NewGuid().ToString();
         }

@@ -1,10 +1,7 @@
 ﻿using GymHub.Data.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace GymHub.Web.ViewModels
+namespace GymHub.Web.Models.ViewModels
 {
     public class RegisterUserViewModel
     {

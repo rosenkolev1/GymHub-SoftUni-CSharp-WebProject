@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace GymHub.Web.InputModels
+namespace GymHub.Web.Models.InputModels
 {
     public class RegisterUserInputModel
     {
@@ -15,6 +12,6 @@ namespace GymHub.Web.InputModels
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public int GenderId { get; set; }
+        public string GenderId { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using GymHub.Web.Data;
-using System;
 using System.Linq;
 
 namespace GymHub.Data
