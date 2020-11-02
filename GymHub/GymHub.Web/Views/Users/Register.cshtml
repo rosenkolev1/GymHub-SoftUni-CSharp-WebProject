@@ -1,0 +1,49 @@
+﻿@model GymHub.Web.ViewModels.RegisterUserViewModel
+
+<form method="post" action="/Users/Register" class="form-container">
+    <div class="input-container">
+        <label for="firstName" class="input-label">First Name</label>
+        <input name="firstName" id="firstName" type="text" placeholder="Type first name here">
+    </div>
+    <div class="input-container">
+        <label for="middleName" class="input-label">Middle Name</label>
+        <input name="middleName" id="middleName" type="text" placeholder="Type middle name here">
+    </div>
+    <div class="input-container">
+        <label for="lastName" class="input-label">Last Name</label>
+        <input name="lastName" id="lastName" type="text" placeholder="Type last name here">
+    </div>
+    <div class="input-container">
+        <label for="email" class="input-label">Email</label>
+        <input name="email" id="email" type="email" placeholder="Type email here">
+    </div>
+    <div class="input-container">
+        <label for="username" class="input-label">Username</label>
+        <input name="username" id="username" type="text" placeholder="Type username here">
+    </div>
+    <div class="input-container">
+        <label for="password" class="input-label">Password</label>
+        <input name="password" id="password" type="password" placeholder="Type password here">
+    </div>
+    <div class="input-container">
+        <label for="confirmPassword" class="input-label">Confirm Password</label>
+        <input name="confirmPassword" id="confirmPassword" type="password" placeholder="Type password here">
+    </div>
+    <div class="input-container">
+        <label for="dateOfBirth" class="input-label">Date of birth</label>
+        <input name="dateOfBirth" id="dateOfBirth" type="date">
+    </div>
+    <div class="input-container">
+        <label for="gender" class="input-label">Gender</label>
+        <select name="gender" id="gender">
+            @foreach (var gender in Model.Genders)
+            {
+                <option value="@gender.Id">@gender.Name</option>
+            }
+        </select>
+    </div>
+    <div class="button-container">
+        <button>Register</button>
+    </div>
+    <p style="text-align:center;">Already have an account? Login<a href="/Users/Login"> here.</a></p>
+</form>

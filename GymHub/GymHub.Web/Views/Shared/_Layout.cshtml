@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>GymHub</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="/css/SomeCss.css" rel="stylesheet" />
+</head>
+
+<body>
+    <nav class="nav-bar">
+        <span class="nav-bar-home">
+            <a class="nav-bar-button" href="/">GymHub</a>
+        </span>
+        @if (this.User.Identity.IsAuthenticated == false)
+        {
+        <span class="nav-bar-element">
+            <a class="nav-bar-button" href="/Users/Register">Register</a>
+        </span>
+        <span class="nav-bar-element">
+            <a class="nav-bar-button" href="/Users/Login">Login</a>
+        </span>
+        }
+        else
+        {
+        <span class="nav-bar-element">
+            <a class="nav-bar-button" href="/Users/Logout">Logout</a>
+        </span>
+        <span class="nav-bar-element">
+            <a class="nav-bar-button" href="/Users/Profile">Profile</a>
+        </span>
+        <span class="nav-bar-element">
+            <a class="nav-bar-button" href="/Products/All">Shop</a>
+        </span>
+        <span class="nav-bar-element">
+            <a class="nav-bar-button" href="/Carts/All">Cart</a>
+        </span>
+        }
+    </nav>
+    <main class="main-container">
+        @RenderBody()
+    </main>
+    <footer>
+        <p class="footer-paragraph">Copyright 2020 GymHub</p>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+
+</html>
