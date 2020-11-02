@@ -2,6 +2,7 @@
 using GymHub.Web.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GymHub.Web.Services
 {
@@ -13,23 +14,23 @@ namespace GymHub.Web.Services
             this.context = context;
         }
 
-        public void Add(string name)
+        public async Task AddAsync(string name)
         {
-            this.context.Add(new Gender() { Name = name });
-            this.context.SaveChanges();
+            await this.context.AddAsync(new Gender() { Name = name });
+            await this.context.SaveChangesAsync();
         }
 
-        public bool GenderExists(string name)
+        public async Task<bool> GenderExistsAsync(string name)
         {
             return this.context.Genders.Any(x => x.Name == name);
         }
 
-        public List<Gender> GetAllGenders()
+        public async Task<List<Gender>> GetAllGendersAsync()
         {
             return this.context.Genders.ToList();
         }
 
-        public string GetGenderIdByName(string name)
+        public async Task<string> GetGenderIdByNameAsync(string name)
         {
             return this.context.Genders.FirstOrDefault(x => x.Name == name).Id;
         }

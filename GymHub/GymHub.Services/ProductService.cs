@@ -4,6 +4,7 @@ using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GymHub.Web.Services
 {
@@ -14,7 +15,7 @@ namespace GymHub.Web.Services
         {
             this.context = context;
         }
-        public void Add(string name, string mainImage, decimal price, string description, int warranty, int quantityInStock)
+        public async Task AddAsync(string name, string mainImage, decimal price, string description, int warranty, int quantityInStock)
         {
             this.context.Add(new Product
             {
@@ -30,7 +31,7 @@ namespace GymHub.Web.Services
             this.context.SaveChanges();
         }
 
-        public void Add(AddProductInputModel inputModel)
+        public async Task AddAsync(AddProductInputModel inputModel)
         {
             this.context.Add(new Product
             {
@@ -46,12 +47,12 @@ namespace GymHub.Web.Services
             this.context.SaveChanges();
         }
 
-        public bool ProductExists(string id)
+        public async Task<bool> ProductExistsAsync(string id)
         {
             return this.context.Products.Any(x => x.Id == id);
         }
 
-        public List<ProductViewModel> GetAllProducts()
+        public async Task<List<ProductViewModel>> GetAllProductsAsync()
         {
             return this.context.Products.Select(x => new ProductViewModel
             {

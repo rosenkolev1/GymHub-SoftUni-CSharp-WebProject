@@ -6,10 +6,10 @@ namespace GymHub.Web.Services
 {
     public interface IRoleService
     {
-        public Task AddAsync(RoleManager<Role> roleManager, string name);
-        public string GetNormalUserRoleId();
-        public Role GetAdminUser();
-        public Role GetRoleById(string id);
-        public bool RoleExists(string name);
+        public Task AddAsync(string name);
+        public Task<string> GetNormalUserRoleIdAsync();
+        public Task<Role> GetAdminUserAsync();
+        public Task<Role> GetRoleByIdAsync(string id);
+        public Task<bool> RoleExistsAsync(string name);
     }
 }

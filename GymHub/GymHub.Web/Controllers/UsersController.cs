@@ -2,8 +2,10 @@
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using GymHub.Web.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GymHub.Web.Controllers
 {
@@ -17,24 +19,30 @@ namespace GymHub.Web.Controllers
             this.genderService = genderService;
         }
 
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
-            if(this.User.Identity.IsAuthenticated == false)
+            if(this.User.Identity.IsAuthenticated == true)
             {
                 return this.Redirect("/");
             }
 
             var viewModel = new RegisterUserViewModel
             {
-                Genders = this.genderService.GetAllGenders()
+                Genders = await this.genderService.GetAllGendersAsync()
             };
             return this.View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterUserInputModel inputModel)
+        public async Task<IActionResult> Register(RegisterUserInputModel inputModel)
         {
-            return this.Redirect("/");
+            if (this.User.Identity.IsAuthenticated == true)
+            {
+                return this.Redirect("/");
+            }
+
+            await this.userService.RegisterNormalUserAsync(inputModel);
+            return this.Redirect("/Users/Login");
         }
     }
 }

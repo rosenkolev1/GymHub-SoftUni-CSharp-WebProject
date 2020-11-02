@@ -11,36 +11,38 @@ namespace GymHub.Web.Services
     public class RoleService : IRoleService
     {
         private readonly ApplicationDbContext context;
-        public RoleService(ApplicationDbContext context)
+        private readonly RoleManager<Role> roleManager;
+        public RoleService(ApplicationDbContext context, RoleManager<Role> roleManager)
         {
             this.context = context;
+            this.roleManager = roleManager;
         }
 
-        public async Task AddAsync(RoleManager<Role> roleManager, string name)
+        public async Task AddAsync(string name)
         {
-            var result = await roleManager.CreateAsync(new Role(name));
+            var result = await this.roleManager.CreateAsync(new Role(name));
             if (!result.Succeeded)
             {
                 throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
             }
         }
 
-        public Role GetAdminUser()
+        public async Task<Role> GetAdminUserAsync()
         {
             return this.context.Roles.FirstOrDefault(r => r.Name == GlobalConstants.AdminRoleName);
         }
 
-        public string GetNormalUserRoleId()
+        public async Task<string> GetNormalUserRoleIdAsync()
         {
             return this.context.Roles.FirstOrDefault(x => x.Name == GlobalConstants.NormalUserRoleName).Id;
         }
 
-        public Role GetRoleById(string id)
+        public async Task<Role> GetRoleByIdAsync(string id)
         {
             throw new NotImplementedException();
         }
 
-        public bool RoleExists(string name)
+        public async Task<bool> RoleExistsAsync(string name)
         {
             return this.context.Roles.Any(x => x.Name == name);
         }

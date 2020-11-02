@@ -1,10 +1,12 @@
 ﻿using GymHub.Data.Models;
 using GymHub.Web.Data;
 using GymHub.Web.Models.InputModels;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GymHub.Web.Services
 {
@@ -13,14 +15,16 @@ namespace GymHub.Web.Services
         private readonly ApplicationDbContext context;
         private readonly IRoleService roleService;
         private readonly IGenderService genderService;
-        public UserService(ApplicationDbContext context, IRoleService roleService, IGenderService genderService)
+        private readonly UserManager<User> userManager;
+        public UserService(ApplicationDbContext context, IRoleService roleService, IGenderService genderService, UserManager<User> userManager)
         {
             this.context = context;
             this.roleService = roleService;
             this.genderService = genderService;
+            this.userManager = userManager;
         }
 
-        public User RegisterNormalUser(RegisterUserInputModel inputModel)
+        public async Task<User> RegisterNormalUserAsync(RegisterUserInputModel inputModel)
         {
             var newUser = new User()
             {
@@ -34,15 +38,25 @@ namespace GymHub.Web.Services
                 DeletedOn = null,
                 IsDeleted = false,
                 RegisteredOn = DateTime.UtcNow,
-                RoleId = this.roleService.GetNormalUserRoleId(),
+                RoleId = await this.roleService.GetNormalUserRoleIdAsync(),
                 GenderId = inputModel.GenderId,
             };
-            this.context.Add(newUser);
-            this.context.SaveChanges();
+            var resultCreateUser = await this.userManager.CreateAsync(newUser, newUser.Password);
+            if (!resultCreateUser.Succeeded)
+            {
+                throw new Exception(string.Join(Environment.NewLine, resultCreateUser.Errors.Select(e => e.Description)));
+            }
+
+            var resultAsingUserHisRole = await this.userManager.AddToRoleAsync(newUser, newUser.Role.Name);
+            if (!resultAsingUserHisRole.Succeeded)
+            {
+                throw new Exception(string.Join(Environment.NewLine, resultAsingUserHisRole.Errors.Select(e => e.Description)));
+            }
+
             return newUser;
         }
 
-        public string GetIdByUsernameAndPassword(LoginUserInputModel inputModel)
+        public async Task<string> GetIdByUsernameAndPasswordAsync(LoginUserInputModel inputModel)
         {
             var user = this.context.Users.FirstOrDefault(x => x.UserName == inputModel.Username && x.Password == HashPassword(inputModel.Password));
             return user.Id;
@@ -66,22 +80,22 @@ namespace GymHub.Web.Services
             }
         }
 
-        public bool UsernameExists(string username)
+        public async Task<bool> UsernameExistsAsync(string username)
         {
             return this.context.Users.Any(x => x.UserName == username);
         }
 
-        public bool PasswordExists(string password)
+        public async Task<bool> PasswordExistsAsync(string password)
         {
             return this.context.Users.Any(x => x.Password == HashPassword(password));
         }
 
-        public bool EmailExists(string email)
+        public async Task<bool> EmailExistsAsync(string email)
         {
             return this.context.Users.Any(x => x.Email == email);
         }
 
-        public bool PhoneNumberExists(string phoneNumber)
+        public async Task<bool> PhoneNumberExistsAsync(string phoneNumber)
         {
             return this.context.Users.Any(x => x.PhoneNumber == phoneNumber);
         }

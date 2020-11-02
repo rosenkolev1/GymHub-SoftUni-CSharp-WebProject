@@ -19,15 +19,22 @@ namespace GymHub.Services.SeederFolder
         private IRoleService roleService;
         private IUserService userService;
         private IProductService productService;
-        public Seeder()
+        public Seeder(IServiceProvider serviceProvider)
         {
             var context = new ApplicationDbContext();
             this.genderService = new GenderService(context);
-            this.roleService = new RoleService(context);
-            this.userService = new UserService(context, this.roleService as RoleService, this.genderService as GenderService);
+
+            //Set up roleService
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
+            this.roleService = new RoleService(context, roleManager);
+
+            //Set up userService
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            this.userService = new UserService(context, this.roleService as RoleService, this.genderService as GenderService, userManager);
             this.productService = new ProductService(context);
         }
 
+        //Currently unused
         public void Seed(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
@@ -35,24 +42,21 @@ namespace GymHub.Services.SeederFolder
 
             //Seeder methods
             SeedGenders();
-            SeedRoles(roleManager);
+            SeedRoles();
             //SeedUsers();
             //SeedProducts();
         }
 
-        public async Task SeedAsync(IServiceProvider serviceProvider)
+        public async Task SeedAsync()
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-
             //Seeder methods
             await SeedGenders();
-            await SeedRoles(roleManager);
+            await SeedRoles();
             //SeedUsers();
             //SeedProducts();
         }
 
-        private async Task<bool> SeedRoles(RoleManager<Role> roleManager)
+        private async Task<bool> SeedRoles()
         {
             //Seed data
             var roles = new List<string>();
@@ -63,9 +67,9 @@ namespace GymHub.Services.SeederFolder
             {
                 foreach (var roleName in roles)
                 {
-                    if (this.roleService.RoleExists(roleName) == false)
+                    if (await this.roleService.RoleExistsAsync(roleName) == false)
                     {
-                        await this.roleService.AddAsync(roleManager, roleName);
+                        await this.roleService.AddAsync(roleName);
                     }
                 }
             }
@@ -88,9 +92,9 @@ namespace GymHub.Services.SeederFolder
             {
                 foreach (var genderName in genders)
                 {
-                    if (this.genderService.GenderExists(genderName) == false)
+                    if (await this.genderService.GenderExistsAsync(genderName) == false)
                     {
-                        this.genderService.Add(genderName);
+                        await this.genderService.AddAsync(genderName);
                     }
                 }
             }
@@ -105,7 +109,7 @@ namespace GymHub.Services.SeederFolder
         {
             try
             {
-                this.userService.RegisterNormalUser(new RegisterUserInputModel
+                await this.userService.RegisterNormalUserAsync(new RegisterUserInputModel
                 {
                     FirstName = "Rosen",
                     MiddleName = "Andreev",
@@ -114,7 +118,7 @@ namespace GymHub.Services.SeederFolder
                     Password = "rosenkolev1",
                     DateOfBirth = new DateTime(2002, 9, 17),
                     Email = "rosenandreevkolev@abv.bg",
-                    GenderId = this.genderService.GetGenderIdByName("Male")
+                    GenderId = await this.genderService.GetGenderIdByNameAsync("Male")
                 });
             }
             catch
@@ -131,7 +135,7 @@ namespace GymHub.Services.SeederFolder
                 var products = JsonSerializer.Deserialize<List<AddProductInputModel>>(File.ReadAllText("SeederFolder/SeedJSON/Products.json"));
                 foreach (var product in products)
                 {
-                    this.productService.Add(product);
+                    await this.productService.AddAsync(product);
                 }
             }
             catch

@@ -51,7 +51,7 @@ namespace GymHub.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //Seed database at startup        
-            SeedDatabase(app, true).GetAwaiter().GetResult();
+            SeedDatabaseAsync(app, false).GetAwaiter().GetResult();
 
             if (env.IsDevelopment())
             {
@@ -82,14 +82,14 @@ namespace GymHub.Web
             });
         }
 
-        private async Task SeedDatabase(IApplicationBuilder app, bool willSeed)
+        private async Task SeedDatabaseAsync(IApplicationBuilder app, bool willSeed)
         {
             if(willSeed)
             {
                 using (var serviceScope = app.ApplicationServices.CreateScope())
                 {
-                    var seeder = new Seeder();
-                    await seeder.SeedAsync(serviceScope.ServiceProvider);
+                    var seeder = new Seeder(serviceScope.ServiceProvider);
+                    await seeder.SeedAsync();
                 }
             }
         }
