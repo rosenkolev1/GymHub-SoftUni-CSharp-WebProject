@@ -1,4 +1,5 @@
-﻿using GymHub.Data.Models;
+﻿using GymHub.Common;
+using GymHub.Data.Models;
 using GymHub.Web.Data;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -26,12 +27,12 @@ namespace GymHub.Web.Services
 
         public Role GetAdminUser()
         {
-            return this.context.Roles.FirstOrDefault(r => r.Name == "Admin");
+            return this.context.Roles.FirstOrDefault(r => r.Name == GlobalConstants.AdminRoleName);
         }
 
         public string GetNormalUserRoleId()
         {
-            return this.context.Roles.FirstOrDefault(x => x.Name == "Normal User").Id;
+            return this.context.Roles.FirstOrDefault(x => x.Name == GlobalConstants.NormalUserRoleName).Id;
         }
 
         public Role GetRoleById(string id)

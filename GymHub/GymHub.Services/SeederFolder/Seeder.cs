@@ -1,4 +1,5 @@
-﻿using GymHub.Data.Models;
+﻿using GymHub.Common;
+using GymHub.Data.Models;
 using GymHub.Web.Data;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Services;
@@ -55,8 +56,8 @@ namespace GymHub.Services.SeederFolder
         {
             //Seed data
             var roles = new List<string>();
-            roles.Add("Admin");
-            roles.Add("Normal User");
+            roles.Add(GlobalConstants.AdminRoleName);
+            roles.Add(GlobalConstants.NormalUserRoleName);
 
             try
             {
@@ -79,8 +80,8 @@ namespace GymHub.Services.SeederFolder
         {
             //Seed data
             var genders = new List<string>();
-            genders.Add("Male");
-            genders.Add("Female");
+            genders.Add(GlobalConstants.MaleGenderName);
+            genders.Add(GlobalConstants.FemaleGenderName);
             genders.Sort();
 
             try
