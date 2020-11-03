@@ -1,5 +1,6 @@
-﻿using GymHub.Data.Models;
-using GymHub.Web.Data;
+﻿using GymHub.Data;
+using GymHub.Data.Data;
+using GymHub.Data.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using System.Collections.Generic;

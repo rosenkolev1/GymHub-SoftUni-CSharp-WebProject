@@ -1,4 +1,5 @@
-﻿using GymHub.Web.Data;
+﻿using GymHub.Data.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace GymHub.Data
@@ -9,6 +10,7 @@ namespace GymHub.Data
         {
             var dbContext = new ApplicationDbContext();
             CreateDatabase(dbContext, true);
+            MigrateDatabase(dbContext, false);
         }
 
         static void CreateDatabase(ApplicationDbContext dbContext, bool isTrue)
@@ -18,6 +20,14 @@ namespace GymHub.Data
                 dbContext.Database.EnsureDeleted();
                 dbContext.Database.EnsureCreated();
                 dbContext.Users.FirstOrDefault();
+            }
+        }
+
+        static void MigrateDatabase(ApplicationDbContext dbContext, bool isTrue)
+        {
+            if (isTrue)
+            {
+                dbContext.Database.Migrate();
             }
         }
     }

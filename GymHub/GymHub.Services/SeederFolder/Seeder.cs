@@ -1,6 +1,7 @@
 ﻿using GymHub.Common;
+using GymHub.Data;
+using GymHub.Data.Data;
 using GymHub.Data.Models;
-using GymHub.Web.Data;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Services;
 using Microsoft.AspNetCore.Identity;
@@ -34,29 +35,16 @@ namespace GymHub.Services.SeederFolder
             this.productService = new ProductService(context);
         }
 
-        //Currently unused
-        public void Seed(IServiceProvider serviceProvider)
-        {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-
-            //Seeder methods
-            SeedGenders();
-            SeedRoles();
-            //SeedUsers();
-            //SeedProducts();
-        }
-
         public async Task SeedAsync()
         {
             //Seeder methods
-            await SeedGenders();
-            await SeedRoles();
-            //SeedUsers();
+            await SeedGendersAsync();
+            await SeedRolesAsync();
+            await SeedUsersAsync();
             //SeedProducts();
         }
 
-        private async Task<bool> SeedRoles()
+        private async Task<bool> SeedRolesAsync()
         {
             //Seed data
             var roles = new List<string>();
@@ -80,7 +68,7 @@ namespace GymHub.Services.SeederFolder
             return true;
         }
 
-        private async Task<bool> SeedGenders()
+        private async Task<bool> SeedGendersAsync()
         {
             //Seed data
             var genders = new List<string>();
@@ -105,11 +93,11 @@ namespace GymHub.Services.SeederFolder
             return true;
         }
 
-        private async Task<bool> SeedUsers()
+        private async Task<bool> SeedUsersAsync()
         {
             try
             {
-                await this.userService.RegisterNormalUserAsync(new RegisterUserInputModel
+                await this.userService.CreateNormalUserAsync(new RegisterUserInputModel
                 {
                     FirstName = "Rosen",
                     MiddleName = "Andreev",
@@ -128,7 +116,7 @@ namespace GymHub.Services.SeederFolder
             return true;
         }
 
-        private async Task<bool> SeedProducts()
+        private async Task<bool> SeedProductsAsync()
         {
             try
             {

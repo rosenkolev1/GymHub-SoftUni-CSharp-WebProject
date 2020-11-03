@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace GymHub.Web.Data
+namespace GymHub.Data.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, string>
     {

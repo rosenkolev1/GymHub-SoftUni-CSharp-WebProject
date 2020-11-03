@@ -1,6 +1,7 @@
 ﻿using GymHub.Common;
+using GymHub.Data;
+using GymHub.Data.Data;
 using GymHub.Data.Models;
-using GymHub.Web.Data;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;

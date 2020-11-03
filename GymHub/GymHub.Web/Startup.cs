@@ -1,11 +1,10 @@
 using GymHub.Data;
+using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.SeederFolder;
-using GymHub.Web.Data;
 using GymHub.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,7 +50,7 @@ namespace GymHub.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //Seed database at startup        
-            SeedDatabaseAsync(app, false).GetAwaiter().GetResult();
+            SeedDatabaseAsync(app, true).GetAwaiter().GetResult();
 
             if (env.IsDevelopment())
             {
@@ -84,7 +83,7 @@ namespace GymHub.Web
 
         private async Task SeedDatabaseAsync(IApplicationBuilder app, bool willSeed)
         {
-            if(willSeed)
+            if (willSeed)
             {
                 using (var serviceScope = app.ApplicationServices.CreateScope())
                 {

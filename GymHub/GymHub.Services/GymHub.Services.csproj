@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GymHub.Common\GymHub.Common.csproj" />
     <ProjectReference Include="..\GymHub.Data\GymHub.Data.csproj" />
     <ProjectReference Include="..\GymHub.Web.Models\GymHub.Web.Models.csproj" />

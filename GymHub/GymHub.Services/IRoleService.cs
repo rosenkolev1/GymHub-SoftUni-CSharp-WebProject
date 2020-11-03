@@ -1,5 +1,4 @@
 ﻿using GymHub.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 
 namespace GymHub.Web.Services

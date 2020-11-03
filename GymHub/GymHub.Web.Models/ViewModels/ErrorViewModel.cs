@@ -1,5 +1,3 @@
-using System;
-
 namespace GymHub.Web.Models.ViewModels
 {
     public class ErrorViewModel

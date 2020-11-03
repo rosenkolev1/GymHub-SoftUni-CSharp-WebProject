@@ -6,10 +6,11 @@ namespace GymHub.Web.Services
 {
     public interface IUserService
     {
-        public Task<User> RegisterNormalUserAsync(RegisterUserInputModel inputModel);
+        public Task<User> GetUserAsync(LoginUserInputModel inputModel);
+        public Task<bool> UserExistsAsync(string username, string password);
+        public Task<User> CreateNormalUserAsync(RegisterUserInputModel inputModel);
         public Task<string> GetIdByUsernameAndPasswordAsync(LoginUserInputModel inputModel);
         public Task<bool> UsernameExistsAsync(string username);
-        public Task<bool> PasswordExistsAsync(string password);
         public Task<bool> EmailExistsAsync(string email);
         public Task<bool> PhoneNumberExistsAsync(string phoneNumber);
     }

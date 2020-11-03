@@ -48,8 +48,6 @@ namespace GymHub.Data.Models
         public DateTime? RegisteredOn { get; set; }
         public string ProfilePicture { get; set; }
         [Required]
-        public string Password { get; set; }
-        [Required]
         public DateTime DateOfBirth { get; set; }
         public string Description { get; set; }
         [Required]

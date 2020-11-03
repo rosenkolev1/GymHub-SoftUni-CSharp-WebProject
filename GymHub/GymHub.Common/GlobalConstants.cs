@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GymHub.Common
+﻿namespace GymHub.Common
 {
     public static class GlobalConstants
     {

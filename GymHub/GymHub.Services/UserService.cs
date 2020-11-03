@@ -1,11 +1,10 @@
-﻿using GymHub.Data.Models;
-using GymHub.Web.Data;
+﻿using GymHub.Data;
+using GymHub.Data.Data;
+using GymHub.Data.Models;
 using GymHub.Web.Models.InputModels;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GymHub.Web.Services
@@ -24,7 +23,7 @@ namespace GymHub.Web.Services
             this.userManager = userManager;
         }
 
-        public async Task<User> RegisterNormalUserAsync(RegisterUserInputModel inputModel)
+        public async Task<User> CreateNormalUserAsync(RegisterUserInputModel inputModel)
         {
             var newUser = new User()
             {
@@ -33,7 +32,6 @@ namespace GymHub.Web.Services
                 LastName = inputModel.LastName,
                 DateOfBirth = inputModel.DateOfBirth,
                 UserName = inputModel.Username,
-                Password = HashPassword(inputModel.Password),
                 Email = inputModel.Email,
                 DeletedOn = null,
                 IsDeleted = false,
@@ -41,53 +39,27 @@ namespace GymHub.Web.Services
                 RoleId = await this.roleService.GetNormalUserRoleIdAsync(),
                 GenderId = inputModel.GenderId,
             };
-            var resultCreateUser = await this.userManager.CreateAsync(newUser, newUser.Password);
-            if (!resultCreateUser.Succeeded)
-            {
-                throw new Exception(string.Join(Environment.NewLine, resultCreateUser.Errors.Select(e => e.Description)));
-            }
+            var newUserPassword = inputModel.Password;
 
-            var resultAsingUserHisRole = await this.userManager.AddToRoleAsync(newUser, newUser.Role.Name);
-            if (!resultAsingUserHisRole.Succeeded)
-            {
-                throw new Exception(string.Join(Environment.NewLine, resultAsingUserHisRole.Errors.Select(e => e.Description)));
-            }
+            await this.userManager.CreateAsync(newUser, newUserPassword);
+
+            await this.userManager.AddToRoleAsync(newUser, newUser.Role.Name);
 
             return newUser;
         }
 
         public async Task<string> GetIdByUsernameAndPasswordAsync(LoginUserInputModel inputModel)
         {
-            var user = this.context.Users.FirstOrDefault(x => x.UserName == inputModel.Username && x.Password == HashPassword(inputModel.Password));
-            return user.Id;
-        }
-
-        private string HashPassword(string password)
-        {
-            // Create a SHA256   
-            using (SHA512 sha512Hash = SHA512.Create())
+            if (await UserExistsAsync(inputModel.Username, inputModel.Password) == false)
             {
-                // ComputeHash - returns byte array  
-                byte[] bytes = sha512Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-                // Convert byte array to a string   
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                return builder.ToString();
+                return null;
             }
+            return (await this.userManager.FindByNameAsync(inputModel.Username)).Id;
         }
 
         public async Task<bool> UsernameExistsAsync(string username)
         {
             return this.context.Users.Any(x => x.UserName == username);
-        }
-
-        public async Task<bool> PasswordExistsAsync(string password)
-        {
-            return this.context.Users.Any(x => x.Password == HashPassword(password));
         }
 
         public async Task<bool> EmailExistsAsync(string email)
@@ -98,6 +70,24 @@ namespace GymHub.Web.Services
         public async Task<bool> PhoneNumberExistsAsync(string phoneNumber)
         {
             return this.context.Users.Any(x => x.PhoneNumber == phoneNumber);
+        }
+
+        public async Task<bool> UserExistsAsync(string username, string password)
+        {
+            var user = await this.userManager.FindByNameAsync(username);
+            if (user == null) return false;
+            var passwordIsCorrect = await this.userManager.CheckPasswordAsync(user, password);
+
+            return passwordIsCorrect;
+        }
+
+        public async Task<User> GetUserAsync(LoginUserInputModel inputModel)
+        {
+            if (await UserExistsAsync(inputModel.Username, inputModel.Password) == false)
+            {
+                return null;
+            }
+            return await this.userManager.FindByNameAsync(inputModel.Username);
         }
     }
 }

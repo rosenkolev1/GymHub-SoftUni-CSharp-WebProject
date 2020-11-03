@@ -42,6 +42,8 @@ namespace GymHub.Data.Data.Configurations
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.ToTable("Users");
         }
     }
 }
