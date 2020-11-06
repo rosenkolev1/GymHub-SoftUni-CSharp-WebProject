@@ -1,0 +1,25 @@
+*-Maybe change IdentityOptionsProvider file location
+
+-Implement tag helpers in views
+
+-Add Automapper
+
+-Implement automapper functionality for products, cart, users, genders, roles
+
+-Add Validation for login and register
+
+-Add User seeder functionality
+
+-Add products and cart functionality
+
+-Add products and cart seeder functionality
+
+-Use section for cart quantity change script so it only load for that page instead of for every page which use the layout
+
+-Fix the quantity js script functionality by adding quantity change for product cart with <input type="Hidden"> and some js code.
+
+-Add security features(aka unauthorized users cant visit etc... Normal User can't visit admin pages etc...). Maybe do it by implementing your own validation attribute...
+
+-Maybe fix some database blunders
+
+-Potentially add more functionality

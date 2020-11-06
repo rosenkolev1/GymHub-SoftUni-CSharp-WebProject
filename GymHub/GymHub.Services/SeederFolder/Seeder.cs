@@ -41,7 +41,7 @@ namespace GymHub.Services.SeederFolder
             await SeedGendersAsync();
             await SeedRolesAsync();
             await SeedUsersAsync();
-            //SeedProducts();
+            await SeedProductsAsync();
         }
 
         private async Task<bool> SeedRolesAsync()

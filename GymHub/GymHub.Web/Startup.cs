@@ -50,7 +50,7 @@ namespace GymHub.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //Seed database at startup        
-            SeedDatabaseAsync(app, true).GetAwaiter().GetResult();
+            SeedDatabaseAsync(app, false).GetAwaiter().GetResult();
 
             if (env.IsDevelopment())
             {

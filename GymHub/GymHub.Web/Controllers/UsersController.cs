@@ -2,6 +2,7 @@
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using GymHub.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -77,6 +78,7 @@ namespace GymHub.Web.Controllers
             return this.Redirect("/");
         }
 
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await this.signInManager.SignOutAsync();
