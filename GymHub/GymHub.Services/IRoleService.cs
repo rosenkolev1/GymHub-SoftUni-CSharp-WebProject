@@ -10,6 +10,7 @@ namespace GymHub.Web.Services
         public Task<Role> GetNormalUserRoleAsync();
         public Task<Role> GetAdminUserAsync();
         public Task<Role> GetRoleByIdAsync(string id);
+        public Task<string> GetRoleId(Role role);
         public Task<bool> RoleExistsAsync(string name);
     }
 }

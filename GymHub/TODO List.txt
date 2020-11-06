@@ -6,16 +6,7 @@
 
 -Add Validation for login and register
 
--Add User seeder functionality
-
--Add products and cart functionality
-
--Add products and cart seeder functionality
-
 -Fix the quantity js script functionality by adding quantity change for product cart with <input type="Hidden"> and some js code.
 
 -Add security features(aka unauthorized users cant visit etc... Normal User can't visit admin pages etc...). Maybe do it by implementing your own validation attribute...
 
--Maybe fix some database blunders
-
--Potentially add more functionality

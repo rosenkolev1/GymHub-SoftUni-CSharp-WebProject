@@ -1,4 +1,5 @@
-﻿using GymHub.Data;
+﻿using AutoMapper;
+using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Web.Models.InputModels;
@@ -15,33 +16,19 @@ namespace GymHub.Web.Services
         private readonly IRoleService roleService;
         private readonly IGenderService genderService;
         private readonly UserManager<User> userManager;
-        public UserService(ApplicationDbContext context, IRoleService roleService, IGenderService genderService, UserManager<User> userManager)
+        private readonly IMapper mapper;
+        public UserService(ApplicationDbContext context, IRoleService roleService, IGenderService genderService, UserManager<User> userManager, IMapper mapper)
         {
             this.context = context;
             this.roleService = roleService;
             this.genderService = genderService;
             this.userManager = userManager;
+            this.mapper = mapper;
         }
 
         public async Task<User> CreateNormalUserAsync(RegisterUserInputModel inputModel)
         {
-            var newUser = new User()
-            {
-                FirstName = inputModel.FirstName,
-                MiddleName = inputModel.MiddleName,
-                LastName = inputModel.LastName,
-                DateOfBirth = inputModel.DateOfBirth,
-                UserName = inputModel.Username,
-                Email = inputModel.Email,
-                DeletedOn = null,
-                IsDeleted = false,
-                RegisteredOn = DateTime.UtcNow,
-                RoleId = await this.roleService.GetNormalUserRoleIdAsync(),
-                GenderId = inputModel.GenderId,
-            };
-            var newUserPassword = inputModel.Password;
-
-            await this.userManager.CreateAsync(newUser, newUserPassword);
+            var newUser = await CreateUserAsync(inputModel, false);
 
             await this.userManager.AddToRoleAsync(newUser, (await this.roleService.GetNormalUserRoleAsync()).Name);
 
@@ -93,6 +80,29 @@ namespace GymHub.Web.Services
                 return null;
             }
             return await this.userManager.FindByNameAsync(inputModel.Username);
+        }
+
+        public async Task<User> CreateAdminUserAsync(RegisterUserInputModel inputModel)
+        {
+            var newUser = await CreateUserAsync(inputModel, true);
+
+            await this.userManager.AddToRoleAsync(newUser, (await this.roleService.GetAdminUserAsync()).Name);
+
+            await this.context.SaveChangesAsync();
+
+            return newUser;
+        }
+
+        public async Task<User> CreateUserAsync(RegisterUserInputModel inputModel, Role role)
+        {
+            var newUser = mapper.Map<User>(inputModel);
+            newUser.RoleId = isAdmin == false ? await this.roleService.GetNormalUserRoleIdAsync() : await this.roleService.GetAdminUserRoleIdAsync();
+
+            var newUserPassword = inputModel.Password;
+
+            await this.userManager.CreateAsync(newUser, newUserPassword);
+
+            return newUser;
         }
     }
 }

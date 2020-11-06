@@ -1,3 +1,5 @@
+using AutoMapper;
+using GymHub.Common.AutomapperProfiles;
 using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
@@ -9,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace GymHub.Web
@@ -44,6 +47,8 @@ namespace GymHub.Web
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICartService, CartService>();
+
+            services.AddAutoMapper(typeof(UserProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

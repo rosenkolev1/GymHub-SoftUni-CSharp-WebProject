@@ -8,7 +8,9 @@ namespace GymHub.Web.Services
     {
         public Task<User> GetUserAsync(LoginUserInputModel inputModel);
         public Task<bool> UserExistsAsync(string username, string password);
+        public Task<User> CreateUserAsync(RegisterUserInputModel inputModel);
         public Task<User> CreateNormalUserAsync(RegisterUserInputModel inputModel);
+        public Task<User> CreateAdminUserAsync(RegisterUserInputModel inputModel);
         public Task<string> GetIdByUsernameAndPasswordAsync(LoginUserInputModel inputModel);
         public Task<bool> UsernameExistsAsync(string username);
         public Task<bool> EmailExistsAsync(string email);

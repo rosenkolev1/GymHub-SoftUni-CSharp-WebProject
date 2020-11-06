@@ -1,0 +1,32 @@
+﻿[
+  {
+    "FirstName": "Rosen",
+    "MiddleName": "Andreev",
+    "LastName": "Kolev",
+    "Username": "rosenkolev1",
+    "Password": "rosenkolev1",
+    "DateOfBirth": "2002-09-17T00:00:00Z",
+    "Email": "rosenandreevkolev@abv.bg",
+    "GenderId": "Male"
+  },
+  {
+    "FirstName": "Stefan",
+    "MiddleName": "Konstantinov",
+    "LastName": "Andonov",
+    "Username": "stefan01",
+    "Password": "stefan01",
+    "DateOfBirth": "2001-02-23T00:00:00Z",
+    "Email": "stefanandonov01@abv.bg",
+    "GenderId": "Male"
+  },
+  {
+    "FirstName": "Zornica",
+    "MiddleName": "Stefanova",
+    "LastName": "Koleva",
+    "Username": "zornicakoleva1982",
+    "Password": "z820311z",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "zornicakoleva1982@abv.bg",
+    "GenderId": "Female"
+  }
+]

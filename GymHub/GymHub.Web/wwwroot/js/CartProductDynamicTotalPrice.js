@@ -17,7 +17,7 @@
     })
 
     let allProductsTotalPriceEl = document.querySelector("#allProductsTotalPrice");
-    allProductsTotalPriceEl.textContent = allProductsTotalPrice;
+    allProductsTotalPriceEl.textContent = allProductsTotalPrice.toFixed(2);
 }
 
 setInterval(SetTotalPrice, 100);
