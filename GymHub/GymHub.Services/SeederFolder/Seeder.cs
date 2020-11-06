@@ -1,19 +1,16 @@
 ﻿using AutoMapper;
+using GymHub.Automapper.AutomapperProfiles;
 using GymHub.Common;
-using GymHub.Common.AutomapperProfiles;
-using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
-using GymHub.Services.DTOs;
+using GymHub.DTOs;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -101,7 +98,7 @@ namespace GymHub.Services.SeederFolder
 
             foreach (var newUser in users)
             {
-                if (await this.userService.UserExistsAsync(newUser.Username, newUser.Password) == false)
+                if (await this.userService.UserIsTakenAsync(newUser.Username, newUser.Password, newUser.Email) == false)
                 {
                     await this.userService.CreateUserAsync(newUser);
                 }

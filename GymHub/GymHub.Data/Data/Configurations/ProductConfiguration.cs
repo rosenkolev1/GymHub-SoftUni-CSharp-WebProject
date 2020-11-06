@@ -13,7 +13,7 @@ namespace GymHub.Data.Data.Configurations
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder
-                .HasIndex("Model")
+                .HasIndex(x => x.Model)
                 .IsUnique();
         }
     }

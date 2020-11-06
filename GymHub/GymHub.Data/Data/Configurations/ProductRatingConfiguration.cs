@@ -12,7 +12,7 @@ namespace GymHub.Data.Data.Configurations
                 .HasKey(x => new { x.ProductId, x.UserId });
 
             builder
-                .Property("Rating")
+                .Property(x => x.Rating)
                 .HasDefaultValue(0);
         }
     }

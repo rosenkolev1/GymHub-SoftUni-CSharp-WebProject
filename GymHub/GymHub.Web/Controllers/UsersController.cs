@@ -6,6 +6,7 @@ using GymHub.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace GymHub.Web.Controllers
@@ -28,7 +29,7 @@ namespace GymHub.Web.Controllers
         {
             if (this.User.Identity.IsAuthenticated == true)
             {
-                return this.Redirect("/error");
+                return this.Redirect("/Home/Error");
             }
 
             var viewModel = new ComplexModel<RegisterUserInputModel, RegisterUserViewModel>
@@ -39,14 +40,27 @@ namespace GymHub.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(ComplexModel<RegisterUserInputModel, RegisterUserViewModel> complexModel)
         {
             if (this.User.Identity.IsAuthenticated == true)
             {
-                return this.Redirect("/error");
+                return this.Redirect("/Home/Error");
             }
 
-            await this.userService.CreateUserAsync(complexModel.InputModel, await this.roleService.GetRoleAsync("Normal User"));
+            if(this.ModelState.IsValid == false)
+            {
+                return this.Redirect("/SomethingInvalid");
+            }
+
+            var inputModel = complexModel.InputModel;
+
+            if (await this.userService.UserIsTakenAsync(inputModel.Username, inputModel.Password, inputModel.Email) == true)
+            {
+                return this.Redirect("/SomethingInvalid");
+            }
+
+            await this.userService.CreateUserAsync(inputModel, await this.roleService.GetRoleAsync("Normal User"));
             return this.Redirect("/Users/Login");
         }
 
@@ -61,12 +75,19 @@ namespace GymHub.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginUserInputModel inputModel)
         {
             if (this.User.Identity.IsAuthenticated == true)
             {
-                return this.Redirect("/error");
+                return this.Redirect("/Home/Error");
             }
+
+            if(this.ModelState.IsValid == false)
+            {
+                return this.Redirect("/SomethingInvalid");
+            }
+
             var username = inputModel.Username;
             var password = inputModel.Password;
 

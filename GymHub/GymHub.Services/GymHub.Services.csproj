@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GymHub.Automapper\GymHub.Automapper.csproj" />
     <ProjectReference Include="..\GymHub.Common\GymHub.Common.csproj" />
     <ProjectReference Include="..\GymHub.Data\GymHub.Data.csproj" />
     <ProjectReference Include="..\GymHub.Web.Models\GymHub.Web.Models.csproj" />

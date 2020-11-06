@@ -12,9 +12,6 @@ namespace GymHub.Data.Data.Configurations
         {
             builder
                 .ToTable("UsersRoles");
-
-            //builder
-            //    .HasKey(x => new { x.RoleId, x.UserId });
         }
     }
 }

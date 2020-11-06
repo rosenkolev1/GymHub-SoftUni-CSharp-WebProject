@@ -9,10 +9,11 @@ namespace GymHub.Data.Data.Configurations
         public void Configure(EntityTypeBuilder<ProductComment> builder)
         {
             builder
-                .Property("IsDeleted")
+                .Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
+
             builder
-                .Property("DeletedOn")
+                .Property(x => x.DeletedOn)
                 .HasDefaultValue(null);
         }
     }
