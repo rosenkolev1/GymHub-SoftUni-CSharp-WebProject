@@ -20,6 +20,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\Cart_All\QuantityArrow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Cart_All\QuantityArrowReverse.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\css\SomeCss.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwroot\Home\HomeImage.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
