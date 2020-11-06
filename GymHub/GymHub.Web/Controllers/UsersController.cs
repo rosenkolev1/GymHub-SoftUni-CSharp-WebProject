@@ -1,4 +1,5 @@
 ﻿using GymHub.Data.Models;
+using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using GymHub.Web.Services;
@@ -28,22 +29,22 @@ namespace GymHub.Web.Controllers
                 return this.Redirect("/error");
             }
 
-            var viewModel = new RegisterUserViewModel
+            var viewModel = new ComplexModel<RegisterUserInputModel, RegisterUserViewModel>
             {
-                Genders = await this.genderService.GetAllGendersAsync()
+                ViewModel= new RegisterUserViewModel { Genders = await this.genderService.GetAllGendersAsync() }
             };
             return this.View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterUserInputModel inputModel)
+        public async Task<IActionResult> Register(ComplexModel<RegisterUserInputModel, RegisterUserViewModel> complexModel)
         {
             if (this.User.Identity.IsAuthenticated == true)
             {
                 return this.Redirect("/error");
             }
 
-            await this.userService.CreateNormalUserAsync(inputModel);
+            await this.userService.CreateNormalUserAsync(complexModel.InputModel);
             return this.Redirect("/Users/Login");
         }
 

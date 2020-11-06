@@ -1,6 +1,6 @@
 *-Maybe change IdentityOptionsProvider file location
 
--Implement tag helpers in views
+-Implement tag helpers in views (Almost, still need to do the cart one which is more complex)
 
 -Add Automapper
 
@@ -13,8 +13,6 @@
 -Add products and cart functionality
 
 -Add products and cart seeder functionality
-
--Use section for cart quantity change script so it only load for that page instead of for every page which use the layout
 
 -Fix the quantity js script functionality by adding quantity change for product cart with <input type="Hidden"> and some js code.
 

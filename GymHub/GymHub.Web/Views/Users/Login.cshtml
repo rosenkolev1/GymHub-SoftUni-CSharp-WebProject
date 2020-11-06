@@ -1,11 +1,15 @@
-﻿<form method="post" action="/Users/Login" class="form-container">
+﻿@using GymHub.Web.Models.InputModels
+
+@model LoginUserInputModel
+
+<form asp-controller="Users" asp-action="Login" method="post" class="form-container">
     <div class="input-container">
-        <label for="username" class="input-label">Username</label>
-        <input name="username" id="username" type="text" placeholder="Type username here">
+        <label asp-for="Username" class="input-label">Username</label>
+        <input asp-for="Username" type="text" placeholder="Type username here">
     </div>
     <div class="input-container">
-        <label for="password" class="input-label">Password</label>
-        <input name="password" id="password" type="password" placeholder="Type password here">
+        <label asp-for="Password" class="input-label">Password</label>
+        <input asp-for="Password" type="password" placeholder="Type password here">
     </div>
     <div class="button-container">
         <button>Login</button>
