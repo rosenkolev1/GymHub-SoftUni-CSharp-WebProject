@@ -2,6 +2,7 @@
 using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
+using GymHub.Services.DTOs;
 using GymHub.Web.Models.InputModels;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -24,17 +25,6 @@ namespace GymHub.Web.Services
             this.genderService = genderService;
             this.userManager = userManager;
             this.mapper = mapper;
-        }
-
-        public async Task<User> CreateNormalUserAsync(RegisterUserInputModel inputModel)
-        {
-            var newUser = await CreateUserAsync(inputModel, false);
-
-            await this.userManager.AddToRoleAsync(newUser, (await this.roleService.GetNormalUserRoleAsync()).Name);
-
-            await this.context.SaveChangesAsync();
-
-            return newUser;
         }
 
         public async Task<string> GetIdByUsernameAndPasswordAsync(LoginUserInputModel inputModel)
@@ -82,25 +72,46 @@ namespace GymHub.Web.Services
             return await this.userManager.FindByNameAsync(inputModel.Username);
         }
 
-        public async Task<User> CreateAdminUserAsync(RegisterUserInputModel inputModel)
+        public async Task<User> CreateUserAsync(RegisterUserInputModel inputModel, params Role[] roles)
         {
-            var newUser = await CreateUserAsync(inputModel, true);
+            if(roles.Length == 0)
+            {
+                throw new ArgumentException("No roles have been give to this user");
+            }
 
-            await this.userManager.AddToRoleAsync(newUser, (await this.roleService.GetAdminUserAsync()).Name);
+            var newUser = mapper.Map<User>(inputModel);
+
+            var newUserPassword = inputModel.Password;
+
+            await this.userManager.CreateAsync(newUser, newUserPassword);
+
+            foreach (var role in roles)
+            {
+                await this.userManager.AddToRoleAsync(newUser, role.Name);
+            }
 
             await this.context.SaveChangesAsync();
 
             return newUser;
         }
 
-        public async Task<User> CreateUserAsync(RegisterUserInputModel inputModel, Role role)
+        public async Task<User> CreateUserAsync(UserDTO userDTO)
         {
-            var newUser = mapper.Map<User>(inputModel);
-            newUser.RoleId = isAdmin == false ? await this.roleService.GetNormalUserRoleIdAsync() : await this.roleService.GetAdminUserRoleIdAsync();
+            var newUser = mapper.Map<User>(userDTO);
+            var roleNames = userDTO.RoleNames;
+            newUser.GenderId = await this.genderService.GetGenderIdByNameAsync(userDTO.GenderName);
 
-            var newUserPassword = inputModel.Password;
+            var newUserPassword = userDTO.Password;
 
             await this.userManager.CreateAsync(newUser, newUserPassword);
+
+            foreach (var roleName in roleNames)
+            {
+                var role = await this.roleService.GetRoleAsync(roleName);
+                await this.userManager.AddToRoleAsync(newUser, role.Name);
+            }
+
+            await this.context.SaveChangesAsync();
 
             return newUser;
         }

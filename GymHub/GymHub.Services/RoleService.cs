@@ -5,6 +5,7 @@ using GymHub.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace GymHub.Web.Services
@@ -28,24 +29,9 @@ namespace GymHub.Web.Services
             }
         }
 
-        public async Task<Role> GetAdminUserAsync()
+        public async Task<Role> GetRoleAsync (string name)
         {
-            return this.context.Roles.FirstOrDefault(r => r.Name == GlobalConstants.AdminRoleName);
-        }
-
-        public async Task<Role> GetNormalUserRoleAsync()
-        {
-            return this.context.Roles.FirstOrDefault(x => x.Name == GlobalConstants.NormalUserRoleName);
-        }
-
-        public async Task<string> GetNormalUserRoleIdAsync()
-        {
-            return this.context.Roles.FirstOrDefault(x => x.Name == GlobalConstants.NormalUserRoleName).Id;
-        }
-
-        public async Task<Role> GetRoleByIdAsync(string id)
-        {
-            throw new NotImplementedException();
+            return this.context.Roles.FirstOrDefault(x => x.Name == name);
         }
 
         public async Task<bool> RoleExistsAsync(string name)

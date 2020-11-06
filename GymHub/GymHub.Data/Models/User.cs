@@ -18,10 +18,6 @@ namespace GymHub.Data.Models
         [ForeignKey("Gender")]
         public string GenderId { get; set; }
         public virtual Gender Gender { get; set; }
-        [Required]
-        [ForeignKey("Role")]
-        public string RoleId { get; set; }
-        public virtual Role Role { get; set; }
 
         //Collections
         public virtual ICollection<UserOccupation> Occupations { get; set; }

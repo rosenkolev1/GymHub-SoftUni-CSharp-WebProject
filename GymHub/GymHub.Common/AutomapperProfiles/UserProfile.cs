@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using GymHub.Data.Models;
+using GymHub.Services.DTOs;
 using GymHub.Web.Models.InputModels;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GymHub.Common.AutomapperProfiles
 {
@@ -15,6 +14,11 @@ namespace GymHub.Common.AutomapperProfiles
                 .ForMember(dest => 
                     dest.RegisteredOn,
                     opt => opt.NullSubstitute(DateTime.UtcNow));
+
+            CreateMap<UserDTO, User>()
+                .ForMember(dest =>
+                    dest.RegisteredOn,
+                    opt => opt.NullSubstitute(DateTime.UtcNow)); 
         }
     }
 }
