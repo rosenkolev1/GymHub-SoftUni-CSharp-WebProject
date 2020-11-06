@@ -251,9 +251,11 @@ button {
 }
 
 .cart-table-container {
-    margin-left: 5px;
+    width:95vw;
+    margin-left: 2.5vw;
     background-color: aquamarine;
-    border-collapse: collapse;
+    border-width: 1px;
+    border-collapse:collapse;
 }
 
 .cart-thead-container {
@@ -279,14 +281,14 @@ th {
 }
 
 .cart-th-name {
-    text-align: right;
+    text-align: center;
     padding-right: 20px;
 }
 
 .cart-td-mainImage {
+    width: 7vw;
     z-index: -100;
-    width: 20vw;
-    height: 20vh;
+    height: 7vw;
 }
 
 .cart-td-name{
@@ -301,24 +303,39 @@ th {
 
 .cart-td-element {
     background-color: lightblue;
+    text-align: center;
 }
 
 .cart-td-nameElement {
     background-color: lightblue;
-    text-align: left;
 }
 
 .cart-td-mainImageElement {
     background-color: lightblue;
-    text-align: left;
-    vertical-align:middle;
-    margin:5px;
+    text-align: center;
+    width: 8vw;
+    height: 8vw;
+    vertical-align: middle;
+}
+
+.cart-form-buyButton {
+    width: 8vw;
+    height: 7.5vh;
+    margin-top: 5px;
+    margin-right: 8.5vw;
+}
+
+.cart-td-totalPriceRow {
+    background-color: lightblue;
+    text-align: center;
+}
+
+.cart-input-quantity {
+    width: 4vw;
+    text-align: center;
+    padding-left: 15px;
 }
 
 .cart-form-products {
-    position: absolute;
-    left: 80vw;
-    top: 30vw;
-    display: inline-block;
     text-align: right;
 }

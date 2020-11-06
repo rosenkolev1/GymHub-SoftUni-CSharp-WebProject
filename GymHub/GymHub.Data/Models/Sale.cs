@@ -26,6 +26,7 @@ namespace GymHub.Data.Models
         //Simple properties
         [Required]
         public decimal TotalPrice => this.Products.Select(p => p.Product.Price * p.Quantity).Sum();
+
         [Required]
         public DateTime PurchasedOn { get; set; }
     }

@@ -6,59 +6,52 @@
 <div>
     <h1 class="main-cart-title">My Cart:</h1>
 </div>
-<table class="cart-table-container">
-    <thead class="cart-thead-container">
-        <tr class="cart-tr-header">
-            <th colspan="2" class="cart-th-name">Name</th>
-            <th class="cart-th-element">Single Price</th>
-            <th class="cart-th-element">Quantity</th>
-            <th class="cart-th-element">Total Price</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int i = 0; i < Model.ViewModel.Count; i++)
-        {var product = viewModel[i];
-        <tr class="cart-tr-row-even" id="@i">
-            <td class="cart-td-mainImageElement">
-                <img class="cart-td-mainImage" src="/ProductsImages/@product.MainImage" />
-            </td>
-            <td class="cart-td-nameElement">
-                <a class="cart-td-name" asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id">@product.Name</a>
-            </td>
-            <td class="cart-td-element" id="singlePrice">
-                <p>@product.Price $</p>
-            </td>
-            <td class="cart-td-element" id="quantity">
-                <p>@product.Quantity</p>
-            </td>
-            <td class="cart-td-element">
-                <p class="totalPrice">Total Price</p>
-            </td>
-        </tr>
-        }
-        <tr class="cart-tr-row-even" id="allProductsTotalPriceTr">
-            <td class="cart-td-mainImageElement">
-            </td>
-            <td class="cart-td-nameElement">
-            </td>
-            <td class="cart-td-element" id="singlePrice">
-            </td>
-            <td class="cart-td-element" id="quantity">
-            </td>
-            <td class="cart-td-element">
-                <p id="allProductsTotalPrice">Total Price</p>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<form method="post" action="/Carts/Buy" class="cart-form-products">
-    @for (int i = 0; i < Model.ViewModel.Count; i++)
-    {var product = viewModel[i];
-        <input type="hidden" asp-for="InputModel[i].Id" value="@product.Id" class="input-product-@product.Id"/>
-        <input type="hidden" asp-for="InputModel[i].Quantity" value="@product.Quantity" class="input-product-quantity-@product.Id"/>
-        <input type="hidden" asp-for="InputModel[i].SinglePrice" value="@product.Price" class="input-product-singlePrice-@product.Id"/>
-    }
-    <button>Buy</button>
+<form asp-controller="Carts" asp-action="Buy" class="cart-form-products">
+    <table class="cart-table-container">
+        <thead class="cart-thead-container">
+            <tr class="cart-tr-header">
+                <th></th>
+                <th class="cart-th-name">Name</th>
+                <th class="cart-th-element">Single Price</th>
+                <th class="cart-th-element">Quantity</th>
+                <th class="cart-th-element">Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.ViewModel.Count; i++)
+            {var product = viewModel[i];       
+            <tr class="cart-tr-row-even" id="@i">
+                <td hidden>
+                    <input type="hidden" asp-for="InputModel[i].Id" value="@product.Id" class="cart-input-product" />
+                    <input type="hidden" asp-for="InputModel[i].SinglePrice" value="@product.Price" class="cart-input-product-singlePrice" />
+                </td>
+                <td class="cart-td-mainImageElement">
+                    <img class="cart-td-mainImage" src="/ProductsImages/@product.MainImage" />
+                </td>
+                <td class="cart-td-nameElement">
+                    <a class="cart-td-name" asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id">@product.Name</a>
+                </td>
+                <td class="cart-td-element" id="singlePrice">
+                    <p>@product.Price $</p>
+                </td>
+                <td class="cart-td-element" id="quantity">
+                    <input class="cart-input-quantity" type="number" asp-for="InputModel[i].Quantity" value="@product.Quantity" />
+                </td>
+                <td class="cart-td-element">
+                    <p class="totalPrice">@((product.Price*product.Quantity).ToString("f2"))</p>
+                </td>
+            </tr>
+            }
+            <tr class="cart-tr-row-even" id="allProductsTotalPriceTr">
+                <td colspan="4" class="cart-td-totalPriceRow">
+                </td>
+                <td class="cart-td-element">
+                    <p id="allProductsTotalPrice">Total Price</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="cart-form-buyButton">Buy</button>
 </form>
 
 @section Scripts{ 

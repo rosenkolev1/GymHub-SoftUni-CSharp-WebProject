@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -43,7 +44,8 @@ namespace GymHub.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Buy(ComplexModel<List<BuyProductInputModel>, List<ProductCartViewModel>> complexModel)
         {
-            throw new NotImplementedException("Ne sum go vkaral tova");
+            var inputModel = complexModel.InputModel;
+            var totalPriceOfAllProducts = inputModel.Sum(x => x.Quantity * x.SinglePrice);
             return this.View("../Home/Index", complexModel);
         }
 
