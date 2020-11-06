@@ -11,7 +11,6 @@ namespace GymHub.Data.Models
         {
             this.Id = Guid.NewGuid().ToString();
         }
-        public virtual ICollection<User> Users { get; set; }
         public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; }
         public virtual ICollection<IdentityRoleClaim<string>> RoleClaims { get; set; }
     }

@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GymHub.DTOs\GymHub.DTOs.csproj" />
     <ProjectReference Include="..\GymHub.Web.Models\GymHub.Web.Models.csproj" />
   </ItemGroup>
 

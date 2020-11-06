@@ -4,6 +4,7 @@ using GymHub.Common.AutomapperProfiles;
 using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
+using GymHub.Services.DTOs;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Services;
 using Microsoft.AspNetCore.Identity;
@@ -96,32 +97,14 @@ namespace GymHub.Services.SeederFolder
 
         private async Task<bool> SeedUsersAsync()
         {
-            var users = JsonSerializer.Deserialize<List<RegisterUserInputModel>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Users.json"));
-            foreach (var newUserInputModel in users)
+            var users = JsonSerializer.Deserialize<List<UserDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Users.json"));
+
+            foreach (var newUser in users)
             {
-                if (await this.userService.UserExistsAsync(newUserInputModel.Username, newUserInputModel.Password) == false)
+                if (await this.userService.UserExistsAsync(newUser.Username, newUser.Password) == false)
                 {
-                    newUserInputModel.GenderId = await this.genderService.GetGenderIdByNameAsync(newUserInputModel.GenderId);
-                    await this.userService.CreateNormalUserAsync(newUserInputModel);
+                    await this.userService.CreateUserAsync(newUser);
                 }
-            }
-
-            //Seed Admin user
-            var newAdminUserInputModel = new RegisterUserInputModel
-            {
-                FirstName = "Rosen",
-                MiddleName = "Andreev",
-                LastName = "Kolev",
-                Username = "adminRosen",
-                Password = "adminRosen",
-                DateOfBirth = new DateTime(2002, 9, 17),
-                Email = "rosenandreevkolev@abv.bg",
-                GenderId = await this.genderService.GetGenderIdByNameAsync("Male")
-            };
-
-            if (await this.userService.UserExistsAsync(newAdminUserInputModel.Username, newAdminUserInputModel.Password) == false)
-            {
-                await this.userService.CreateAdminUserAsync(newAdminUserInputModel);
             }
 
             return true;

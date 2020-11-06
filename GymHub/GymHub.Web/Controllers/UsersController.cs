@@ -13,13 +13,15 @@ namespace GymHub.Web.Controllers
     public class UsersController : Controller
     {
         private readonly IUserService userService;
+        private readonly IRoleService roleService;
         private readonly IGenderService genderService;
         private readonly SignInManager<User> signInManager;
-        public UsersController(IUserService userService, IGenderService genderService, SignInManager<User> signInManager)
+        public UsersController(IUserService userService, IGenderService genderService, IRoleService roleService, SignInManager<User> signInManager)
         {
             this.userService = userService;
             this.genderService = genderService;
             this.signInManager = signInManager;
+            this.roleService = roleService;
         }
 
         public async Task<IActionResult> Register()
@@ -44,7 +46,7 @@ namespace GymHub.Web.Controllers
                 return this.Redirect("/error");
             }
 
-            await this.userService.CreateNormalUserAsync(complexModel.InputModel);
+            await this.userService.CreateUserAsync(complexModel.InputModel, await this.roleService.GetRoleAsync("Normal User"));
             return this.Redirect("/Users/Login");
         }
 
