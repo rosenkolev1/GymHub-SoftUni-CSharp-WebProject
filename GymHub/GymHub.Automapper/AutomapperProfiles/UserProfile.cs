@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using GymHub.Data.Models;
-using GymHub.Services.DTOs;
+using GymHub.DTOs;
 using GymHub.Web.Models.InputModels;
 using System;
 
-namespace GymHub.Common.AutomapperProfiles
+namespace GymHub.Automapper.AutomapperProfiles
 {
     public class UserProfile : Profile
     {

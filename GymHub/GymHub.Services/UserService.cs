@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
-using GymHub.Services.DTOs;
+using GymHub.DTOs;
 using GymHub.Web.Models.InputModels;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace GymHub.Web.Services
@@ -114,6 +114,12 @@ namespace GymHub.Web.Services
             await this.context.SaveChangesAsync();
 
             return newUser;
+        }
+
+        public async Task<bool> UserIsTakenAsync(string username, string password, string email, string phoneNumber = null)
+        {
+            var passwordHash = this.userManager.PasswordHasher.HashPassword(null, password);
+            return this.context.Users.Where(x => x.PhoneNumber != null).Any(x => x.UserName == username || x.PasswordHash == password || x.Email == email || x.PhoneNumber == phoneNumber);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace GymHub.Data.Data.Configurations
 {
@@ -9,19 +10,39 @@ namespace GymHub.Data.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            //Default values
             builder
-                .Property("DeletedOn")
+                .Property(x => x.DeletedOn)
                 .HasDefaultValue(null);
             builder
-                .Property("Description")
+                .Property(x => x.Description)
                 .HasDefaultValue(null);
             builder
-                .Property("ProfilePicture")
+                .Property(x => x.ProfilePicture)
                 .HasDefaultValue(null);
             builder
-                .Property("RegisteredOn")
+                .Property(x => x.RegisteredOn)
                 .HasDefaultValue(DateTime.UtcNow);
 
+            //Unique column
+            builder
+                .HasIndex(x => x.UserName)
+                .IsUnique();
+
+            builder
+                .HasIndex(x => x.PasswordHash)
+                .IsUnique();
+
+            builder
+                .HasIndex(x => x.Email)
+                .IsUnique();
+
+            builder
+                .HasIndex(x => x.PhoneNumber)
+                .IsUnique();
+
+
+            //Relationships
             builder
                 .HasMany(e => e.Claims)
                 .WithOne()

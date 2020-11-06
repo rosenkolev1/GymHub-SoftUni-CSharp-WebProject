@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
-using GymHub.Data.Models;
-using GymHub.Web.Models.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace GymHub.Common.AutomapperProfiles
+namespace GymHub.Automapper.AutomapperProfiles
 {
     public class CartProfile : Profile
     {

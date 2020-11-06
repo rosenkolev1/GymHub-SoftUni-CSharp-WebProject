@@ -1,5 +1,5 @@
 using AutoMapper;
-using GymHub.Common.AutomapperProfiles;
+using GymHub.Automapper.AutomapperProfiles;
 using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace GymHub.Web

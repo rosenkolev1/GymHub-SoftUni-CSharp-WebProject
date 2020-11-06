@@ -40,6 +40,7 @@ namespace GymHub.Web.Controllers
 
         [HttpPost]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Buy(ComplexModel<List<BuyProductInputModel>, List<ProductCartViewModel>> complexModel)
         {
             throw new NotImplementedException("Ne sum go vkaral tova");

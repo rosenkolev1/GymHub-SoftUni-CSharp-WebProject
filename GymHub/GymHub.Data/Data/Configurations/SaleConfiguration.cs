@@ -10,7 +10,7 @@ namespace GymHub.Data.Data.Configurations
         public void Configure(EntityTypeBuilder<Sale> builder)
         {
             builder
-                .Property("PurchasedOn")
+                .Property(x => x.PurchasedOn)
                 .HasDefaultValue(DateTime.UtcNow);
         }
     }

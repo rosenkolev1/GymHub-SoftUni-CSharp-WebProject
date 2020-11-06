@@ -6,12 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GymHub.Common\GymHub.Common.csproj" />
     <ProjectReference Include="..\GymHub.Data\GymHub.Data.csproj" />
+    <ProjectReference Include="..\GymHub.DTOs\GymHub.DTOs.csproj" />
+    <ProjectReference Include="..\GymHub.Web.Models\GymHub.Web.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
+    <ProjectReference Include="..\GymHub.Common\GymHub.Common.csproj" />
   </ItemGroup>
 
 </Project>

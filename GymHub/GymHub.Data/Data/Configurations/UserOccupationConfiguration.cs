@@ -10,11 +10,13 @@ namespace GymHub.Data.Data.Configurations
         {
             builder
                 .HasKey(x => new { x.UserId, x.OccupationId });
+
             builder
-                .Property("IsDeleted")
+                .Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
+
             builder
-                .Property("DeletedOn")
+                .Property(x => x.DeletedOn)
                 .HasDefaultValue(null);
         }
     }
