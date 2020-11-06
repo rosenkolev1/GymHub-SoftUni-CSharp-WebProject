@@ -1,5 +1,7 @@
 ﻿@model ComplexModel<RegisterUserInputModel, RegisterUserViewModel>
-
+@{ 
+    var viewModel = Model.ViewModel;
+}
 <form method="post" action="/Users/Register" class="form-container">
     <div class="input-container">
         <label asp-for="InputModel.FirstName" class="input-label">First Name</label>
@@ -36,7 +38,7 @@
     <div class="input-container">
         <label asp-for="InputModel.GenderId" class="input-label">Gender</label>
         <select asp-for="InputModel.GenderId">
-            @foreach (var gender in Model.ViewModel.Genders)
+            @foreach (var gender in viewModel.Genders)
             {
                 <option value="@gender.Id">@gender.Name</option>
             }

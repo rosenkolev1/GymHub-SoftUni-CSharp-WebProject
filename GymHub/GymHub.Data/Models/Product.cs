@@ -25,6 +25,8 @@ namespace GymHub.Data.Models
         [Required]
         public string Name { get; set; }
         [Required]
+        public string Model { get; set; }
+        [Required]
         public string MainImage { get; set; }
         [Required]
         public decimal Price { get; set; }

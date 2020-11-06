@@ -6,9 +6,11 @@ using GymHub.Web.Models.InputModels;
 using GymHub.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -97,7 +99,7 @@ namespace GymHub.Services.SeederFolder
         {
             try
             {
-                await this.userService.CreateNormalUserAsync(new RegisterUserInputModel
+                var newUserInputModel = new RegisterUserInputModel
                 {
                     FirstName = "Rosen",
                     MiddleName = "Andreev",
@@ -107,7 +109,12 @@ namespace GymHub.Services.SeederFolder
                     DateOfBirth = new DateTime(2002, 9, 17),
                     Email = "rosenandreevkolev@abv.bg",
                     GenderId = await this.genderService.GetGenderIdByNameAsync("Male")
-                });
+                };
+
+                if (await this.userService.UserExistsAsync(newUserInputModel.Username, newUserInputModel.Password) == false){
+
+                    await this.userService.CreateNormalUserAsync(newUserInputModel);
+                }
             }
             catch
             {
@@ -118,17 +125,14 @@ namespace GymHub.Services.SeederFolder
 
         private async Task<bool> SeedProductsAsync()
         {
-            try
+            var assemblyName = Assembly.GetExecutingAssembly().FullName;
+            var products = JsonSerializer.Deserialize<List<AddProductInputModel>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Products.json"));
+            foreach (var product in products)
             {
-                var products = JsonSerializer.Deserialize<List<AddProductInputModel>>(File.ReadAllText("SeederFolder/SeedJSON/Products.json"));
-                foreach (var product in products)
+                if(await this.productService.ProductExistsByModelAsync(product.Model) == false)
                 {
                     await this.productService.AddAsync(product);
                 }
-            }
-            catch
-            {
-                return false;
             }
             return true;
         }

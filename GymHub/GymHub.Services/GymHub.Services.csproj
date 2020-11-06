@@ -15,4 +15,10 @@
     <ProjectReference Include="..\GymHub.Web.Models\GymHub.Web.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="SeederFolder\SeedJSON\Products.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

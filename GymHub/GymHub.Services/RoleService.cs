@@ -33,6 +33,11 @@ namespace GymHub.Web.Services
             return this.context.Roles.FirstOrDefault(r => r.Name == GlobalConstants.AdminRoleName);
         }
 
+        public async Task<Role> GetNormalUserRoleAsync()
+        {
+            return this.context.Roles.FirstOrDefault(x => x.Name == GlobalConstants.NormalUserRoleName);
+        }
+
         public async Task<string> GetNormalUserRoleIdAsync()
         {
             return this.context.Roles.FirstOrDefault(x => x.Name == GlobalConstants.NormalUserRoleName).Id;

@@ -1,7 +1,11 @@
-﻿<div>
+﻿@model ComplexModel<List<BuyProductInputModel>, List<ProductCartViewModel>>
+@{ 
+    var inputModel = Model.InputModel;
+    var viewModel = Model.ViewModel;
+}
+<div>
     <h1 class="main-cart-title">My Cart:</h1>
 </div>
-
 <table class="cart-table-container">
     <thead class="cart-thead-container">
         <tr class="cart-tr-header">
@@ -12,8 +16,8 @@
         </tr>
     </thead>
     <tbody>
-        @for (int i = 0; i < Model.Count; i++)
-        {var product = Model[i];
+        @for (int i = 0; i < Model.ViewModel.Count; i++)
+        {var product = viewModel[i];
         <tr class="cart-tr-row-even" id="@i">
             <td class="cart-td-mainImageElement">
                 <img class="cart-td-mainImage" src="/ProductsImages/@product.MainImage" />
@@ -48,15 +52,15 @@
     </tbody>
 </table>
 <form method="post" action="/Carts/Buy" class="cart-form-products">
-    @for (int i = 0; i < Model.Count; i++)
-    {var product = Model[i];
-        <input type="hidden" name="product[@product.Id ].Id" value="@product.Id" class="input-product-@product.Id"/>
-        <input type="hidden" name="product[@product.Id ].Quantity" value="@product.Quantity" class="input-product-quantity-@product.Id"/>
-        <input type="hidden" name="product[@product.Id ].SinglePrice" value="@product.Price" class="input-product-singlePrice-@product.Id"/>
+    @for (int i = 0; i < Model.ViewModel.Count; i++)
+    {var product = viewModel[i];
+        <input type="hidden" asp-for="InputModel[i].Id" value="@product.Id" class="input-product-@product.Id"/>
+        <input type="hidden" asp-for="InputModel[i].Quantity" value="@product.Quantity" class="input-product-quantity-@product.Id"/>
+        <input type="hidden" asp-for="InputModel[i].SinglePrice" value="@product.Price" class="input-product-singlePrice-@product.Id"/>
     }
     <button>Buy</button>
 </form>
 
 @section Scripts{ 
-    <script src="/CartProductDynamicTotalPrice.js"></script>
+    <script src="/js/CartProductDynamicTotalPrice.js"></script>
 }

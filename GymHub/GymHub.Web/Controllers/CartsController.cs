@@ -1,4 +1,7 @@
 ﻿using GymHub.Data.Models;
+using GymHub.Web.Models;
+using GymHub.Web.Models.InputModels;
+using GymHub.Web.Models.ViewModels;
 using GymHub.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -27,15 +30,20 @@ namespace GymHub.Web.Controllers
             var currentUserId = this.userManager.GetUserId(this.User);
             var productsInCart = await this.cartService.GetAllProductsFromCartAsync(currentUserId);
 
-            return this.View(productsInCart);
+            var complexModel = new ComplexModel<List<BuyProductInputModel>, List<ProductCartViewModel>>
+            {
+                ViewModel = productsInCart
+            };
+
+            return this.View(complexModel);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Buy(List<object> inputModels)
+        public async Task<IActionResult> Buy(ComplexModel<List<BuyProductInputModel>, List<ProductCartViewModel>> complexModel)
         {
             throw new NotImplementedException("Ne sum go vkaral tova");
-            return this.View("../Home/Index", inputModels);
+            return this.View("../Home/Index", complexModel);
         }
 
         [Authorize]

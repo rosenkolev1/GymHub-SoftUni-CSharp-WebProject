@@ -1,6 +1,7 @@
 [
     {
         "Name": "Leg Extension Machine",
+        "Model":  "LEM: 1082-45",
         "MainImage": "LegExtensionMachine.jpeg",
         "Price": 60.59,
         "Description": "Leg Extension Machine for personal and home use",
@@ -9,6 +10,7 @@
     },
     {
         "Name": "Leg Curl Machine",
+        "Model":  "LCM: 5470-331",
         "MainImage": "LegCurlMachine.jpg",
         "Price": 80.76,
         "Description": "Leg Curl Machine for personal and home use",

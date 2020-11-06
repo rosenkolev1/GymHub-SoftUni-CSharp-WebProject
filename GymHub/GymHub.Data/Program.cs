@@ -9,8 +9,17 @@ namespace GymHub.Data
         static void Main(string[] args)
         {
             var dbContext = new ApplicationDbContext();
-            CreateDatabase(dbContext, true);
-            MigrateDatabase(dbContext, false);
+            DeleteDatabase(dbContext, true);
+            CreateDatabase(dbContext, false);
+            MigrateDatabase(dbContext, true);
+        }
+
+        static void DeleteDatabase(ApplicationDbContext dbContext, bool isTrue)
+        {
+            if (isTrue)
+            {
+                dbContext.Database.EnsureDeleted();
+            }
         }
 
         static void CreateDatabase(ApplicationDbContext dbContext, bool isTrue)
@@ -19,7 +28,6 @@ namespace GymHub.Data
             {
                 dbContext.Database.EnsureDeleted();
                 dbContext.Database.EnsureCreated();
-                dbContext.Users.FirstOrDefault();
             }
         }
 

@@ -1,7 +1,5 @@
 *-Maybe change IdentityOptionsProvider file location
 
--Implement tag helpers in views (Almost, still need to do the cart one which is more complex)
-
 -Add Automapper
 
 -Implement automapper functionality for products, cart, users, genders, roles

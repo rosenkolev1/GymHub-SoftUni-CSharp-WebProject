@@ -43,7 +43,9 @@ namespace GymHub.Web.Services
 
             await this.userManager.CreateAsync(newUser, newUserPassword);
 
-            await this.userManager.AddToRoleAsync(newUser, newUser.Role.Name);
+            await this.userManager.AddToRoleAsync(newUser, (await this.roleService.GetNormalUserRoleAsync()).Name);
+
+            await this.context.SaveChangesAsync();
 
             return newUser;
         }
@@ -75,7 +77,10 @@ namespace GymHub.Web.Services
         public async Task<bool> UserExistsAsync(string username, string password)
         {
             var user = await this.userManager.FindByNameAsync(username);
-            if (user == null) return false;
+            if (user == null)
+            {
+                return false;
+            }
             var passwordIsCorrect = await this.userManager.CheckPasswordAsync(user, password);
 
             return passwordIsCorrect;
