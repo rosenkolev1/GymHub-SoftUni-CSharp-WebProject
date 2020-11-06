@@ -11,6 +11,8 @@ namespace GymHub.Automapper.AutomapperProfiles
         {
             CreateMap<AddProductInputModel, Product>();
             CreateMap<Product, ProductViewModel>();
+
+            CreateMap<Product, ProductInfoViewModel>();
         }
     }
 }
