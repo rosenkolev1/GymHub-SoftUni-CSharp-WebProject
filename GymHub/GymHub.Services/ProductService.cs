@@ -1,4 +1,5 @@
-﻿using GymHub.Data;
+﻿using AutoMapper;
+using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Web.Models.InputModels;
@@ -12,9 +13,12 @@ namespace GymHub.Web.Services
     public class ProductService : IProductService
     {
         private readonly ApplicationDbContext context;
-        public ProductService(ApplicationDbContext context)
+        private readonly IMapper mapper;
+
+        public ProductService(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
         public async Task AddAsync(string name, string mainImage, decimal price, string description, int warranty, int quantityInStock)
         {
@@ -34,18 +38,7 @@ namespace GymHub.Web.Services
 
         public async Task AddAsync(AddProductInputModel inputModel)
         {
-            this.context.Add(new Product
-            {
-                Name = inputModel.Name,
-                MainImage = inputModel.MainImage,
-                Price = inputModel.Price,
-                Description = inputModel.Description,
-                Warranty = inputModel.Warranty,
-                QuantityInStock = inputModel.QuantityInStock,
-                Model = inputModel.Model,
-                IsDeleted = false,
-                DeletedOn = null
-            });
+            this.context.Add(mapper.Map<Product>(inputModel));
             this.context.SaveChanges();
         }
 
@@ -65,16 +58,7 @@ namespace GymHub.Web.Services
 
         public async Task<List<ProductViewModel>> GetAllProductsAsync()
         {
-            return this.context.Products.Select(x => new ProductViewModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                QuantityInStock = x.QuantityInStock,
-                Description = x.Description,
-                MainImage = x.MainImage,
-                Price = x.Price,
-                Warranty = x.Warranty
-            }).ToList();
+            return this.context.Products.Select(product => mapper.Map<ProductViewModel>(product)).ToList();
         }
     }
 }

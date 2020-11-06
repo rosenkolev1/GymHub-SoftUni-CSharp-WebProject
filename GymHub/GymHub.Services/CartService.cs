@@ -1,4 +1,6 @@
-﻿using GymHub.Data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Web.Models.ViewModels;
@@ -11,9 +13,11 @@ namespace GymHub.Web.Services
     public class CartService : ICartService
     {
         private readonly ApplicationDbContext context;
-        public CartService(ApplicationDbContext context)
+        private readonly IMapper mapper;
+        public CartService(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
         public async Task AddToCartAsync(string productId, string userId, int quantity = 1)
         {

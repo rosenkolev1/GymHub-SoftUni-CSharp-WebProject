@@ -1,4 +1,6 @@
-﻿using GymHub.Common;
+﻿using AutoMapper;
+using GymHub.Common;
+using GymHub.Common.AutomapperProfiles;
 using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
@@ -22,19 +24,28 @@ namespace GymHub.Services.SeederFolder
         private IRoleService roleService;
         private IUserService userService;
         private IProductService productService;
+        private IMapper mapper;
         public Seeder(IServiceProvider serviceProvider)
         {
             var context = new ApplicationDbContext();
             this.genderService = new GenderService(context);
 
+
             //Set up roleService
             var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
             this.roleService = new RoleService(context, roleManager);
 
+            //Set up automapper
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddMaps(typeof(UserProfile));
+            });
+            this.mapper = mapperConfig.CreateMapper();
+
             //Set up userService
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-            this.userService = new UserService(context, this.roleService as RoleService, this.genderService as GenderService, userManager);
-            this.productService = new ProductService(context);
+            this.userService = new UserService(context, this.roleService as RoleService, this.genderService as GenderService, userManager, this.mapper);
+            this.productService = new ProductService(context, this.mapper);
         }
 
         public async Task SeedAsync()
@@ -53,20 +64,14 @@ namespace GymHub.Services.SeederFolder
             roles.Add(GlobalConstants.AdminRoleName);
             roles.Add(GlobalConstants.NormalUserRoleName);
 
-            try
+            foreach (var roleName in roles)
             {
-                foreach (var roleName in roles)
+                if (await this.roleService.RoleExistsAsync(roleName) == false)
                 {
-                    if (await this.roleService.RoleExistsAsync(roleName) == false)
-                    {
-                        await this.roleService.AddAsync(roleName);
-                    }
+                    await this.roleService.AddAsync(roleName);
                 }
             }
-            catch
-            {
-                return false;
-            }
+
             return true;
         }
 
@@ -78,54 +83,52 @@ namespace GymHub.Services.SeederFolder
             genders.Add(GlobalConstants.FemaleGenderName);
             genders.Sort();
 
-            try
+            foreach (var genderName in genders)
             {
-                foreach (var genderName in genders)
+                if (await this.genderService.GenderExistsAsync(genderName) == false)
                 {
-                    if (await this.genderService.GenderExistsAsync(genderName) == false)
-                    {
-                        await this.genderService.AddAsync(genderName);
-                    }
+                    await this.genderService.AddAsync(genderName);
                 }
             }
-            catch
-            {
-                return false;
-            }
+
             return true;
         }
 
         private async Task<bool> SeedUsersAsync()
         {
-            try
+            var users = JsonSerializer.Deserialize<List<RegisterUserInputModel>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Users.json"));
+            foreach (var newUserInputModel in users)
             {
-                var newUserInputModel = new RegisterUserInputModel
+                if (await this.userService.UserExistsAsync(newUserInputModel.Username, newUserInputModel.Password) == false)
                 {
-                    FirstName = "Rosen",
-                    MiddleName = "Andreev",
-                    LastName = "Kolev",
-                    Username = "rosenkolev1",
-                    Password = "rosenkolev1",
-                    DateOfBirth = new DateTime(2002, 9, 17),
-                    Email = "rosenandreevkolev@abv.bg",
-                    GenderId = await this.genderService.GetGenderIdByNameAsync("Male")
-                };
-
-                if (await this.userService.UserExistsAsync(newUserInputModel.Username, newUserInputModel.Password) == false){
-
+                    newUserInputModel.GenderId = await this.genderService.GetGenderIdByNameAsync(newUserInputModel.GenderId);
                     await this.userService.CreateNormalUserAsync(newUserInputModel);
                 }
             }
-            catch
+
+            //Seed Admin user
+            var newAdminUserInputModel = new RegisterUserInputModel
             {
-                return false;
+                FirstName = "Rosen",
+                MiddleName = "Andreev",
+                LastName = "Kolev",
+                Username = "adminRosen",
+                Password = "adminRosen",
+                DateOfBirth = new DateTime(2002, 9, 17),
+                Email = "rosenandreevkolev@abv.bg",
+                GenderId = await this.genderService.GetGenderIdByNameAsync("Male")
+            };
+
+            if (await this.userService.UserExistsAsync(newAdminUserInputModel.Username, newAdminUserInputModel.Password) == false)
+            {
+                await this.userService.CreateAdminUserAsync(newAdminUserInputModel);
             }
+
             return true;
         }
 
         private async Task<bool> SeedProductsAsync()
         {
-            var assemblyName = Assembly.GetExecutingAssembly().FullName;
             var products = JsonSerializer.Deserialize<List<AddProductInputModel>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Products.json"));
             foreach (var product in products)
             {
