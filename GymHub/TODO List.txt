@@ -1,11 +1,3 @@
--Add custom date of birth validation attribute
-
--Add custome validation attribute which uses the database to check if the entered gender exists in the database.
-
--Use Identity Razor Pages...
-
--Client side validation with proper error messages
-
 -Use .RedirectToAction(nameof(action)) method for redirecting after a post action
 
 -Change services so they don't check deleted users, products, etc... Maybe use repository pattern
