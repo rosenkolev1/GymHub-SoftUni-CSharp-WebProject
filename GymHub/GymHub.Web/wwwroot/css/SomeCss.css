@@ -339,3 +339,8 @@ th {
 .cart-form-products {
     text-align: right;
 }
+
+.validation-span{
+    display:block;
+    color: orangered;
+}

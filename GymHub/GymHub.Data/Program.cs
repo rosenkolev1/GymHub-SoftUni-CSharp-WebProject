@@ -9,8 +9,6 @@ namespace GymHub.Data
         static void Main(string[] args)
         {
             var dbContext = new ApplicationDbContext();
-            DeleteDatabase(dbContext, true);
-            CreateDatabase(dbContext, true);
             MigrateDatabase(dbContext, true);
         }
 

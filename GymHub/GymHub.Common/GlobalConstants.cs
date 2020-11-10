@@ -2,6 +2,9 @@
 {
     public static class GlobalConstants
     {
+        /*IMPORTANT:
+         * WHEN CHANGING VALIDATION CONSTANTS CHANGE ERROR MESSAGES IN MODELS
+        */
         //Role constants
         public const string AdminRoleName = "Admin";
         public const string NormalUserRoleName = "Normal User";
