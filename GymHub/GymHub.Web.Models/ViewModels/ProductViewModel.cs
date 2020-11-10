@@ -14,6 +14,7 @@ namespace GymHub.Web.Models.ViewModels
         public int Warranty { get; set; }
         public int QuantityInStock { get; set; }
         public string ShortDescription => this.GetShortDescription();
+        public string Model { get; set; }
 
         private string GetShortDescription()
         {

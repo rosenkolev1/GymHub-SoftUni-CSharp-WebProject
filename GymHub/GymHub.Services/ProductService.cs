@@ -4,8 +4,10 @@ using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace GymHub.Web.Services
@@ -59,6 +61,14 @@ namespace GymHub.Web.Services
         public async Task<List<ProductViewModel>> GetAllProductsAsync()
         {
             return this.context.Products.Select(product => mapper.Map<ProductViewModel>(product)).ToList();
+        }
+
+        public async Task<Product> GetProductByIdAsync(string productId)
+        {
+            return this.context.Products
+                .Include(x => x.ProductComments)
+                .Include(x => x.ProductRatings)
+                .FirstOrDefault(x => x.Id == productId);
         }
     }
 }

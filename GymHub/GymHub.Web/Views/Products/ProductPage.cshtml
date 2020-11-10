@@ -1,0 +1,121 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using GymHub.Data.Models
+@model Product
+@{
+}
+
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link href="~/css/ProductPageForOnlineShop.css" rel="stylesheet" />
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container-fluid">
+    <div class="content-wrapper">
+        <div class="item-container">
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="product col-md-3 service-image-left">
+
+                        <center>
+                            <img id="item-display" src="/ProductsImages/@Model.MainImage" alt="">
+                        </center>
+                    </div>
+
+                    <div class="container service1-items col-sm-2 col-md-2 pull-left">
+                        <center>
+                            <a id="item-1" class="service1-item">
+                                <img src="http://www.corsair.com/Media/catalog/product/g/s/gs600_psu_sideview_blue_2.png" alt="">
+                            </a>
+                            <a id="item-2" class="service1-item">
+                                <img src="http://www.corsair.com/Media/catalog/product/g/s/gs600_psu_sideview_blue_2.png" alt="">
+                            </a>
+                            <a id="item-3" class="service1-item">
+                                <img src="http://www.corsair.com/Media/catalog/product/g/s/gs600_psu_sideview_blue_2.png" alt="">
+                            </a>
+                        </center>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="product-title">@Model.Name: @Model.Model</div>
+                    <div class="product-desc">@Model.Description</div>
+                    <div class="product-rating"><i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star-o"></i> </div>
+                    <hr>
+                    <div class="product-price">$ @Model.Price</div>
+                    <div class="product-stock">In Stock: @Model.QuantityInStock</div>
+                    <hr>
+                    <div class="btn-group cart">
+                        <form method="post">
+                            <input type="hidden" name="productId" value="@Model.Id" />
+                            <input type="hidden" name="quantity" value="1" />
+                            <button asp-controller="Carts" asp-action="AddToCart" type="submit" class="btn btn-success">
+                                Add
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="col-md-12 product-info">
+                <ul id="myTab" class="nav nav-tabs nav_tabs">
+
+                    <li class="active"><a href="#service-one" data-toggle="tab">Product info</a></li>
+                    <li><a href="#service-two" data-toggle="tab">User reviews</a></li>
+
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade in active" id="service-one" name="service-one">
+
+                        <section class="container product-info">
+                            @Model.Description
+                        </section>
+
+                    </div>
+                    <div class="tab-pane fade" id="service-two" name="service-two">
+
+                        <section class="container">
+                        </section>
+
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+}
+@*<div class="container-md text-right col-10">@Model.Name</div>
+    <hr />
+    <div class="container-fluid alert h-50 w-100 float-right">
+        <img src="/ProductsImages/@Model.MainImage" class="col-md-7 float-right h-25 w-25">
+    </div>
+    <div class="container-fluid alert">@Model.Description</div>
+    <div>
+        @Model.Model
+    </div>
+    <div>
+        @Model.Price
+    </div>
+    <div>
+        @Model.Warranty
+    </div>
+    <div>
+        @Model.QuantityInStock
+    </div>
+    @foreach (var productRating in Model.ProductRatings)
+    {
+        <hr />
+        <div>User: @productRating.User.UserName</div>
+        <div>Rating: @productRating.Rating</div>
+    }
+    @foreach (var productComment in Model.ProductComments)
+    {
+        <hr />
+        <div>User: @productComment.User.UserName</div>
+        <div>Comment: @productComment.Text</div>
+    }*@

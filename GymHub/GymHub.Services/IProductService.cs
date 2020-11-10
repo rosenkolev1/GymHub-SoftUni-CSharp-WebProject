@@ -1,4 +1,5 @@
-﻿using GymHub.Web.Models.InputModels;
+﻿using GymHub.Data.Models;
+using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,5 +14,6 @@ namespace GymHub.Web.Services
         public Task<bool> ProductExistsByIdAsync(string id);
         public Task<bool> ProductExistsByNameAsync(string name);
         public Task<bool> ProductExistsByModelAsync(string model);
+        public Task<Product> GetProductByIdAsync(string productId);
     }
 }

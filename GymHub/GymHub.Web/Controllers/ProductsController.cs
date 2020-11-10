@@ -22,10 +22,10 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> ProductPage()
+        public async Task<IActionResult> ProductPage(string productId)
         {
-            throw new NotImplementedException("Ne sum go vkaral tova");
-            return this.View(null, "../Home/Index");
+            var product = await this.productService.GetProductByIdAsync(productId);
+            return this.View(product);
         }
 
     }

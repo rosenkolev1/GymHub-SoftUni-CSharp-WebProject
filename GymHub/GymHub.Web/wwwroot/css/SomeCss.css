@@ -3,6 +3,10 @@
     margin: 0px;
 }
 
+.body-container {
+    background-color: skyblue;
+}
+
 p, label, a, h1, input, button, select, th, tr, table, thead, tbody, td {
     font-family: Arial;
 }
@@ -54,7 +58,7 @@ main {
 }
 
 .main-container {
-    margin-top: 60px;
+    margin-top: 80px;
 }
 
 .main-home-title {
@@ -349,4 +353,44 @@ th {
 .validation-span{
     display:block;
     color: orangered;
+}
+
+.product-page-mainImage{
+    float:right;
+    margin-right:10px;
+    height:30vh;
+    width:20vw;
+    display:block;
+}
+
+.product-page-name {
+    margin: 10px;
+    margin-right: 10px;
+    margin-top:100px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: gray;
+    background-color: darkgray;
+    display: block;
+    text-decoration: none;
+    color: black;
+    float: right;
+    font-size: 22px;
+}
+
+.product-page-description {
+    margin: 10px;
+    background-color: darkgray;
+    display: block;
+    text-decoration: none;
+    float: left;
+    text-align: left;
+    font-size: 14px;
+    display:block;
+    width: 70vw;
+    height: 70vh;
 }
