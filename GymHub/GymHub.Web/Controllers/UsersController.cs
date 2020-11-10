@@ -1,4 +1,5 @@
-﻿using GymHub.Data.Models;
+﻿using GymHub.Common;
+using GymHub.Data.Models;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
@@ -40,7 +41,6 @@ namespace GymHub.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(ComplexModel<RegisterUserInputModel, RegisterUserViewModel> complexModel)
         {
             if (this.User.Identity.IsAuthenticated == true)
@@ -60,7 +60,7 @@ namespace GymHub.Web.Controllers
                 return this.Redirect("/SomethingInvalid");
             }
 
-            await this.userService.CreateUserAsync(inputModel, await this.roleService.GetRoleAsync("Normal User"));
+            await this.userService.CreateUserAsync(inputModel, await this.roleService.GetRoleAsync(GlobalConstants.NormalUserRoleName));
             return this.Redirect("/Users/Login");
         }
 

@@ -1,12 +1,34 @@
-*-Maybe change IdentityOptionsProvider file location
+-Add custom date of birth validation attribute
 
--Add Automapper
+-Add custome validation attribute which uses the database to check if the entered gender exists in the database.
 
--Implement automapper functionality for products, cart, users, genders, roles
+-Use Identity Razor Pages...
 
--Add Validation for login and register
+-Client side validation with proper error messages
 
--Fix the quantity js script functionality by adding quantity change for product cart with <input type="Hidden"> and some js code.
+-Use .RedirectToAction(nameof(action)) method for redirecting after a post action
 
--Add security features(aka unauthorized users cant visit etc... Normal User can't visit admin pages etc...). Maybe do it by implementing your own validation attribute...
+-Change services so they don't check deleted users, products, etc... Maybe use repository pattern
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-Add product info page.
+
+-Add email address sender and email confirmation
+
+-Add user profile pages and functionality
+
+-Add product categories to database and add category based searching.
+
+-Add notifications for most things.
+
+-Add registered user welcome page.
+
+
+**Things to keep in mind
+
+-ImageSharp for validating images
+-WebHostEnvironment in the controller for accessing wwwroot folder
+-IFormFile
+-ASP.Net is weird and a null string bypasses [MinLength] for some reason during validation
+-multipart/form-data for file upload inputs

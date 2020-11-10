@@ -21,10 +21,10 @@
         @if (this.User.Identity.IsAuthenticated == false)
         {
         <span class="nav-bar-element">
-            <a class="nav-bar-button" asp-controller="Users" asp-action="Register">Register</a>
+            <a class="nav-bar-button" asp-area="Identity" asp-page="/Account/Register">Register</a>
         </span>
         <span class="nav-bar-element">
-            <a class="nav-bar-button" asp-controller="Users" asp-action="Login">Login</a>
+            <a class="nav-bar-button" asp-area="Identity" asp-page="/Account/Login">Login</a>
         </span>
         }
         else

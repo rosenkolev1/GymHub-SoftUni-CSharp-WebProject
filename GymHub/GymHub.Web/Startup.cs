@@ -7,6 +7,7 @@ using GymHub.Services.SeederFolder;
 using GymHub.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,7 +35,10 @@ namespace GymHub.Web
 
             //Add Identity
             services.AddDefaultIdentity<User>(IdentityOptionsProvider.GetIdentityOptions)
-                    .AddRoles<Role>().AddEntityFrameworkStores<ApplicationDbContext>();
+                    .AddRoles<Role>().AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddDefaultTokenProviders();
+
+            //Add Identity managers
 
             //Add Razor and views
             services.AddControllersWithViews();
@@ -53,6 +57,9 @@ namespace GymHub.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //Migrate Database at startup
+            MigrateDatabase(app, true);
+
             //Seed database at startup        
             SeedDatabaseAsync(app, false).GetAwaiter().GetResult();
 
@@ -93,6 +100,18 @@ namespace GymHub.Web
                 {
                     var seeder = new Seeder(serviceScope.ServiceProvider);
                     await seeder.SeedAsync();
+                }
+            }
+        }
+
+        private void MigrateDatabase(IApplicationBuilder app, bool willMigrate)
+        {
+            if (willMigrate)
+            {
+                using (var serviceScope = app.ApplicationServices.CreateScope())
+                {
+                    var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    dbContext.Database.Migrate();
                 }
             }
         }

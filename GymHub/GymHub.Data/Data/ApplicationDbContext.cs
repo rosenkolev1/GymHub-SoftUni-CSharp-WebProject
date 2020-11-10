@@ -11,6 +11,11 @@ namespace GymHub.Data.Data
         {
 
         }
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
         public virtual DbSet<Gender> Genders { get; set; }
         public virtual DbSet<Occupation> Occupations { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -23,14 +28,12 @@ namespace GymHub.Data.Data
         public virtual DbSet<UserOccupation> UsersOccupations { get; set; }
         public virtual DbSet<UserImage> UsersImages { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured) optionsBuilder.UseSqlServer("Server=.;Database=GymHub;Integrated Security=true");
+            if(optionsBuilder.IsConfigured == false)
+            {
+                optionsBuilder.UseSqlServer("Server=.;Database=GymHub;Integrated Security=true");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Register";
 }
+@{ 
+    var View = Model.ViewModel;
+}
 
 <h1>@ViewData["Title"]</h1>
 
@@ -11,23 +14,62 @@
         <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h4>Create a new account.</h4>
             <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            <div asp-validation-summary="All"></div>
+            <div class="input-container">
+                <label asp-for="Input.Email" class="input-label"></label>
+                <input type="email" asp-for="Input.Email" class="input-label" placeholder="Type email here" />
+                <span asp-validation-for="Input.Email" class="validation-span"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            <div class="input-container">
+                <label asp-for="Input.Password" class="input-label"></label>
+                <input type="password" asp-for="Input.Password" class="input-label" placeholder="Type password here" />
+                <span asp-validation-for="Input.Password" class="validation-span"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.ConfirmPassword"></label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" />
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            <div class="input-container">
+                <label asp-for="Input.ConfirmPassword" class="input-label"></label>
+                <input type="password" asp-for="Input.ConfirmPassword" class="input-label" placeholder="Type confirm password here" />
+                <span asp-validation-for="Input.ConfirmPassword" class="validation-span"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <div class="input-container">
+                <label asp-for="Input.FirstName" class="input-label"></label>
+                <input asp-for="Input.FirstName" type="text" placeholder="Type first name here">
+                <span asp-validation-for="Input.FirstName" class="validation-span"></span>
+            </div>
+            <div class="input-container">
+                <label asp-for="Input.MiddleName" class="input-label"></label>
+                <input asp-for="Input.MiddleName" type="text" placeholder="Type middle name here">
+                <span asp-validation-for="Input.MiddleName" class="validation-span"></span>
+            </div>
+            <div class="input-container">
+                <label asp-for="Input.LastName" class="input-label"></label>
+                <input asp-for="Input.LastName" type="text" placeholder="Type last name here">
+                <span asp-validation-for="Input.LastName" class="validation-span"></span>
+            </div>
+            <div class="input-container">
+                <label asp-for="Input.Username" class="input-label"></label>
+                <input asp-for="Input.Username" type="text" placeholder="Type username here">
+                <span asp-validation-for="Input.Username" class="validation-span"></span>
+            </div>
+            <div class="input-container">
+                <label asp-for="Input.DateOfBirth" class="input-label"></label>
+                <input asp-for="Input.DateOfBirth" type="date">
+                <span asp-validation-for="Input.DateOfBirth" class="validation-span"></span>
+            </div>
+            <div class="input-container">
+                <label asp-for="Input.GenderId" class="input-label"></label>
+                <select asp-for="Input.GenderId">
+                    <option value="">Gender</option>
+                    @foreach (var gender in View.Genders)
+                    {
+                        <option value="@gender.Id">@gender.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="Input.GenderId" class="validation-span"></span>
+            </div>
+            <div class="button-container">
+                <button type="submit">Register</button>
+            </div>
+            <p style="text-align:center;">Already have an account? Login<a asp-area="Identity" asp-page="/Account/Login"> here.</a></p>
         </form>
     </div>
     <div class="col-md-6 col-md-offset-2">
