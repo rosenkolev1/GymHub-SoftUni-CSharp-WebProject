@@ -20,16 +20,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\Cart_All\QuantityArrow.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\Cart_All\QuantityArrowReverse.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Update="wwwroot\css\SomeCss.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\Home\HomeImage.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\ProductsImages\LegCurlMachine_LCM5470-331\LegCurlMachine.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\ProductsImages\LegExtensionMachine_LEM1082-45\LegExtensionMachine.jpeg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

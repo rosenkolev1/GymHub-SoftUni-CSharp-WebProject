@@ -1,20 +1,22 @@
 [
-    {
-        "Name": "Leg Extension Machine",
-        "Model":  "LEM: 1082-45",
-        "MainImage": "LegExtensionMachine.jpeg",
-        "Price": 60.59,
-        "Description": "Leg Extension Machine for personal and home use",
-        "Warranty": 12,
-        "QuantityInStock": 1000
-    },
-    {
-        "Name": "Leg Curl Machine",
-        "Model":  "LCM: 5470-331",
-        "MainImage": "LegCurlMachine.jpg",
-        "Price": 80.76,
-        "Description": "Leg Curl Machine for personal and home use",
-        "Warranty": 24,
-        "QuantityInStock": 500
-    }
+  {
+    "Name": "Leg Extension Machine",
+    "Model": "LEM:1082-45",
+    "MainImage": "LegExtensionMachine_LEM1082-45/Main.jpeg",
+    "Price": 60.59,
+    "LEM": 1082,
+    -45: null,
+    "Description": "Leg Extension Machine for personal and home use",
+    "Warranty": 12,
+    "QuantityInStock": 1000
+  },
+  {
+    "Name": "Leg Curl Machine",
+    "Model": "LCM:5470-331",
+    "MainImage": "LegCurlMachine_LCM5470-331/Main.jpg",
+    "Price": 80.76,
+    "Description": "Leg Curl Machine for personal and home use",
+    "Warranty": 24,
+    "QuantityInStock": 500
+  }
 ]

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GymHub.Data.Models
 {
-    public class User : IdentityUser<string>
+    public class User : IdentityUser<string>, IDeletableEntity
     {
         public User()
         {

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GymHub.Data.Models
 {
-    public class Product
+    public class Product : IDeletableEntity
     {
         public Product()
         {

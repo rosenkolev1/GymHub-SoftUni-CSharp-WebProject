@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GymHub.Data.Models
 {
-    public class UserOccupation
+    public class UserOccupation : IDeletableEntity
     {
         //Foreign Keys
         [Required]

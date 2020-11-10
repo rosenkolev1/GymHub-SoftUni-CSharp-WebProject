@@ -1,9 +1,3 @@
--Use .RedirectToAction(nameof(action)) method for redirecting after a post action
-
--Change services so they don't check deleted users, products, etc... Maybe use repository pattern
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 -Add product info page.
 
 -Add email address sender and email confirmation

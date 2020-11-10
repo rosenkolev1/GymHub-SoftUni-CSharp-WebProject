@@ -26,87 +26,87 @@ namespace GymHub.Web.Controllers
             this.roleService = roleService;
         }
 
-        public async Task<IActionResult> Register()
-        {
-            if (this.User.Identity.IsAuthenticated == true)
-            {
-                return this.Redirect("/Home/Error");
-            }
+        //public async Task<IActionResult> Register()
+        //{
+        //    if (this.User.Identity.IsAuthenticated == true)
+        //    {
+        //        return this.Redirect("/Home/Error");
+        //    }
 
-            var viewModel = new ComplexModel<RegisterUserInputModel, RegisterUserViewModel>
-            {
-                ViewModel= new RegisterUserViewModel { Genders = await this.genderService.GetAllGendersAsync() }
-            };
-            return this.View(viewModel);
-        }
+        //    var viewModel = new ComplexModel<RegisterUserInputModel, RegisterUserViewModel>
+        //    {
+        //        ViewModel= new RegisterUserViewModel { Genders = await this.genderService.GetAllGendersAsync() }
+        //    };
+        //    return this.View(viewModel);
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> Register(ComplexModel<RegisterUserInputModel, RegisterUserViewModel> complexModel)
-        {
-            if (this.User.Identity.IsAuthenticated == true)
-            {
-                return this.Redirect("/Home/Error");
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> Register(ComplexModel<RegisterUserInputModel, RegisterUserViewModel> complexModel)
+        //{
+        //    if (this.User.Identity.IsAuthenticated == true)
+        //    {
+        //        return this.Redirect("/Home/Error");
+        //    }
 
-            if(this.ModelState.IsValid == false)
-            {
-                return this.Redirect("/SomethingInvalid");
-            }
+        //    if(this.ModelState.IsValid == false)
+        //    {
+        //        return this.Redirect("/SomethingInvalid");
+        //    }
 
-            var inputModel = complexModel.InputModel;
+        //    var inputModel = complexModel.InputModel;
 
-            if (await this.userService.UserIsTakenAsync(inputModel.Username, inputModel.Password, inputModel.Email) == true)
-            {
-                return this.Redirect("/SomethingInvalid");
-            }
+        //    if (await this.userService.UserIsTakenAsync(inputModel.Username, inputModel.Password, inputModel.Email) == true)
+        //    {
+        //        return this.Redirect("/SomethingInvalid");
+        //    }
 
-            await this.userService.CreateUserAsync(inputModel, await this.roleService.GetRoleAsync(GlobalConstants.NormalUserRoleName));
-            return this.Redirect("/Users/Login");
-        }
+        //    await this.userService.CreateUserAsync(inputModel, await this.roleService.GetRoleAsync(GlobalConstants.NormalUserRoleName));
+        //    return this.Redirect("/Users/Login");
+        //}
 
-        public async Task<IActionResult> Login()
-        {
-            if (this.User.Identity.IsAuthenticated == true)
-            {
-                return this.Redirect("/error");
-            }
+        //public async Task<IActionResult> Login()
+        //{
+        //    if (this.User.Identity.IsAuthenticated == true)
+        //    {
+        //        return this.Redirect("/error");
+        //    }
 
-            return this.View();
-        }
+        //    return this.View();
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginUserInputModel inputModel)
-        {
-            if (this.User.Identity.IsAuthenticated == true)
-            {
-                return this.Redirect("/Home/Error");
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Login(LoginUserInputModel inputModel)
+        //{
+        //    if (this.User.Identity.IsAuthenticated == true)
+        //    {
+        //        return this.Redirect("/Home/Error");
+        //    }
 
-            if(this.ModelState.IsValid == false)
-            {
-                return this.Redirect("/SomethingInvalid");
-            }
+        //    if(this.ModelState.IsValid == false)
+        //    {
+        //        return this.Redirect("/SomethingInvalid");
+        //    }
 
-            var username = inputModel.Username;
-            var password = inputModel.Password;
+        //    var username = inputModel.Username;
+        //    var password = inputModel.Password;
 
-            if (await this.userService.UserExistsAsync(username, password) == false)
-            {
-                return this.Redirect("/error");
-            }
+        //    if (await this.userService.UserExistsAsync(username, password) == false)
+        //    {
+        //        return this.Redirect("/error");
+        //    }
 
-            var newUser = await this.userService.GetUserAsync(inputModel);
-            await this.signInManager.SignInAsync(newUser, false);
+        //    var newUser = await this.userService.GetUserAsync(inputModel);
+        //    await this.signInManager.SignInAsync(newUser, false);
 
-            return this.Redirect("/");
-        }
+        //    return this.Redirect("/");
+        //}
 
-        [Authorize]
-        public async Task<IActionResult> Logout()
-        {
-            await this.signInManager.SignOutAsync();
-            return this.Redirect("/");
-        }
+        //[Authorize]
+        //public async Task<IActionResult> Logout()
+        //{
+        //    await this.signInManager.SignOutAsync();
+        //    return this.Redirect("/");
+        //}
     }
 }
