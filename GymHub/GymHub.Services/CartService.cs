@@ -51,7 +51,8 @@ namespace GymHub.Web.Services
                 Name = x.Product.Name,
                 Price = x.Product.Price,
                 Id = x.Product.Id,
-                Quantity = x.Quantity
+                Quantity = x.Quantity,
+                Model = x.Product.Model
             }).ToList();
         }
     }

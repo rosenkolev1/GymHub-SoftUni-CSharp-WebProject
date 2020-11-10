@@ -46,10 +46,11 @@ namespace GymHub.Web.Controllers
         {
             var inputModel = complexModel.InputModel;
             var totalPriceOfAllProducts = inputModel.Sum(x => x.Quantity * x.SinglePrice);
-            return this.View("/", complexModel);
+            return this.Redirect("/");
         }
 
         [Authorize]
+        [HttpPost]
         public async Task<IActionResult> AddToCart(string productId, int quantity)
         {
             var currentUserId = this.userManager.GetUserId(this.User);

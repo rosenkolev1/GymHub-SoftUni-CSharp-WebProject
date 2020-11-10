@@ -29,7 +29,7 @@
                     <img class="cart-td-mainImage" src="/ProductsImages/@product.MainImage" />
                 </td>
                 <td class="cart-td-nameElement">
-                    <a class="cart-td-name" asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id">@product.Name</a>
+                    <a class="cart-td-name" asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id">@product.Name: @product.Model</a>
                 </td>
                 <td class="cart-td-element" id="singlePrice">
                     <p>@product.Price $</p>
