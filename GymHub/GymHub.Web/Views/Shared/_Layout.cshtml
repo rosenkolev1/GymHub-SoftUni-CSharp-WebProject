@@ -15,32 +15,32 @@
 
 <body>
     <nav class="nav-bar">
-        <span class="nav-bar-home">
+        @*<div class="nav-bar-home">
             <a class="nav-bar-button" href="/">GymHub</a>
-        </span>
+        </div>*@
         @if (this.User.Identity.IsAuthenticated == false)
         {
-        <span class="nav-bar-element">
+        @*<div class="nav-bar-element">
             <a class="nav-bar-button" asp-area="Identity" asp-page="/Account/Register">Register</a>
-        </span>
-        <span class="nav-bar-element">
+        </div>
+        <div class="nav-bar-element">
             <a class="nav-bar-button" asp-area="Identity" asp-page="/Account/Login">Login</a>
-        </span>
+        </div>*@
         }
         else
         {
-        <span class="nav-bar-element">
-            <a class="nav-bar-button" asp-controller="Users" asp-action="Logout">Logout</a>
-        </span>
-        <span class="nav-bar-element">
+        @*<form method="post" class="nav-bar-element" asp-area="Identity" asp-page="/Account/Logout">
+                <button style="margin-bottom:3px;" class="nav-bar-button" type="submit">Logout</button>
+        </form>
+        <div class="nav-bar-element">
             <a class="nav-bar-button" asp-controller="Users" asp-action="Profile">Profile</a>
-        </span>
-        <span class="nav-bar-element">
+        </div>
+        <div class="nav-bar-element">
             <a class="nav-bar-button" asp-controller="Products" asp-action="All">Shop</a>
-        </span>
-        <span class="nav-bar-element">
+        </div>
+        <div class="nav-bar-element">
             <a class="nav-bar-button" asp-controller="Carts" asp-action="All">Cart</a>
-        </span>
+        </div>*@
         }
     </nav>
     <main class="main-container">
