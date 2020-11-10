@@ -46,7 +46,7 @@ namespace GymHub.Web.Controllers
         {
             var inputModel = complexModel.InputModel;
             var totalPriceOfAllProducts = inputModel.Sum(x => x.Quantity * x.SinglePrice);
-            return this.View("../Home/Index", complexModel);
+            return this.View("/", complexModel);
         }
 
         [Authorize]
@@ -55,7 +55,7 @@ namespace GymHub.Web.Controllers
             var currentUserId = this.userManager.GetUserId(this.User);
             await this.cartService.AddToCartAsync(productId, currentUserId, quantity);
 
-            return this.Redirect("/Carts/All");
+            return this.RedirectToAction(nameof(this.All));
         }
     }
 }

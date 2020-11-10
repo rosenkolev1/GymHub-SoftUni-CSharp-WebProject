@@ -1,12 +1,18 @@
 ﻿using GymHub.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Reflection;
 
 namespace GymHub.Data.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, string>
     {
+        private static readonly MethodInfo SetIsDeletedQueryFilterMethod =
+            typeof(ApplicationDbContext).GetMethod(
+                nameof(SetIsDeletedQueryFilter),
+                BindingFlags.NonPublic | BindingFlags.Static);
+
         public ApplicationDbContext()
         {
 
@@ -36,11 +42,27 @@ namespace GymHub.Data.Data
             }
         }
 
+        private static void SetIsDeletedQueryFilter<T>(ModelBuilder modelBuilder)
+            where T : class, IDeletableEntity
+        {
+            modelBuilder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             //Default Rating value = 0
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            // Set global query filter for not deleted entities only
+            var entityTypes = modelBuilder.Model.GetEntityTypes().ToList();
+            var deletableEntityTypes = entityTypes
+                .Where(et => et.ClrType != null && typeof(IDeletableEntity).IsAssignableFrom(et.ClrType));
+            foreach (var deletableEntityType in deletableEntityTypes)
+            {
+                var method = SetIsDeletedQueryFilterMethod.MakeGenericMethod(deletableEntityType.ClrType);
+                method.Invoke(null, new object[] { modelBuilder });
+            }
         }
     }
 }
