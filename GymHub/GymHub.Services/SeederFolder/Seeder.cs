@@ -24,6 +24,7 @@ namespace GymHub.Services.SeederFolder
         private IUserService userService;
         private IProductService productService;
         private IMapper mapper;
+        private IProductCommentService productCommentService;
         public Seeder(IServiceProvider serviceProvider)
         {
             var context = new ApplicationDbContext();
@@ -44,7 +45,12 @@ namespace GymHub.Services.SeederFolder
             //Set up userService
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             this.userService = new UserService(context, this.roleService as RoleService, this.genderService as GenderService, userManager, this.mapper);
+
+            //Set up productService
             this.productService = new ProductService(context, this.mapper);
+
+            //Set up productCommentService
+            this.productCommentService = new ProductCommentService(context);
         }
 
         public async Task SeedAsync()
@@ -54,6 +60,8 @@ namespace GymHub.Services.SeederFolder
             await SeedRolesAsync();
             await SeedUsersAsync();
             await SeedProductsAsync();
+            await SeedProductsCommentsAsync();
+
         }
 
         private async Task<bool> SeedRolesAsync()
@@ -134,6 +142,30 @@ namespace GymHub.Services.SeederFolder
                 if(await this.productService.ProductExistsByModelAsync(product.Model) == false)
                 {
                     await this.productService.AddAsync(product);
+                }
+            }
+            return true;
+        }
+
+        private async Task<bool> SeedProductsCommentsAsync()
+        {
+            var productsCommentsDTOs = JsonSerializer.Deserialize<List<ProductCommentDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/ProductsComments.json"));
+            var productsComments = productsCommentsDTOs
+                .Select(x => new ProductComment
+                {
+                    CommentedOn = x.CommentedOn,
+                    ParentCommentId = x.ParentCommentId,
+                    UserId = this.userService.GetUserId(x.Username),
+                    ProductId = this.productService.GetProductId(x.ProductModel),
+                    Id = x.Id,
+                    Text = x.Text
+                }).ToList();
+
+            foreach (var productComment in productsComments)
+            {
+                if (await this.productCommentService.CommentExists(productComment) == false)
+                {
+                    await this.productCommentService.AddAsync(productComment);
                 }
             }
             return true;

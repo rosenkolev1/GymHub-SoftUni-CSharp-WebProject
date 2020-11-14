@@ -1,0 +1,66 @@
+﻿[
+  {
+    "Id": "RootCommentOne",
+    "Username": "rosenkolev1",
+    "ParentCommentId": null,
+    "ProductModel": "LEM:1082-45",
+    "Text": "Really good!!!",
+    "CommentedOn": "2020-09-17T00:00:00Z"
+  },
+  {
+    "Id": "CommentOne",
+    "Username": "stefan01",
+    "ParentCommentId": "RootCommentOne",
+    "ProductModel": "LEM:1082-45",
+    "Text": "I don't agree. I think it's poor",
+    "CommentedOn": "2020-09-18T00:00:00Z"
+  },
+  {
+    "Id": "CommentTwo",
+    "Username": "rosenkolev1",
+    "ParentCommentId": "CommentOne",
+    "ProductModel": "LEM:1082-45",
+    "Text": "Fuck you",
+    "CommentedOn": "2020-09-19T00:00:00Z"
+  },
+  {
+    "Id": "CommentThree",
+    "Username": "stefan01",
+    "ParentCommentId": "CommentTwo",
+    "ProductModel": "LEM:1082-45",
+    "Text": "Just because you can't accept other people's opinion doesn't mean you have the right to put me down. Suck your mum.",
+    "CommentedOn": "2020-09-20T00:00:00Z"
+  },
+  {
+    "Id": "RootCommentTwo",
+    "Username": "stefan01",
+    "ParentCommentId": null,
+    "ProductModel": "LEM:1082-45",
+    "Text": "I wouldn't recommend. It's thrash, don't listen to rosenkolev1",
+    "CommentedOn": "2020-09-20T05:00:00Z"
+  },
+  {
+    "Id": "CommentFour",
+    "Username": "rosenkolev1",
+    "ParentCommentId": "RootCommentTwo",
+    "ProductModel": "LEM:1082-45",
+    "Text": "Tupanar da ti eba maikata ai 1 vs 1 na liga shti prusna tikvata. It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+    "CommentedOn": "2020-09-22T00:00:00Z"
+  },
+  {
+    "Id": "CommentFive",
+    "Username": "rosenkolev1",
+    "ParentCommentId": "RootCommentTwo",
+    "ProductModel": "LEM:1082-45",
+    "Text": "Aide be sme6nik, nasra ne6to.",
+    "CommentedOn": "2020-09-22T02:00:00Z"
+  },
+  {
+    "Id": "RootCommentThree",
+    "Username": "adminRosen",
+    "ParentCommentId": null,
+    "ProductModel": "LCM:5470-331",
+    "Text": "Pls buy I need the money :)",
+    "CommentedOn": "2020-09-20T00:00:00Z"
+  }
+]

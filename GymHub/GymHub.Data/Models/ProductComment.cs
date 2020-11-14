@@ -6,6 +6,10 @@ namespace GymHub.Data.Models
 {
     public class ProductComment : IDeletableEntity
     {
+        public ProductComment(string id)
+        {
+            this.Id = id;
+        }
         public ProductComment()
         {
             this.Id = Guid.NewGuid().ToString();

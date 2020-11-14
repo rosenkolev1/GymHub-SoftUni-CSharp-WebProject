@@ -18,5 +18,6 @@ namespace GymHub.Web.Services
         public Task<Product> GetProductByIdAsync(string productId);
         public double GetAverageRating(List<ProductRating> productRatings);
         public string GetShordDescription(string description, int stringLength);
+        public string GetProductId(string model);
     }
 }

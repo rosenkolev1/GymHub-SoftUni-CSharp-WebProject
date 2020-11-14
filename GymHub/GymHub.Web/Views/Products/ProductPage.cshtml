@@ -6,15 +6,17 @@
 @{
 }
 
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<link href="~/css/ProductPageForOnlineShop.css" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<!------ Include the above in your HEAD tag ---------->
+@section AdditionalLinks{
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="~/css/ProductPageForOnlineShop.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!------ Include the above in your HEAD tag ---------->
+}
 
 <div class="container-fluid">
     <div class="content-wrapper">
         <div class="item-container">
-            <div class="container">
+            <div class="container" style="padding-top:10px;">
                 <div class="col-md-12">
                     <div class="product col-md-3 service-image-left">
 
@@ -42,19 +44,22 @@
                     <div class="product-title">@Model.Name: @Model.Model</div>
                     <div class="product-desc">@Model.ShortDescription</div>
                     <div class="product-rating">
-                        @for (int i = 0; i < Model.FullStarsCount; i++)
+                        @{
+                            var productRating = Model.ProductRating;
+                        }
+                        @for (int i = 0; i < productRating.FullStarsCount; i++)
                         {
                             <i class="fa fa-star gold"></i>
                         }
-                        @if (Model.HasHalfStar == true)
+                        @if (productRating.HasHalfStar == true)
                         {
                             <i class="fa fa-star-half-o gold"></i>
                         }
-                        @for (int i = 0; i < Model.EmptyStarsCount; i++)
+                        @for (int i = 0; i < productRating.EmptyStarsCount; i++)
                         {
                             <i class="fa fa-star-o gold"></i>
                         }
-                        <span> @Model.AverageRating/10</span>
+                        <span> @productRating.AverageRating/10</span>
                     </div>
                     <hr>
                     <div class="product-price">$ @Model.Price</div>
@@ -90,7 +95,32 @@
                     </div>
                     <div class="tab-pane fade" id="service-two" name="service-two">
 
-                        <section class="container">
+                        <section class="container" style="margin-top: 10px;">
+                            <form class="product-comment-addReview-form-container">
+                                <textarea class="input-group"></textarea>
+                                <button asp-controller="Carts" asp-action="AddToCart" type="submit" class="form-check btn btn-success product-comment-addReview-button">Add review</button>
+                            </form>
+                            <hr />
+                            @foreach (var kv in Model.ParentsChildrenComments)
+                            {
+                                var parentComment = kv.Key;
+                                var childrenComments = kv.Value;
+                                if (parentComment.ParentCommentId == null)
+                                {
+                                    var userProductRating = Model.UsersProductRatings[parentComment.User];
+                                    var repliesCount = childrenComments.Count;
+                                    <div class="product-commentWithChildren-container">
+                                        @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(parentComment, userProductRating, repliesCount))
+                                        <div hidden class="product-comment-child-container">
+                                            @foreach (var childComment in childrenComments)
+                                            {
+                                                var userProductRatingChild = Model.UsersProductRatings[childComment.User];
+                                                @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, userProductRatingChild))
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
                         </section>
 
                     </div>
@@ -103,34 +133,5 @@
 @section Scripts{
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js" asp-append-version="true"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js" asp-append-version="true"></script>
+    <script src="/js/ProductCommentsReplyButton.js"></script>
 }
-@*<div class="container-md text-right col-10">@Model.Name</div>
-    <hr />
-    <div class="container-fluid alert h-50 w-100 float-right">
-        <img src="/ProductsImages/@Model.MainImage" class="col-md-7 float-right h-25 w-25">
-    </div>
-    <div class="container-fluid alert">@Model.Description</div>
-    <div>
-        @Model.Model
-    </div>
-    <div>
-        @Model.Price
-    </div>
-    <div>
-        @Model.Warranty
-    </div>
-    <div>
-        @Model.QuantityInStock
-    </div>
-    @foreach (var productRating in Model.ProductRatings)
-    {
-        <hr />
-        <div>User: @productRating.User.UserName</div>
-        <div>Rating: @productRating.Rating</div>
-    }
-    @foreach (var productComment in Model.ProductComments)
-    {
-        <hr />
-        <div>User: @productComment.User.UserName</div>
-        <div>Comment: @productComment.Text</div>
-    }*@
