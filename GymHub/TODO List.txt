@@ -1,3 +1,5 @@
+-Add asp-append-version-true for scripts and link files in html
+
 -Add product info page.
 
 -Add email address sender and email confirmation

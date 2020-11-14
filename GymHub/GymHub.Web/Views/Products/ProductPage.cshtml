@@ -2,7 +2,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @using GymHub.Data.Models
-@model Product
+@model ProductInfoViewModel
 @{
 }
 
@@ -39,8 +39,10 @@
 
                 <div class="col-md-7">
                     <div class="product-title">@Model.Name: @Model.Model</div>
-                    <div class="product-desc">@Model.Description</div>
-                    <div class="product-rating"><i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star-o"></i> </div>
+                    <div class="product-desc">@Model.ShortDescription</div>
+                    <div class="product-rating">
+                        <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star-o"></i> 
+                    </div>
                     <hr>
                     <div class="product-price">$ @Model.Price</div>
                     <div class="product-stock">In Stock: @Model.QuantityInStock</div>
@@ -86,8 +88,8 @@
     </div>
 </div>
 @section Scripts{
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js" asp-append-version="true"></script>
 }
 @*<div class="container-md text-right col-10">@Model.Name</div>
     <hr />
