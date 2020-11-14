@@ -3,6 +3,7 @@ using GymHub.Automapper.AutomapperProfiles;
 using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
+using GymHub.Services;
 using GymHub.Services.SeederFolder;
 using GymHub.Web.Services;
 using Microsoft.AspNetCore.Builder;
@@ -50,6 +51,7 @@ namespace GymHub.Web
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICartService, CartService>();
+            services.AddTransient<IProductCommentService, ProductCommentService>();
 
             services.AddAutoMapper(typeof(UserProfile));
         }
@@ -58,7 +60,7 @@ namespace GymHub.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //Delete database at startup
-            DeleteDatabase(app, true);
+            DeleteDatabase(app, false);
 
             //Migrate Database at startup
             MigrateDatabase(app, true);

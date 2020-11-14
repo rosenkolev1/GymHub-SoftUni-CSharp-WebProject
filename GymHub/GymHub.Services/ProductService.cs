@@ -69,7 +69,9 @@ namespace GymHub.Web.Services
         {
             return this.context.Products
                 .Include(x => x.ProductComments)
+                .ThenInclude(pc => pc.User)
                 .Include(x => x.ProductRatings)
+                .ThenInclude(x => x.User)
                 .FirstOrDefault(x => x.Id == productId);
         }
 
@@ -126,6 +128,11 @@ namespace GymHub.Web.Services
                 returnString.Append("...");
             }
             return returnString.ToString();
+        }
+
+        public string GetProductId(string model)
+        {
+            return this.context.Products.FirstOrDefault(x => x.Model == model).Id;
         }
     }
 }

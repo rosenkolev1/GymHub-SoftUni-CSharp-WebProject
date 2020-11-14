@@ -1,0 +1,40 @@
+﻿@using GymHub.Data.Models
+@model ProductCommentPartialViewModel
+@{
+    var comment = Model.Comment;
+    var userProductRating = Model.UserProductRating;
+}
+
+<div class="container-md product-comment-container">
+    <div class="product-comment-userinfo-container">
+        <span>
+            <b>@comment.User.UserName</b> | Commented On: @comment.CommentedOn.ToLongDateString() @comment.CommentedOn.ToLongTimeString() | Rated:
+        </span>
+        <span style="margin-left:5px;">
+            @for (int i = 0; i < userProductRating.FullStarsCount; i++)
+            {
+                <i class="fa fa-star gold"></i>
+            }
+            @if (userProductRating.HasHalfStar == true)
+            {
+                <i class="fa fa-star-half-o gold"></i>
+            }
+            @for (int i = 0; i < userProductRating.EmptyStarsCount; i++)
+            {
+                <i class="fa fa-star-o gold"></i>
+            }
+        </span>
+        <hr class="product-comment-userinfo-hr" />
+    </div>
+    <p class="align-self-md-end" style="font-size: larger;padding-bottom: 10px;">
+        @if (comment.ParentComment?.User != null)
+        {
+        <span class="alert-light">@@@comment.ParentComment?.User?.UserName</span>
+        }
+        @comment.Text
+    </p>
+    @if(Model.RepliesCount > 0)
+    {
+        <button class="product-comment-replies-button">Show replies(@Model.RepliesCount)</button>
+    }
+</div>

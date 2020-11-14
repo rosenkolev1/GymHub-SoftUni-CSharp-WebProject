@@ -13,19 +13,15 @@ namespace GymHub.Web.Models.ViewModels
         public string MainImage { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
+        public string ShortDescription { get; set; }
         //Warranty in days
         public int Warranty { get; set; }
         public int QuantityInStock { get; set; }
         public string Model { get; set; }
         public List<ProductComment> ProductComments { get; set; }
         public List<ProductRating> ProductRatings { get; set; }
-
-        public string ShortDescription { get; set; }
-
-        public double AverageRating { get; set; }
-
-        public int FullStarsCount => (int)Math.Floor(AverageRating);
-        public int EmptyStarsCount => 10 - (int)Math.Ceiling(AverageRating);
-        public bool HasHalfStar => 10 - (this.FullStarsCount + this.EmptyStarsCount) > 0;
+        public ProductRatingViewModel ProductRating { get; set; }
+        public Dictionary<User, ProductRatingViewModel> UsersProductRatings { get; set; } = new Dictionary<User, ProductRatingViewModel>();
+        public Dictionary<ProductComment, List<ProductComment>> ParentsChildrenComments { get; set; } = new Dictionary<ProductComment, List<ProductComment>>();
     }
 }

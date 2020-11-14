@@ -394,3 +394,48 @@ th {
     width: 70vw;
     height: 70vh;
 }
+
+.product-commentWithChildren-container {
+    margin-bottom: 40px;
+}
+
+.product-comment-container {
+    color: black;
+    background-color: whitesmoke;
+    border-color: #fdfdfe;
+    margin-bottom: 10px;
+}
+
+.product-comment-userinfo-container {
+    padding-top:10px;
+}
+
+.product-comment-userinfo-hr {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-color: lightgray;
+}
+
+.product-comment-child-container {
+    margin-left:50px;
+}
+
+.product-comment-replies-button {
+    text-align: left;
+    font-weight: bold;
+    color: darkslategrey;
+    background-color: whitesmoke;
+    padding: 0px 6px;
+    width: 10vw;
+    font-size: 14px;
+    margin-bottom: 5px;
+    border:none;
+}
+
+.product-comment-addReview-form-container {
+    text-align: center;
+}
+
+.product-comment-addReview-button{
+
+}

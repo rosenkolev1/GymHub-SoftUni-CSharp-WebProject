@@ -10,10 +10,11 @@
 
     <title>GymHub</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="/css/SomeCss.css" rel="stylesheet" />
     <link href="/css/bootstrap-reboot.css" rel="stylesheet" />
     <link href="/css/bootstrap.css" rel="stylesheet" />
     <link href="/css/bootstrap-grid.css" rel="stylesheet" />
+    @RenderSection("AdditionalLinks", required:false)
+    <link href="/css/SomeCss.css" rel="stylesheet" />
 </head>
 
 <body class="body-container">
