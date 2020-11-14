@@ -13,16 +13,8 @@
         "Username": "rosenkolev1"
       },
       {
-        "Rating": 4,
-        "Username": "adminRosen"
-      },
-      {
         "Rating": 6,
         "Username": "stefan01"
-      },
-      {
-        "Rating": 8,
-        "Username": "zornicakoleva1982"
       }
     ]
   },
@@ -37,19 +29,7 @@
     "ProductRatings": [
       {
         "Rating": 3,
-        "Username": "rosenkolev1"
-      },
-      {
-        "Rating": 3,
         "Username": "adminRosen"
-      },
-      {
-        "Rating": 5,
-        "Username": "stefan01"
-      },
-      {
-        "Rating": 4,
-        "Username": "zornicakoleva1982"
       }
     ]
   }

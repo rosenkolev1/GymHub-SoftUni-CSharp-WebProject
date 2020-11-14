@@ -134,5 +134,22 @@ namespace GymHub.Web.Services
         {
             return this.context.Products.FirstOrDefault(x => x.Model == model).Id;
         }
+
+        public async Task AddRatingAsync(string productId, string userId, double rating)
+        {
+            var newRating = new ProductRating
+            {
+                ProductId = productId,
+                UserId = userId,
+                Rating = rating
+            };
+            await this.context.AddAsync(newRating);
+            await this.context.SaveChangesAsync();
+        }
+
+        public bool ProductRatingExists(ProductRating productRating)
+        {
+            return this.context.ProductsRatings.Any(x => x.ProductId == productRating.ProductId && x.UserId == productRating.UserId);
+        }
     }
 }

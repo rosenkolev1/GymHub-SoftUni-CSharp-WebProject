@@ -18,6 +18,7 @@ p, label, a, h1, input, button, select, th, tr, table, thead, tbody, td {
     height: 60px;
     background-color: #0B8E4C;
     display: block;
+    z-index: 10000;
 }
 
 .nav-bar-element {
@@ -120,6 +121,7 @@ footer p{
     position: relative;
     bottom: 5px;
     background: #0B8E4C;
+    padding-top: 10px;
 }
 
 .form-container{
@@ -436,6 +438,6 @@ th {
     text-align: center;
 }
 
-.product-comment-addReview-button{
-
+.product-comment-addReview-rating {
+    font-size: 30px;
 }
