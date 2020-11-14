@@ -8,6 +8,7 @@
 
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link href="~/css/ProductPageForOnlineShop.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!------ Include the above in your HEAD tag ---------->
 
 <div class="container-fluid">
@@ -41,7 +42,19 @@
                     <div class="product-title">@Model.Name: @Model.Model</div>
                     <div class="product-desc">@Model.ShortDescription</div>
                     <div class="product-rating">
-                        <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star gold"></i> <i class="fa fa-star-o"></i> 
+                        @for (int i = 0; i < Model.FullStarsCount; i++)
+                        {
+                            <i class="fa fa-star gold"></i>
+                        }
+                        @if (Model.HasHalfStar == true)
+                        {
+                            <i class="fa fa-star-half-o gold"></i>
+                        }
+                        @for (int i = 0; i < Model.EmptyStarsCount; i++)
+                        {
+                            <i class="fa fa-star-o gold"></i>
+                        }
+                        <span> @Model.AverageRating/10</span>
                     </div>
                     <hr>
                     <div class="product-price">$ @Model.Price</div>

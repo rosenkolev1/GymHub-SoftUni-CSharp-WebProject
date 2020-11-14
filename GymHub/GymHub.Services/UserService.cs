@@ -121,5 +121,10 @@ namespace GymHub.Web.Services
             var passwordHash = this.userManager.PasswordHasher.HashPassword(null, password);
             return this.context.Users.Where(x => x.PhoneNumber != null).Any(x => x.UserName == username || x.PasswordHash == password || x.Email == email || x.PhoneNumber == phoneNumber);
         }
+
+        public string GetUserId(string username)
+        {
+            return this.context.Users.FirstOrDefault(x => x.UserName == username).Id;
+        }
     }
 }

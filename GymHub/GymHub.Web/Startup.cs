@@ -57,6 +57,9 @@ namespace GymHub.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //Delete database at startup
+            DeleteDatabase(app, true);
+
             //Migrate Database at startup
             MigrateDatabase(app, true);
 
@@ -112,6 +115,18 @@ namespace GymHub.Web
                 {
                     var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                     dbContext.Database.Migrate();
+                }
+            }
+        }
+
+        private void DeleteDatabase(IApplicationBuilder app, bool willDelete)
+        {
+            if (willDelete)
+            {
+                using (var serviceScope = app.ApplicationServices.CreateScope())
+                {
+                    var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    dbContext.Database.EnsureDeleted();
                 }
             }
         }

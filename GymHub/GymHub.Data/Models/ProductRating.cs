@@ -17,6 +17,7 @@ namespace GymHub.Data.Models
 
         //Simple properties
         [Required]
+        [Range(1, 10)]
         public double Rating { get; set; }
     }
 }
