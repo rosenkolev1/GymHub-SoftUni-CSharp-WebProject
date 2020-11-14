@@ -2,17 +2,23 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @using GymHub.Data.Models
-@model ProductInfoViewModel
+@model ComplexModel<AddReviewInputModel, ProductInfoViewModel>
 @{
 }
 
 @section AdditionalLinks{
+
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="~/css/ProductPageForOnlineShop.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+    <link href="/css/ProductPageCommentBox.css" rel="stylesheet" />
     <!------ Include the above in your HEAD tag ---------->
 }
-
+@{
+    var viewModel = Model.ViewModel;
+    var inputModel = Model.InputModel;
+}
 <div class="container-fluid">
     <div class="content-wrapper">
         <div class="item-container">
@@ -21,7 +27,7 @@
                     <div class="product col-md-3 service-image-left">
 
                         <center>
-                            <img id="item-display" src="/ProductsImages/@Model.MainImage" alt="">
+                            <img id="item-display" src="/ProductsImages/@viewModel.MainImage" alt="">
                         </center>
                     </div>
 
@@ -41,11 +47,11 @@
                 </div>
 
                 <div class="col-md-7">
-                    <div class="product-title">@Model.Name: @Model.Model</div>
-                    <div class="product-desc">@Model.ShortDescription</div>
+                    <div class="product-title">@viewModel.Name: @viewModel.Model</div>
+                    <div class="product-desc">@viewModel.ShortDescription</div>
                     <div class="product-rating">
                         @{
-                            var productRating = Model.ProductRating;
+                            var productRating = viewModel.ProductRating;
                         }
                         @for (int i = 0; i < productRating.FullStarsCount; i++)
                         {
@@ -62,12 +68,12 @@
                         <span> @productRating.AverageRating/10</span>
                     </div>
                     <hr>
-                    <div class="product-price">$ @Model.Price</div>
-                    <div class="product-stock">In Stock: @Model.QuantityInStock</div>
+                    <div class="product-price">$ @viewModel.Price</div>
+                    <div class="product-stock">In Stock: @viewModel.QuantityInStock</div>
                     <hr>
                     <div class="btn-group cart">
                         <form method="post">
-                            <input type="hidden" name="productId" value="@Model.Id" />
+                            <input type="hidden" name="productId" value="@viewModel.Id" />
                             <input type="hidden" name="quantity" value="1" />
                             <button asp-controller="Carts" asp-action="AddToCart" type="submit" class="btn btn-success">
                                 Add
@@ -89,32 +95,79 @@
                     <div class="tab-pane fade in active" id="service-one" name="service-one">
 
                         <section class="container product-info">
-                            @Model.Description
+                            @viewModel.Description
                         </section>
 
                     </div>
                     <div class="tab-pane fade" id="service-two" name="service-two">
 
                         <section class="container" style="margin-top: 10px;">
-                            <form class="product-comment-addReview-form-container">
-                                <textarea class="input-group"></textarea>
-                                <button asp-controller="Carts" asp-action="AddToCart" type="submit" class="form-check btn btn-success product-comment-addReview-button">Add review</button>
-                            </form>
+                            <div class="container">
+                                <div class="row">
+                                    <h3>Add a review</h3>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        <div class="widget-area no-padding blank">
+                                            <span class="product-comment-addReview-ratings-container">
+                                                @if (inputModel != null)
+                                                {
+                                                    @for (int i = 1; i <= inputModel.FullStarsCount; i++)
+                                                    {
+                                                        <i class="fa fa-star gold product-comment-addReview-rating" id="star-review-@i"></i>
+                                                    }
+                                                    @for (int i = inputModel.FullStarsCount + 1; i <= 10; i++)
+                                                    {
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-@i"></i>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-1"></i>
+                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-2"></i>
+                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-3"></i>
+                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-4"></i>
+                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-5"></i>
+                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-6"></i>
+                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-7"></i>
+                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-8"></i>
+                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-9"></i>
+                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-10"></i>
+                                                }
+                                            </span>
+                                            <span class="h4" id="span-rating">@(inputModel?.Rating != null ? inputModel.Rating : 0)/10</span>
+                                            <div class="status-upload">
+                                                <form method="post" class="product-review-form">
+                                                    <input type="hidden" value="@(inputModel?.Rating != null ? inputModel.Rating : 0)" asp-for="InputModel.Rating" />
+                                                    <input type="hidden" asp-for="InputModel.ProductId" value="@Model.ViewModel.Id" />
+                                                    <textarea placeholder="What are your thoughts?" asp-for="InputModel.Text"></textarea>
+                                                    <span asp-validation-for="InputModel.Rating" class="alert-danger" style="display:block"></span>
+                                                    <span asp-validation-for="InputModel.Text" class="alert-danger" style="display:block"></span>
+                                                    <button type="submit" class="btn btn-success green" asp-controller="Products" asp-action="AddReview"><i class="fa fa-share"></i>Add review</button>
+                                                </form>
+                                            </div><!-- Status Upload  -->
+                                        </div><!-- Widget Area -->
+                                    </div>
+
+                                </div>
+                            </div>
                             <hr />
-                            @foreach (var kv in Model.ParentsChildrenComments)
+                            @foreach (var kv in viewModel.ParentsChildrenComments)
                             {
                                 var parentComment = kv.Key;
                                 var childrenComments = kv.Value;
                                 if (parentComment.ParentCommentId == null)
                                 {
-                                    var userProductRating = Model.UsersProductRatings[parentComment.User];
+                                    var userProductRating = viewModel.UsersProductRatings[parentComment.User];
                                     var repliesCount = childrenComments.Count;
                                     <div class="product-commentWithChildren-container">
                                         @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(parentComment, userProductRating, repliesCount))
                                         <div hidden class="product-comment-child-container">
                                             @foreach (var childComment in childrenComments)
                                             {
-                                                var userProductRatingChild = Model.UsersProductRatings[childComment.User];
+                                                var userProductRatingChild = viewModel.UsersProductRatings[childComment.User];
                                                 @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, userProductRatingChild))
                                             }
                                         </div>
@@ -133,5 +186,9 @@
 @section Scripts{
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js" asp-append-version="true"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js" asp-append-version="true"></script>
-    <script src="/js/ProductCommentsReplyButton.js"></script>
+    <script src="/js/ProductCommentsReplyButton.js" asp-append-version="true"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="/js/ProductPageCommentBox.js" asp-append-version="true"></script>
+    <script src="/js/ProductInfoReviewDynamicRating.js" asp-append-version="true"></script>
+    <partial name="_ValidationScriptsPartial.cshtml">
 }
