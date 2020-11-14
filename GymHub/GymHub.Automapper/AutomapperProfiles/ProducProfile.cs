@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GymHub.Data.Models;
+using GymHub.DTOs;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 

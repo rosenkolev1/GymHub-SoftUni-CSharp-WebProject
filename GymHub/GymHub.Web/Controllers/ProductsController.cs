@@ -22,6 +22,10 @@ namespace GymHub.Web.Controllers
         public async Task<IActionResult> All()
         {
             var products = await this.productService.GetAllProductsAsync();
+            foreach (var product in products)
+            {
+                product.ShortDescription = this.productService.GetShordDescription(product.Description, 40);
+            }
             return this.View(products);
         }
 
@@ -30,6 +34,9 @@ namespace GymHub.Web.Controllers
         {
             var product = await this.productService.GetProductByIdAsync(productId);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
+            viewModel.AverageRating = this.productService.GetAverageRating(viewModel.ProductRatings);
+            viewModel.ShortDescription = this.productService.GetShordDescription(viewModel.Description, 40);
+
             return this.View(viewModel);
         }
 

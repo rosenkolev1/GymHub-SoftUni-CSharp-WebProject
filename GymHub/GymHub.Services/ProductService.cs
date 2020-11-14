@@ -5,9 +5,11 @@ using GymHub.Data.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace GymHub.Web.Services
@@ -35,13 +37,13 @@ namespace GymHub.Web.Services
                 IsDeleted = false,
                 DeletedOn = null
             });
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
         }
 
         public async Task AddAsync(AddProductInputModel inputModel)
         {
-            this.context.Add(mapper.Map<Product>(inputModel));
-            this.context.SaveChanges();
+            await this.context.AddAsync(mapper.Map<Product>(inputModel));
+            await this.context.SaveChangesAsync();
         }
 
         public async Task<bool> ProductExistsByIdAsync(string id)
@@ -69,6 +71,61 @@ namespace GymHub.Web.Services
                 .Include(x => x.ProductComments)
                 .Include(x => x.ProductRatings)
                 .FirstOrDefault(x => x.Id == productId);
+        }
+
+        public async Task AddAsync(Product product)
+        {
+            await this.context.AddAsync(product);
+            await this.context.SaveChangesAsync();
+        }
+
+        public double GetAverageRating(List<ProductRating> productRatings)
+        {
+            var ratingsCount = productRatings.Count;
+            var ratingsSum = productRatings.Sum(x => x.Rating);
+            var ratingIncrement = 0.5d;
+
+            var ratingAverage = RoundRatingNumber(ratingsSum / ratingsCount, ratingIncrement);
+
+            return ratingAverage;
+        }
+
+        private double RoundRatingNumber(double number, double increment)
+        {
+            if (number % increment == 0) return number;
+            var incrementedNumber = 0d;
+            while (true)
+            {
+                if (number - incrementedNumber <= increment)
+                {
+                    var distanceToFloor = number - incrementedNumber;
+                    var distanceToCeiling = Math.Abs(increment - distanceToFloor);
+                    var neededDistance = distanceToFloor > distanceToCeiling ? distanceToCeiling : -distanceToFloor;
+                    return number + neededDistance;
+                }
+                incrementedNumber += increment;
+            }
+        }
+
+        public string GetShordDescription(string description, int stringLength)
+        {
+            var returnString = new StringBuilder();
+            var descriptionWords = description.Split(" ").ToList();
+            foreach (var word in descriptionWords)
+            {
+                returnString.Append(word);
+                if (returnString.ToString().Length >= stringLength) break;
+                returnString.Append(" ");
+            }
+            if (returnString.ToString().EndsWith('.'))
+            {
+                returnString.Append("..");
+            }
+            else
+            {
+                returnString.Append("...");
+            }
+            return returnString.ToString();
         }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -109,7 +110,25 @@ namespace GymHub.Services.SeederFolder
 
         private async Task<bool> SeedProductsAsync()
         {
-            var products = JsonSerializer.Deserialize<List<AddProductInputModel>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Products.json"));
+            var productsDTOs = JsonSerializer.Deserialize<List<ProductDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Products.json"));
+            var products = productsDTOs
+                .Select(x => new Product 
+                { 
+                    Name = x.Name,
+                    Model = x.Model,
+                    Warranty = x.Warranty,
+                    QuantityInStock = x.QuantityInStock,
+                    MainImage = x.MainImage,
+                    Description = x.Description,
+                    Price = x.Price,
+                    ProductRatings = x.ProductRatings
+                        .Select((pr) => new ProductRating 
+                        {
+                            Rating = pr.Rating,
+                            UserId = this.userService.GetUserId(pr.Username)
+                        }).ToList()
+                }).ToList();
+
             foreach (var product in products)
             {
                 if(await this.productService.ProductExistsByModelAsync(product.Model) == false)

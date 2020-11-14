@@ -1,19 +1,25 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
-namespace GymHub.Web.Models.ViewModels
+namespace GymHub.DTOs
 {
-    public class ProductViewModel
+    public class ProductDTO
     {
-        public string Id { get; set; }
         public string Name { get; set; }
-        public string MainImage { get; set; }
-        public decimal Price { get; set; }
-        public string Description { get; set; }
-        //Warranty in days
-        public int Warranty { get; set; }
-        public int QuantityInStock { get; set; }
-        public string ShortDescription { get; set; }
+
         public string Model { get; set; }
+
+        public string MainImage { get; set; }
+
+        public decimal Price { get; set; }
+
+        public string Description { get; set; }
+
+        public int Warranty { get; set; }
+
+        public int QuantityInStock { get; set; }
+
+        public List<ProductRatingDTO> ProductRatings { get; set; }
     }
 }

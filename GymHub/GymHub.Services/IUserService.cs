@@ -16,5 +16,6 @@ namespace GymHub.Web.Services
         public Task<bool> UsernameExistsAsync(string username);
         public Task<bool> EmailExistsAsync(string email);
         public Task<bool> PhoneNumberExistsAsync(string phoneNumber);
+        public string GetUserId(string username);
     }
 }
