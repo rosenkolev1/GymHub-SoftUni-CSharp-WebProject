@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,6 +18,9 @@ namespace GymHub.Data.Models
 
         [Key]
         public string Id { get; set; }
+
+        //Collections
+        public virtual ICollection<ProductCommentLike> CommentLikes { get; set; }
 
         //Foreign Keys
         [ForeignKey("User")]
