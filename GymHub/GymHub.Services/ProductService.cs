@@ -102,7 +102,7 @@ namespace GymHub.Web.Services
                 {
                     var distanceToFloor = number - incrementedNumber;
                     var distanceToCeiling = Math.Abs(increment - distanceToFloor);
-                    var neededDistance = distanceToFloor > distanceToCeiling ? distanceToCeiling : -distanceToFloor;
+                    var neededDistance = distanceToFloor >= distanceToCeiling ? distanceToCeiling : -distanceToFloor;
                     return number + neededDistance;
                 }
                 incrementedNumber += increment;

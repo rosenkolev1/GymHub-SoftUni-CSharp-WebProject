@@ -87,19 +87,19 @@
             <div class="col-md-12 product-info">
                 <ul id="myTab" class="nav nav-tabs nav_tabs">
 
-                    <li class="active"><a href="#service-one" data-toggle="tab">Product info</a></li>
-                    <li><a href="#service-two" data-toggle="tab">User reviews</a></li>
+                    <li><a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@viewModel.Id" asp-fragment="Info" data-toggle="tab">Product info</a></li>
+                    <li><a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@viewModel.Id" asp-fragment="Reviews" data-toggle="tab">User reviews</a></li>
 
                 </ul>
                 <div id="myTabContent" class="tab-content">
-                    <div class="tab-pane fade in active" id="service-one" name="service-one">
+                    <div class="tab-pane fade" id="Info" name="Info">
 
                         <section class="container product-info">
                             @viewModel.Description
                         </section>
 
                     </div>
-                    <div class="tab-pane fade" id="service-two" name="service-two">
+                    <div class="tab-pane fade" id="Reviews" name="Reviews">
 
                         <section class="container" style="margin-top: 10px;">
                             <div class="container">
@@ -139,13 +139,14 @@
                                             </span>
                                             <span class="h4" id="span-rating">@(inputModel?.Rating != null ? inputModel.Rating : 0)/10</span>
                                             <div class="status-upload">
-                                                <form method="post" class="product-review-form">
+                                                <form method="post" class="product-review-form" id="add-review-form">
                                                     <input type="hidden" value="@(inputModel?.Rating != null ? inputModel.Rating : 0)" asp-for="InputModel.Rating" />
                                                     <input type="hidden" asp-for="InputModel.ProductId" value="@Model.ViewModel.Id" />
                                                     <textarea placeholder="What are your thoughts?" asp-for="InputModel.Text"></textarea>
                                                     <span asp-validation-for="InputModel.Rating" class="alert-danger" style="display:block"></span>
                                                     <span asp-validation-for="InputModel.Text" class="alert-danger" style="display:block"></span>
-                                                    <button type="submit" class="btn btn-success green" asp-controller="Products" asp-action="AddReview"><i class="fa fa-share"></i>Add review</button>
+                                                    <input type="hidden" value="" name="pageFragment" id="addReview-pageFragment"/>
+                                                    <button type="submit" id="addReview" class="btn btn-success green" asp-controller="Products" asp-action="AddReview"><i class="fa fa-share"></i>Add review</button>
                                                 </form>
                                             </div><!-- Status Upload  -->
                                         </div><!-- Widget Area -->
@@ -186,9 +187,10 @@
 @section Scripts{
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js" asp-append-version="true"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js" asp-append-version="true"></script>
-    <script src="/js/ProductCommentsReplyButton.js" asp-append-version="true"></script>
+    <script src="/js/ProductCommentsShowRepliesButton.js" asp-append-version="true"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js" asp-append-version="true"></script>
     <script src="/js/ProductPageCommentBox.js" asp-append-version="true"></script>
     <script src="/js/ProductInfoReviewDynamicRating.js" asp-append-version="true"></script>
+    <script src="/js/ProductPageURLFragments.js" asp-append-version="true"></script>
     <partial name="_ValidationScriptsPartial.cshtml">
 }

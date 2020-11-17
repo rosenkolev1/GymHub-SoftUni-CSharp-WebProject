@@ -95,7 +95,7 @@ namespace GymHub.Web.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddReview(ComplexModel<AddReviewInputModel, ProductInfoViewModel> complexModel)
+        public async Task<IActionResult> AddReview(ComplexModel<AddReviewInputModel, ProductInfoViewModel> complexModel, string pageFragment)
         {
             var productId = complexModel.InputModel.ProductId;
 
@@ -104,7 +104,7 @@ namespace GymHub.Web.Controllers
             {
                 //Store needed info for get request in TempData
                 TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(complexModel.InputModel);
-                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId });
+                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
             }
 
             var userId = this.userService.GetUserId(this.User.Identity.Name);
@@ -150,14 +150,14 @@ namespace GymHub.Web.Controllers
                 TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(complexModel.InputModel);
 
                 //Reload same page with the TempData
-                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId});
+                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId}, pageFragment);
             }
 
             await this.productService.AddRatingAsync(productId, userId, (int)complexModel.InputModel.Rating);
 
             await this.productCommentService.AddAsync(newComment);
 
-             return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId });
+            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
         }
     }
 }

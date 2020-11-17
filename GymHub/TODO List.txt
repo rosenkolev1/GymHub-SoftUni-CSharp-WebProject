@@ -4,8 +4,6 @@
 
 -Sort comments so that the user's own comment shows up at the top and then sort the rest by likes.
 
--Add comment likes (change database so you include likes). Then sort comments on product by likes
-
 -Add functionality for replying to comments
 
 -Add functionality for edditing your comments(Also add modifiedOn column to database)
