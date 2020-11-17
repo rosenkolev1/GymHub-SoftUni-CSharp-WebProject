@@ -32,13 +32,16 @@
 
 function SetFormDataPageFragment() {
     //Set hidden input value to current page fragment
-    document.querySelector('#addReview-pageFragment').value = window.location.hash.substring(1);
+    var hiddenFragmentInputs = document.querySelectorAll('.post-pageFragment');
+    hiddenFragmentInputs.forEach(hiddenFragmentInput => {
+        hiddenFragmentInput.value = window.location.hash.substring(1);
+    })
 }
 
 $(document)
     .ready(SetActiveFragment());
 
-$(document.querySelector('#add-review-form'))
+$(document.querySelectorAll('form'))
     .submit(function (event) {
         SetFormDataPageFragment();
     });

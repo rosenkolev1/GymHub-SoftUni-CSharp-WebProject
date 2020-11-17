@@ -1,7 +1,5 @@
 -Add product info page.
 
--Add fragments for the product info page
-
 -Sort comments so that the user's own comment shows up at the top and then sort the rest by likes.
 
 -Add functionality for replying to comments

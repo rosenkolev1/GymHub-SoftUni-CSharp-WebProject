@@ -4,6 +4,7 @@
 @using GymHub.Data.Models
 @model ComplexModel<AddReviewInputModel, ProductInfoViewModel>
 @{
+    
 }
 
 @section AdditionalLinks{
@@ -103,50 +104,59 @@
 
                         <section class="container" style="margin-top: 10px;">
                             <div class="container">
-                                <div class="row">
-                                    <h3>Add a review</h3>
-                                </div>
+                                @if (viewModel.ReviewedByCurrentUser == false)
+                                {
+                                    <div class="row">
+                                        <h3>Add a review</h3>
+                                    </div>
+                                }
 
                                 <div class="row">
 
                                     <div class="col-md-6">
                                         <div class="widget-area no-padding blank">
-                                            <span class="product-comment-addReview-ratings-container">
-                                                @if (inputModel != null)
-                                                {
-                                                    @for (int i = 1; i <= inputModel.FullStarsCount; i++)
+                                            @if (viewModel.ReviewedByCurrentUser == false)
+                                            {
+                                                <span class="product-comment-addReview-ratings-container">
+                                                    @if (inputModel != null)
                                                     {
-                                                        <i class="fa fa-star gold product-comment-addReview-rating" id="star-review-@i"></i>
+                                                        @for (int i = 1; i <= inputModel.FullStarsCount; i++)
+                                                        {
+                                                            <i class="fa fa-star gold product-comment-addReview-rating" id="star-review-@i"></i>
+                                                        }
+                                                        @for (int i = inputModel.FullStarsCount + 1; i <= 10; i++)
+                                                        {
+                                                            <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-@i"></i>
+                                                        }
                                                     }
-                                                    @for (int i = inputModel.FullStarsCount + 1; i <= 10; i++)
+                                                    else
                                                     {
-                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-@i"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-1"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-2"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-3"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-4"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-5"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-6"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-7"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-8"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-9"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-10"></i>
                                                     }
-                                                }
-                                                else
-                                                {
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-1"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-2"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-3"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-4"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-5"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-6"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-7"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-8"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-9"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-10"></i>
-                                                }
-                                            </span>
-                                            <span class="h4" id="span-rating">@(inputModel?.Rating != null ? inputModel.Rating : 0)/10</span>
+                                                </span>
+                                                <span class="h4" id="span-rating">@(inputModel?.Rating != null ? inputModel.Rating : 0)/10</span>
+                                            }
                                             <div class="status-upload">
-                                                <form method="post" class="product-review-form" id="add-review-form">
-                                                    <input type="hidden" value="@(inputModel?.Rating != null ? inputModel.Rating : 0)" asp-for="InputModel.Rating" />
-                                                    <input type="hidden" asp-for="InputModel.ProductId" value="@Model.ViewModel.Id" />
-                                                    <textarea placeholder="What are your thoughts?" asp-for="InputModel.Text"></textarea>
-                                                    <span asp-validation-for="InputModel.Rating" class="alert-danger" style="display:block"></span>
-                                                    <span asp-validation-for="InputModel.Text" class="alert-danger" style="display:block"></span>
-                                                    <input type="hidden" value="" name="pageFragment" id="addReview-pageFragment"/>
-                                                    <button type="submit" id="addReview" class="btn btn-success green" asp-controller="Products" asp-action="AddReview"><i class="fa fa-share"></i>Add review</button>
+                                                <form method="post" class="product-review-form">
+                                                    @if (viewModel.ReviewedByCurrentUser == false)
+                                                    {
+                                                        <input type="hidden" value="@(inputModel?.Rating != null ? inputModel.Rating : 0)" asp-for="InputModel.Rating" />
+                                                        <input type="hidden" asp-for="InputModel.ProductId" value="@Model.ViewModel.Id" />
+                                                        <textarea placeholder="What are your thoughts?" asp-for="InputModel.Text"></textarea>
+                                                        <span asp-validation-for="InputModel.Rating" class="alert-danger" style="display:block"></span>
+                                                        <span asp-validation-for="InputModel.Text" class="alert-danger" style="display:block"></span>
+                                                        <input type="hidden" value="" name="pageFragment" class="post-pageFragment" />
+                                                        <button type="submit" class="btn btn-success green" asp-controller="Products" asp-action="AddReview"><i class="fa fa-share"></i>Add review</button>
+                                                    }
                                                 </form>
                                             </div><!-- Status Upload  -->
                                         </div><!-- Widget Area -->
@@ -154,9 +164,16 @@
 
                                 </div>
                             </div>
-                            <hr />
+                            @if (viewModel.ReviewedByCurrentUser == false)
+                            {
+                                <hr />
+                            }
+                            @{ 
+                                var uniqueCommentCount = 0;
+                            }
                             @foreach (var kv in viewModel.ParentsChildrenComments)
                             {
+                                
                                 var parentComment = kv.Key;
                                 var childrenComments = kv.Value;
                                 if (parentComment.ParentCommentId == null)
@@ -164,12 +181,12 @@
                                     var userProductRating = viewModel.UsersProductRatings[parentComment.User];
                                     var repliesCount = childrenComments.Count;
                                     <div class="product-commentWithChildren-container">
-                                        @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(parentComment, userProductRating, repliesCount))
+                                        @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(parentComment, userProductRating, viewModel.CurrentUserId, uniqueCommentCount++, repliesCount))
                                         <div hidden class="product-comment-child-container">
                                             @foreach (var childComment in childrenComments)
                                             {
                                                 var userProductRatingChild = viewModel.UsersProductRatings[childComment.User];
-                                                @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, userProductRatingChild))
+                                                @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, userProductRatingChild, viewModel.CurrentUserId, uniqueCommentCount++))
                                             }
                                         </div>
                                     </div>
@@ -192,5 +209,6 @@
     <script src="/js/ProductPageCommentBox.js" asp-append-version="true"></script>
     <script src="/js/ProductInfoReviewDynamicRating.js" asp-append-version="true"></script>
     <script src="/js/ProductPageURLFragments.js" asp-append-version="true"></script>
+    <script src="/js/ProductEditComment.js" asp-append-version="true"></script>
     <partial name="_ValidationScriptsPartial.cshtml">
 }

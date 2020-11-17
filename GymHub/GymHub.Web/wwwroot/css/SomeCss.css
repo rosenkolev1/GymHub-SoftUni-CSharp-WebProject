@@ -422,7 +422,7 @@ th {
     margin-left:50px;
 }
 
-.product-comment-replies-button {
+.product-comment-replies-button, .product-comment-edit-button {
     text-align: left;
     font-weight: bold;
     color: darkslategrey;
@@ -431,7 +431,8 @@ th {
     width: 10vw;
     font-size: 14px;
     margin-bottom: 5px;
-    border:none;
+    border: none;
+    padding-left: 0px;
 }
 
 .product-comment-addReview-form-container {
@@ -440,4 +441,20 @@ th {
 
 .product-comment-addReview-rating {
     font-size: 30px;
+}
+
+.product-comment-edit-container {
+    margin-bottom: 20px;
+}
+.product-comment-editReview-ratings-container{
+    margin-bottom: 10px;
+}
+
+.product-comment-editReview-editButton-container{
+    margin-top: 10px;
+}
+
+.product-comment-editReview-textarea{
+    height: 50px;
+    width: 100%;
 }

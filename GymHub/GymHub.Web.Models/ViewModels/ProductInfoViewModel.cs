@@ -18,6 +18,8 @@ namespace GymHub.Web.Models.ViewModels
         public int Warranty { get; set; }
         public int QuantityInStock { get; set; }
         public string Model { get; set; }
+        public bool ReviewedByCurrentUser { get; set; }
+        public string CurrentUserId { get; set; }
         public List<ProductComment> ProductComments { get; set; }
         public List<ProductRating> ProductRatings { get; set; }
         public ProductRatingViewModel ProductRating { get; set; }

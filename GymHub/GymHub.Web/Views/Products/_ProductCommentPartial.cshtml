@@ -26,15 +26,25 @@
         </span>
         <hr class="product-comment-userinfo-hr" />
     </div>
-    <p class="align-self-md-end" style="font-size: larger;padding-bottom: 10px;">
-        @if (comment.ParentComment?.User != null)
+    <div class="product-comment-textfield">
+        <p class="align-self-md-end product-comment-text" style="font-size: larger;padding-bottom: 10px;">
+            @if (comment.ParentComment?.User != null)
+            {
+                <span class="alert-light">@@@comment.ParentComment?.User?.UserName</span>
+            }
+            @comment.Text
+        </p>
+        @if (Model.BelongsToCurrentUser == true)
         {
-        <span class="alert-light">@@@comment.ParentComment?.User?.UserName</span>
+            @await Html.PartialAsync("_ProductEditReviewPartial.cshtml", new EditReviewInputModel((int)userProductRating.AverageRating, comment.Text, comment.ProductId, comment.Id, comment.ParentCommentId == null, Model.CommentCounter));
         }
-        @comment.Text
-    </p>
-    @if(Model.RepliesCount > 0)
+    </div>
+    @if (Model.RepliesCount > 0)
     {
         <button class="product-comment-replies-button">Show replies(@Model.RepliesCount)</button>
+    }
+    @if (Model.BelongsToCurrentUser)
+    {
+        <button class="product-comment-edit-button">Edit</button>
     }
 </div>
