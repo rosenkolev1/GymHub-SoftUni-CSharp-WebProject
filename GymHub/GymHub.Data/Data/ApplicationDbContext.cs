@@ -33,6 +33,7 @@ namespace GymHub.Data.Data
         public virtual DbSet<Sale> Sales { get; set; }
         public virtual DbSet<UserOccupation> UsersOccupations { get; set; }
         public virtual DbSet<UserImage> UsersImages { get; set; }
+        public virtual DbSet<ProductCommentLike> ProductCommentLikes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

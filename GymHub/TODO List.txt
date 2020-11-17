@@ -1,6 +1,14 @@
--Add asp-append-version-true for scripts and link files in html
-
 -Add product info page.
+
+-Add fragments for the product info page
+
+-Sort comments so that the user's own comment shows up at the top and then sort the rest by likes.
+
+-Add comment likes (change database so you include likes). Then sort comments on product by likes
+
+-Add functionality for replying to comments
+
+-Add functionality for edditing your comments(Also add modifiedOn column to database)
 
 -Add email address sender and email confirmation
 
@@ -12,6 +20,7 @@
 
 -Add registered user welcome page.
 
+-Make imageUrl for products support online urls for images instead of only local files system images.
 
 **Things to keep in mind
 
@@ -20,3 +29,6 @@
 -IFormFile
 -ASP.Net is weird and a null string bypasses [MinLength] for some reason during validation
 -multipart/form-data for file upload inputs
+-Lazy Kit
+-Cloudinary
+-Make website be hosted on secure(HTTPS) connection
