@@ -1,49 +1,53 @@
-﻿let reviewForm = document.querySelector(".product-review-form");
+﻿function DynamicRating() {
+    let reviewForm = document.querySelector(".product-review-form");
 
-let starsElements = Array.from(reviewForm.parentElement.parentElement.querySelectorAll(".fa"));
+    let starsElements = Array.from(reviewForm.parentElement.parentElement.querySelectorAll(".fa"));
 
-let spanRating = reviewForm.parentElement.parentElement.querySelector("#span-rating");
+    let spanRating = reviewForm.parentElement.parentElement.querySelector("#span-rating");
 
-let reviewRatingInput = reviewForm.querySelector('#InputModel_Rating');
+    let reviewRatingInput = reviewForm.querySelector('#InputModel_Rating');
 
-let starsContainer = reviewForm.parentElement.parentElement.querySelector(".product-comment-addReview-ratings-container");
+    let starsContainer = reviewForm.parentElement.parentElement.querySelector(".product-comment-addReview-ratings-container");
 
-function matchReviewRatingInputWithSpanRating() {
-    let ratingValue = reviewRatingInput.value;
-    spanRating.textContent = `${ratingValue}/10`;
-}
+    function matchReviewRatingInputWithSpanRating() {
+        let ratingValue = reviewRatingInput.value;
+        spanRating.textContent = `${ratingValue}/10`;
+    }
 
-window.addEventListener('load', e => {
-    matchReviewRatingInputWithSpanRating();
-})
-
-starsElements.forEach(starElement => {
-    starElement.addEventListener("click", e => {
-        let starRatingValue = parseInt(starElement.id.split('-')[2]);
-        reviewRatingInput.value = starRatingValue;
-
-        //Change review UI
+    window.addEventListener('load', e => {
         matchReviewRatingInputWithSpanRating();
     })
 
-    starElement.addEventListener('mouseover', e => {
-        let starRatingValue = parseInt(starElement.id.split('-')[2]);
+    starsElements.forEach(starElement => {
+        starElement.addEventListener("click", e => {
+            let starRatingValue = parseInt(starElement.id.split('-')[2]);
+            reviewRatingInput.value = starRatingValue;
+
+            //Change review UI
+            matchReviewRatingInputWithSpanRating();
+        })
+
+        starElement.addEventListener('mouseover', e => {
+            let starRatingValue = parseInt(starElement.id.split('-')[2]);
+            changeStarsBasedOnRating(starRatingValue);
+        })
+    })
+
+    starsContainer.addEventListener('mouseleave', e => {
+        let starRatingValue = reviewRatingInput.value;
         changeStarsBasedOnRating(starRatingValue);
     })
-})
 
-starsContainer.addEventListener('mouseleave', e => {
-    let starRatingValue = reviewRatingInput.value;
-    changeStarsBasedOnRating(starRatingValue);
-})
-
-function changeStarsBasedOnRating(starRatingValue) {
-    starsElements.filter(starEl => parseInt(starEl.id.split('-')[2]) <= starRatingValue)
-        .forEach(x => {
-            x.classList.replace("fa-star-o", "fa-star");
-        })
-    starsElements.filter(starEl => parseInt(starEl.id.split('-')[2]) > starRatingValue)
-        .forEach(x => {
-            x.classList.replace("fa-star", "fa-star-o");
-        })
+    function changeStarsBasedOnRating(starRatingValue) {
+        starsElements.filter(starEl => parseInt(starEl.id.split('-')[2]) <= starRatingValue)
+            .forEach(x => {
+                x.classList.replace("fa-star-o", "fa-star");
+            })
+        starsElements.filter(starEl => parseInt(starEl.id.split('-')[2]) > starRatingValue)
+            .forEach(x => {
+                x.classList.replace("fa-star", "fa-star-o");
+            })
+    }
 }
+
+DynamicRating();

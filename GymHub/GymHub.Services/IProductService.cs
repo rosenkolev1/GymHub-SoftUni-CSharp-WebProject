@@ -21,5 +21,8 @@ namespace GymHub.Web.Services
         public string GetProductId(string model);
         public Task AddRatingAsync(string productId, string userId, double rating);
         public bool ProductRatingExists(ProductRating productRating);
+        public ProductRating GetProductRating(string userId, string productId);
+        public bool ProductRatingExists(string userId, string productId);
+        public Task EditProductRating(ProductRating productRating, double rating);
     }
 }

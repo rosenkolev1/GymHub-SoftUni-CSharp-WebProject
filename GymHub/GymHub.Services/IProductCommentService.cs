@@ -11,5 +11,9 @@ namespace GymHub.Services
         public Task AddAsync(ProductComment productComment);
         public Task<bool> CommentExists(ProductComment productComment);
         public Task<List<ProductComment>> GetAllChildCommentsAsync(ProductComment productComment);
+        public ProductComment GetProductComment(string commentId);
+        public bool CommentExists(string commentId);
+        public bool CommentMatchesUserAndProduct(string commentId, string userId, string productId);
+        public Task EditCommentText(ProductComment comment, string text);
     }
 }

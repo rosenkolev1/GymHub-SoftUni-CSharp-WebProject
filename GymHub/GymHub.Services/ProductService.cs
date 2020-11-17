@@ -151,5 +151,21 @@ namespace GymHub.Web.Services
         {
             return this.context.ProductsRatings.Any(x => x.ProductId == productRating.ProductId && x.UserId == productRating.UserId);
         }
+
+        public ProductRating GetProductRating(string userId, string productId)
+        {
+            return this.context.ProductsRatings.FirstOrDefault(x => x.UserId == userId && x.ProductId == productId);
+        }
+
+        public bool ProductRatingExists(string userId, string productId)
+        {
+            return this.context.ProductsRatings.Any(x => x.ProductId == productId && x.UserId == userId);
+        }
+
+        public async Task EditProductRating(ProductRating productRating, double rating)
+        {
+            if (productRating != null) productRating.Rating = rating;
+            await this.context.SaveChangesAsync();
+        }
     }
 }

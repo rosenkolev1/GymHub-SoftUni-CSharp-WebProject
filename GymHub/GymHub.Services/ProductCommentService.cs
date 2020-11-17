@@ -34,6 +34,11 @@ namespace GymHub.Services
             return false;
         }
 
+        public bool CommentExists(string commentId)
+        {
+            return this.context.ProductsComments.Any(x => x.Id == commentId);
+        }
+
         public async Task<List<ProductComment>> GetAllChildCommentsAsync(ProductComment productComment)
         {
             var children = this.context.ProductsComments
@@ -50,6 +55,23 @@ namespace GymHub.Services
             }
 
             return children;
+        }
+
+        public ProductComment GetProductComment(string commentId)
+        {
+            return this.context.ProductsComments.FirstOrDefault(x => x.Id == commentId);
+        }
+
+        public async Task EditCommentText(ProductComment comment, string text)
+        {
+            if (comment != null) comment.Text = text;
+            await this.context.SaveChangesAsync();
+        }
+
+        public bool CommentMatchesUserAndProduct(string commentId, string userId, string productId)
+        {
+            var comment = this.context.ProductsComments.FirstOrDefault(x => x.Id == commentId);
+            return comment.UserId == userId && comment.ProductId == productId;
         }
     }
 }
