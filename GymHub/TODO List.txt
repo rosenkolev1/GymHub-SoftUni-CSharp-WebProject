@@ -1,10 +1,10 @@
 -Add product info page.
 
+-Fix client side validation for edit comment input.
+
 -Sort comments so that the user's own comment shows up at the top and then sort the rest by likes.
 
 -Add functionality for replying to comments
-
--Add functionality for edditing your comments(Also add modifiedOn column to database)
 
 -Add email address sender and email confirmation
 
