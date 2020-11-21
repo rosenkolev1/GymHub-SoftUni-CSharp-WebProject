@@ -1,0 +1,201 @@
+[33mcommit f1be8db8869a806b6fc171e1bef998f92396860f[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Wed Nov 18 00:33:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 16:00:23 2020 +0200
+
+    Add edit comment functionality
+
+[33mcommit 7d08456bbae01fc46ebac8e5671ba5a4aef3a14b[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Tue Nov 17 16:05:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:59 2020 +0200
+
+    Add fragments for the product info page
+
+[33mcommit e13ada145ce1a5bfc27275919e254726283fae83[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Tue Nov 17 12:33:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:55 2020 +0200
+
+    Add products' comments' likes
+
+[33mcommit 56115aa403f6e710f3f0e1a536cbbe5674133bb3[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Sun Nov 15 00:39:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:52 2020 +0200
+
+    Implement leaving a review functionality to ProductPage with validation and Post-Redirect-Get convention being kept
+
+[33mcommit 3dcc57dbc9f055eff396f5e273790c42f0b68041[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Sat Nov 14 18:49:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:47 2020 +0200
+
+    Implement Seeding for comments and show comments for the product info view
+
+[33mcommit ffd025ebd174d63abf35826d1c5d5419aa6fd9af[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Sat Nov 14 12:39:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:44 2020 +0200
+
+    Add ratings to product info view and implement seeding for product ratings
+
+[33mcommit a9b1c9b1cdcb3564b9d48b11aa33a0130c133ae0[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Fri Nov 6 17:53:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:35 2020 +0200
+
+    Add asp-append-version=true to script and link tags
+
+[33mcommit 269fded850e048036c1fc9b2d8f259dd41b6b383[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Tue Nov 10 19:48:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:31 2020 +0200
+
+    Integrate bootstrap and make product info page
+    
+    Product info page is still largely incomplete. Only the UI part is there.
+
+[33mcommit 44417c1857e47cf6aa78f4598e259b9ff8696010[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Tue Nov 10 17:31:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:27 2020 +0200
+
+    Set global query filter for IsDeleted
+
+[33mcommit 989e6e125f6147889404643bb5486c92632d6c98[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Tue Nov 10 16:57:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:23 2020 +0200
+
+    Fix layout a bit
+
+[33mcommit ea88af9a4ccaccc3283249417e3cce96f1a0fec3[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Tue Nov 10 16:01:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:19 2020 +0200
+
+    Implement Identity Login and Logout using Razor Pages with proper validation
+
+[33mcommit 45cad722e2c0178d6b2df9b8c0751a1de9dd791c[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Tue Nov 10 14:06:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:15 2020 +0200
+
+    Implement Identity Register
+
+[33mcommit 630297e6725671550f964cff3477ab5cf9aa6562[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Fri Nov 6 23:35:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:12 2020 +0200
+
+    Implement cart view
+
+[33mcommit a3c741a12a90ae7242e38b2a29d4ff77e1d2c478[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Fri Nov 6 21:05:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:49:05 2020 +0200
+
+    Add validation to login and register
+
+[33mcommit 0a37bc2c00fb97c631756f747ee045971f3e71d0[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Fri Nov 6 18:46:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:48:43 2020 +0200
+
+    Add dto's, fix services, fix seeder for users.
+
+[33mcommit d01ce507367f4833d85534c414176e2b57d7c32b[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Fri Nov 6 17:53:00 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sat Nov 21 15:48:39 2020 +0200
+
+    Implement Automapper
+
+[33mcommit 5685845975194ec0229960af7e2c7a88d3a13258[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Fri Nov 6 15:38:23 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Fri Nov 6 15:38:23 2020 +0200
+
+    Fix Seeding Methods
+
+[33mcommit 759636c5f241cd5fde6012791c767028045830b9[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Fri Nov 6 13:38:45 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Fri Nov 6 13:38:45 2020 +0200
+
+    Implement tag helpers for most things
+
+[33mcommit f8faf6e1de2c891034ee767163f82ed3f7ed1de2[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Fri Nov 6 12:12:08 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Fri Nov 6 12:12:08 2020 +0200
+
+    Add cart and products controllers(Not with full functionality)
+
+[33mcommit fa111c7c6466c4bc6ff799945f13c3669314a5a1[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Tue Nov 3 02:11:09 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Tue Nov 3 02:11:09 2020 +0200
+
+    Make changes to database and also implement user simple login and register
+
+[33mcommit 6d9e70b9746cd9dabb747eada53c3fd1b6dbefb5[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Mon Nov 2 23:48:48 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Mon Nov 2 23:48:48 2020 +0200
+
+    Make services async and make registering of user work
+
+[33mcommit 5595acbcde9aa11d608fbfb32fd482862405878b[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Mon Nov 2 23:04:51 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Mon Nov 2 23:04:51 2020 +0200
+
+    Add global constants
+
+[33mcommit faf1ed8563b6f2f43de23dd8128cc4926aeb86aa[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Mon Nov 2 22:59:59 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Mon Nov 2 22:59:59 2020 +0200
+
+    Add Services, Seeder, ViewModels, InputModels etc...
+
+[33mcommit 725561f772cb3d107e3e711937c274a3c6fb78b1[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Mon Nov 2 21:03:11 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Mon Nov 2 21:03:11 2020 +0200
+
+    Create Database
+
+[33mcommit 75937eb9a19914bd8dbaee09c9c202bb080ee683[m
+Author:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+AuthorDate: Sun Nov 1 17:35:12 2020 +0200
+Commit:     RosenAndreevKolev <rosenandreevkolev@abv.bg>
+CommitDate: Sun Nov 1 17:35:12 2020 +0200
+
+    Initial commit

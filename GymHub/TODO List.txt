@@ -1,3 +1,5 @@
+-Add AutoValidateAntiForgeryToken in startup class
+
 -Add product info page.
 
 -Sort comments so that the user's own comment shows up at the top and then sort the rest by likes.
@@ -18,12 +20,19 @@
 
 -Make imageUrl for products support online urls for images instead of only local files system images.
 
+-Add vaptcha validation
+
 **Things to keep in mind
 
+-HTML sanitizer for validating html
+-HTML encoder for validating html
+-Javascript encoder for validating javascript code
+-Url encoder for validating url values
 -ImageSharp for validating images
+-ASP.Net is weird and a null string bypasses [MinLength] for some reason during validation
+
 -WebHostEnvironment in the controller for accessing wwwroot folder
 -IFormFile
--ASP.Net is weird and a null string bypasses [MinLength] for some reason during validation
 -multipart/form-data for file upload inputs
 -Lazy Kit
 -Cloudinary

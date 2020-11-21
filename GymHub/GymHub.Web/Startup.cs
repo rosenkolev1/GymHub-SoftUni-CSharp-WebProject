@@ -9,6 +9,7 @@ using GymHub.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,7 +43,9 @@ namespace GymHub.Web
             //Add Identity managers
 
             //Add Razor and views
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(option => {
+                option.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
             services.AddRazorPages();
 
             //Services for working with the database

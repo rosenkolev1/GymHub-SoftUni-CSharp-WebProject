@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -21,12 +22,14 @@ namespace GymHub.Web.Controllers
         private readonly IUserService userService;
         private readonly IProductCommentService productCommentService;
         private readonly IMapper mapper;
-        public ProductsController(IProductService productService, IMapper mapper, IProductCommentService productCommentService, IUserService userService)
+        private readonly JavaScriptEncoder javaScriptEncoder;
+        public ProductsController(IProductService productService, IMapper mapper, IProductCommentService productCommentService, IUserService userService, JavaScriptEncoder javaScriptEncoder)
         {
             this.productService = productService;
             this.mapper = mapper;
             this.productCommentService = productCommentService;
             this.userService = userService;
+            this.javaScriptEncoder = javaScriptEncoder;
         }
 
         [Authorize]
@@ -96,10 +99,6 @@ namespace GymHub.Web.Controllers
             {
                 complexModel = AssignViewAndInputModels<AddReviewInputModel, ProductInfoViewModel>(viewModel);
             }
-            //else if(typeOfInputModel?.ToString() == nameof(EditReviewInputModel))
-            //{
-            //    complexModel = AssignViewAndInputModels<EditReviewInputModel, ProductInfoViewModel>(viewModel);
-            //}
             else
             {
                 complexModel = AssignViewAndInputModels<AddReviewInputModel, ProductInfoViewModel>(viewModel, true);
@@ -204,6 +203,9 @@ namespace GymHub.Web.Controllers
             var productId = inputModel.ProductId;
 
             var commentId = inputModel.CommentId;
+
+            //Sanitize pageFragment
+            pageFragment = this.javaScriptEncoder.Encode(pageFragment);
 
             //Store input model for passing in get action
             TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
