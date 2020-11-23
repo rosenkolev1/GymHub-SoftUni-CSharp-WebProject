@@ -6,7 +6,14 @@ namespace GymHub.Data.Models
 {
     public class ProductRating : IDeletableEntity
     {
-        //Foreign Keys
+        public ProductRating()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
+
+        [Key]
+        public string Id { get; set; }
+
         [ForeignKey("User")]
         [Required]
         public string UserId { get; set; }
@@ -21,6 +28,7 @@ namespace GymHub.Data.Models
         [Required]
         public string ProductCommentId { get; set; }
         public virtual ProductComment ProductComment { get; set; }
+
 
         //Simple properties
         [Required]

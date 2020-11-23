@@ -12,6 +12,12 @@
     <Compile Remove="Migrations\20201117102831_Add products comments likes.Designer.cs" />
     <Compile Remove="Migrations\20201123174151_Add foreign key reference to product comment for product rating along with isDeleted and DeletedOn.cs" />
     <Compile Remove="Migrations\20201123174151_Add foreign key reference to product comment for product rating along with isDeleted and DeletedOn.Designer.cs" />
+    <Compile Remove="Migrations\20201123195910_Change relations between productsComments and productsRatings.cs" />
+    <Compile Remove="Migrations\20201123195910_Change relations between productsComments and productsRatings.Designer.cs" />
+    <Compile Remove="Migrations\20201123200422_Change relations between productsComments and productsRatings.cs" />
+    <Compile Remove="Migrations\20201123200422_Change relations between productsComments and productsRatings.Designer.cs" />
+    <Compile Remove="Migrations\20201123200748_Fix fluent api relations between productsComments and productsRatings.cs" />
+    <Compile Remove="Migrations\20201123200748_Fix fluent api relations between productsComments and productsRatings.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

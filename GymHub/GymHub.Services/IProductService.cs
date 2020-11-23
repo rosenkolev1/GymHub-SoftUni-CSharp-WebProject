@@ -20,6 +20,7 @@ namespace GymHub.Services
         public string GetShordDescription(string description, int stringLength);
         public string GetProductId(string model);
         public Task AddRatingAsync(string productId, string userId, double rating);
+        public Task AddRatingAsync(ProductRating productRating);
         public bool ProductRatingExists(ProductRating productRating);
         public ProductRating GetProductRating(string userId, string productId);
         public bool ProductRatingExists(string userId, string productId);

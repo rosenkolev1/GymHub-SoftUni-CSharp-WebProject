@@ -18,6 +18,5 @@ namespace GymHub.DTOs
 
         public int QuantityInStock { get; set; }
 
-        public List<ProductRatingDTO> ProductRatings { get; set; }
     }
 }

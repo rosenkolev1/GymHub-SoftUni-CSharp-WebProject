@@ -58,7 +58,7 @@ namespace GymHub.Services.SeederFolder
             await SeedRolesAsync();
             await SeedUsersAsync();
             await SeedProductsAsync();
-            await SeedProductsCommentsAsync();
+            await SeedProductsCommentsAndRatingsAsync();
 
         }
 
@@ -126,13 +126,7 @@ namespace GymHub.Services.SeederFolder
                     QuantityInStock = x.QuantityInStock,
                     MainImage = x.MainImage,
                     Description = x.Description,
-                    Price = x.Price,
-                    ProductRatings = x.ProductRatings
-                        .Select((pr) => new ProductRating
-                        {
-                            Rating = pr.Rating,
-                            UserId = this.userService.GetUserId(pr.Username)
-                        }).ToList()
+                    Price = x.Price
                 }).ToList();
 
             foreach (var product in products)
@@ -145,8 +139,9 @@ namespace GymHub.Services.SeederFolder
             return true;
         }
 
-        private async Task<bool> SeedProductsCommentsAsync()
+        private async Task<bool> SeedProductsCommentsAndRatingsAsync()
         {
+            //Seed the product comments initially
             var productsCommentsDTOs = JsonSerializer.Deserialize<List<ProductCommentDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/ProductsComments.json"));
             var productsComments = productsCommentsDTOs
                 .Select(x => new ProductComment
@@ -156,7 +151,7 @@ namespace GymHub.Services.SeederFolder
                     UserId = this.userService.GetUserId(x.Username),
                     ProductId = this.productService.GetProductId(x.ProductModel),
                     Id = x.Id,
-                    Text = x.Text
+                    Text = x.Text,
                 }).ToList();
 
             foreach (var productComment in productsComments)
@@ -166,6 +161,33 @@ namespace GymHub.Services.SeederFolder
                     await this.productCommentService.AddAsync(productComment);
                 }
             }
+
+            //Seed the product ratings
+            var productsRatingsDTOs = JsonSerializer.Deserialize<List<ProductRatingDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/ProductsRatings.json"));
+            var productsRatings = productsRatingsDTOs
+                .Select(x => new ProductRating
+                {
+                    Id = x.Id,
+                    UserId = this.userService.GetUserId(x.Username),
+                    ProductId = this.productService.GetProductId(x.ProductModel),
+                    ProductCommentId = x.CommentId,
+                    Rating = x.Rating,
+                }).ToList();
+
+            foreach (var productRating in productsRatings)
+            {
+                if (this.productService.ProductRatingExists(productRating) == false)
+                {
+                    await this.productService.AddRatingAsync(productRating);
+                }
+            }
+
+            //Add reference to product comments for product ratings
+            foreach (var productRating in productsRatings)
+            {
+                productRating.ProductComment.ProductRatingId = productRating.Id;
+            }
+
             return true;
         }
     }

@@ -193,10 +193,7 @@ namespace GymHub.Data.Migrations
 
             modelBuilder.Entity("GymHub.Data.Models.ProductRating", b =>
                 {
-                    b.Property<string>("ProductId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("DeletedOn")
@@ -209,15 +206,25 @@ namespace GymHub.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<double>("Rating")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("float")
                         .HasDefaultValue(0.0);
 
-                    b.HasKey("ProductId", "UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ProductCommentId")
                         .IsUnique();
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
 
@@ -277,7 +284,7 @@ namespace GymHub.Data.Migrations
                     b.Property<DateTime>("PurchasedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2020, 11, 23, 17, 44, 40, 688, DateTimeKind.Utc).AddTicks(3674));
+                        .HasDefaultValue(new DateTime(2020, 11, 23, 20, 8, 28, 592, DateTimeKind.Utc).AddTicks(6699));
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -375,7 +382,7 @@ namespace GymHub.Data.Migrations
                     b.Property<DateTime?>("RegisteredOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2020, 11, 23, 17, 44, 40, 689, DateTimeKind.Utc).AddTicks(6435));
+                        .HasDefaultValue(new DateTime(2020, 11, 23, 20, 8, 28, 593, DateTimeKind.Utc).AddTicks(9679));
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

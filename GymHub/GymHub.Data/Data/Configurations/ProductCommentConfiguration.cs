@@ -15,6 +15,7 @@ namespace GymHub.Data.Data.Configurations
             builder
                 .Property(x => x.DeletedOn)
                 .HasDefaultValue(null);
+
         }
     }
 }

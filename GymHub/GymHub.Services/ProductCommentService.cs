@@ -1,5 +1,6 @@
 ﻿using GymHub.Data.Data;
 using GymHub.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,13 +92,15 @@ namespace GymHub.Services
 
         public async Task RemoveAsync(string commentId)
         {
-            var removedComment = this.context.ProductsComments.FirstOrDefault(x => x.Id == commentId);
+            var removedComment = this.context.ProductsComments
+                .Include(x => x.ProductRating)
+                .FirstOrDefault(x => x.Id == commentId);
             removedComment.IsDeleted = true;
             removedComment.DeletedOn = DateTime.UtcNow;
 
-            if (this.productService.ProductRatingExists(removedComment.UserId, removedComment.ProductId))
+            if (removedComment.ProductRatingId != null)
             {
-                var ratingFromComment = this.productService.GetProductRating(removedComment.UserId, removedComment.ProductId);
+                var ratingFromComment = removedComment.ProductRating;
                 ratingFromComment.IsDeleted = true;
                 ratingFromComment.DeletedOn = DateTime.UtcNow;
             }

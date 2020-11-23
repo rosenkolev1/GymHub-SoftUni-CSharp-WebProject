@@ -1,0 +1,23 @@
+﻿[
+  {
+    "Id": "RootCommentOneRating",
+    "CommentId": "RootCommentOne",
+    "Rating": 2,
+    "Username": "rosenkolev1",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentTwoRating",
+    "CommentId": "RootCommentTwo",
+    "Rating": 6,
+    "Username": "stefan01",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentThreeRating",
+    "CommentId": "RootCommentThree",
+    "Rating": 3,
+    "Username": "adminRosen",
+    "ProductModel": "LCM:5470-331"
+  }
+]

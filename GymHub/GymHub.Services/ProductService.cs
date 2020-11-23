@@ -165,5 +165,11 @@ namespace GymHub.Services
             if (productRating != null) productRating.Rating = rating;
             await this.context.SaveChangesAsync();
         }
+
+        public async Task AddRatingAsync(ProductRating productRating)
+        {
+            this.context.ProductsRatings.Add(productRating);
+            await this.context.SaveChangesAsync();
+        }
     }
 }

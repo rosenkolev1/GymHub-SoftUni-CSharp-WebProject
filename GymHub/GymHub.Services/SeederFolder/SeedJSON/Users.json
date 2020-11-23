@@ -1,0 +1,59 @@
+﻿[
+  {
+    "FirstName": "Rosen",
+    "MiddleName": "Andreev",
+    "LastName": "Kolev",
+    "Username": "adminRosen",
+    "Password": "adminRosen",
+    "DateOfBirth": "2002-09-17T00:00:00Z",
+    "Email": "rosenandreevkolev1@gmail.com",
+    "GenderName": "Male",
+    "RoleNames": [
+      "Admin"
+    ]
+  },
+  {
+    "FirstName": "Rosen",
+    "MiddleName": "Andreev",
+    "LastName": "Kolev",
+    "Username": "rosenkolev1",
+    "Password": "rosenkolev1",
+    "DateOfBirth": "2002-09-17T00:00:00Z",
+    "Email": "rosenandreevkolev@abv.bg",
+    "GenderName": "Male",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "Stefan",
+    "MiddleName": "Konstantinov",
+    "LastName": "Andonov",
+    "Username": "stefan01",
+    "Password": "stefan01",
+    "DateOfBirth": "2001-02-23T00:00:00Z",
+    "Email": "stefanandonov01@abv.bg",
+    "GenderName": "Male",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "Zornica",
+    "MiddleName": "Stefanova",
+    "LastName": "Koleva",
+    "Username": "zornicakoleva1982",
+    "Password": "zornicakoleva1982",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "zornicakoleva1982@abv.bg",
+    "Username": "zornicakoleva",
+    "Password": "zornicakoleva",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "zornicakoleva@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  }
+]
+
