@@ -284,5 +284,79 @@ namespace GymHub.Web.Controllers
 
             return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ReplyToComment(ReplyCommentInputModel inputModel, string pageFragment)
+        {
+            var productId = inputModel.ProductId;
+
+            var commentId = inputModel.CommentId;
+
+            //Sanitize pageFragment
+            pageFragment = this.javaScriptEncoder.Encode(pageFragment);
+
+            //Store input model for passing in get action
+            TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
+            TempData["InputModelFromPOSTRequestType"] = nameof(ReplyCommentInputModel);
+
+            //Check if data is valid without looking into the database
+            if (this.ModelState.IsValid == false)
+            {
+                //Add suitable model state error for UI validation
+                var newModelState = new ModelStateDictionary(this.ModelState);
+                foreach (var modelStateEntry in this.ModelState.Values)
+                {
+                    foreach (var modelStateError in modelStateEntry.Errors)
+                    {
+                        newModelState.AddModelError($"CommentId_{inputModel.CommentCounter}", modelStateError.ErrorMessage);
+                    }
+                }
+
+                //Store needed info for get request in TempData
+                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(newModelState);
+
+                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
+            }
+
+            var userId = this.userService.GetUserId(this.User.Identity.Name);
+
+            //Check if comment from this user for this product exists
+            if (this.productCommentService.CommentExists(commentId) == false)
+            {
+                this.ModelState.AddModelError($"CommentId_{inputModel.CommentCounter}", "Can't reply to nonexistent comment");
+            }
+
+            //Create new reply comment
+            var replyComment = new ProductComment
+            {
+                ProductId = productId,
+                ParentCommentId = commentId,
+                Text = inputModel.Text,
+                CommentedOn = DateTime.UtcNow,
+                UserId = userId
+            };
+
+            //Check if model state is valid after checking into the database
+            if (this.ModelState.IsValid == false)
+            {
+                //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
+                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
+                //Reload same page with the TempData
+                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
+            }
+
+            await this.productCommentService.AddAsync(replyComment);
+
+            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> LoadReplyToComment(ReplyCommentInputModel inputModel)
+        {
+
+            return this.PartialView("_ProductCommentReplyPartial.cshtml", inputModel);
+        }
     }
 }

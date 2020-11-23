@@ -1,0 +1,19 @@
+﻿@model ReplyCommentInputModel
+@{
+    var inputModel = Model;
+}
+
+<div hidden class="product-comment-reply-container">
+    <form method="post" class="product-review-form product-comment-editReview-form">
+        <input type="hidden" value="@inputModel.CommentId" asp-for="CommentId" />
+        <input type="hidden" asp-for="ProductId" value="@Model.ProductId" />
+        <textarea class="product-comment-editReview-textarea" placeholder="What are your thoughts?" name="Text">@inputModel.Text</textarea>
+        <input hidden asp-for="CommentCounter" value="@(Model.CommentCounter)" />
+        @Html.ValidationMessage($"CommentId_{Model.CommentCounter}", new { @class = "alert-danger", @style = "display:block" })
+        @Html.ValidationMessage($"Text_{Model.CommentCounter}", new { @class = "alert-danger", @style = "display:block" })
+        <input type="hidden" value="" name="pageFragment" class="post-pageFragment" />
+        <div class="product-comment-editReview-editButton-container">
+            <button type="submit" class="btn btn-success green" asp-controller="Products" asp-action="ReplyToComment"><i class="fa fa-share"></i>Reply to comment</button>
+        </div>
+    </form>
+</div>

@@ -34,9 +34,14 @@
             }
             @comment.Text
         </p>
+        <p></p>
         @if (Model.BelongsToCurrentUser == true)
         {
             @await Html.PartialAsync("_ProductEditReviewPartial.cshtml", new EditReviewInputModel((int)userProductRating.AverageRating, comment.Text, comment.ProductId, comment.Id, comment.ParentCommentId == null, Model.CommentCounter));
+        }
+        else
+        {
+            @await Html.PartialAsync("_ProductCommentReplyPartial.cshtml", new ReplyCommentInputModel(comment.ProductId, comment.Id, Model.CommentCounter));
         }
     </div>
     @if (Model.RepliesCount > 0)
@@ -46,5 +51,9 @@
     @if (Model.BelongsToCurrentUser)
     {
         <button class="product-comment-edit-button">Edit</button>
+    }
+    else
+    {
+        <button class="product-comment-reply-button">Reply</button>
     }
 </div>

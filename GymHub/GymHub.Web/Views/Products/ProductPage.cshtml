@@ -4,7 +4,7 @@
 @using GymHub.Data.Models
 @model ComplexModel<AddReviewInputModel, ProductInfoViewModel>
 @{
-    
+
 }
 
 @section AdditionalLinks{
@@ -168,12 +168,12 @@
                             {
                                 <hr />
                             }
-                            @{ 
+                            @{
                                 var uniqueCommentCount = 0;
                             }
                             @foreach (var kv in viewModel.ParentsChildrenComments)
                             {
-                                
+
                                 var parentComment = kv.Key;
                                 var childrenComments = kv.Value;
                                 if (parentComment.ParentCommentId == null)
@@ -187,6 +187,7 @@
                                             {
                                                 var userProductRatingChild = viewModel.UsersProductRatings[childComment.User];
                                                 @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, userProductRatingChild, viewModel.CurrentUserId, uniqueCommentCount++))
+                                                uniqueCommentCount++;
                                             }
                                         </div>
                                     </div>
@@ -210,5 +211,6 @@
     <script src="/js/ProductInfoReviewDynamicRating.js" asp-append-version="true"></script>
     <script src="/js/ProductPageURLFragments.js" asp-append-version="true"></script>
     <script src="/js/ProductEditComment.js" asp-append-version="true"></script>
+    <script src="/js/ProductReplyComment.js" asp-append-version="true"></script>
     <partial name="_ValidationScriptsPartial.cshtml">
 }

@@ -25,7 +25,7 @@
         }
 
         listItem.addEventListener('click', e => {
-            window.location.hash = `#${listItemFragment}`;
+            window.location.replace(window.location.protocol + '//' + window.location.host + window.location.pathname + window.location.search + `#${listItemFragment}`);
         })
     })
 }
