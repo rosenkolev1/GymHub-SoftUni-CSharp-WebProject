@@ -6,10 +6,9 @@ using GymHub.Web.Models.InputModels;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-namespace GymHub.Web.Services
+namespace GymHub.Services
 {
     public class UserService : IUserService
     {
@@ -74,7 +73,7 @@ namespace GymHub.Web.Services
 
         public async Task<User> CreateUserAsync(RegisterUserInputModel inputModel, params Role[] roles)
         {
-            if(roles.Length == 0)
+            if (roles.Length == 0)
             {
                 throw new ArgumentException("No roles have been give to this user");
             }

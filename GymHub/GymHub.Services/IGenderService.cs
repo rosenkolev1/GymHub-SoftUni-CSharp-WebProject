@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GymHub.Web.Services
+namespace GymHub.Services
 {
     public interface IGenderService
     {

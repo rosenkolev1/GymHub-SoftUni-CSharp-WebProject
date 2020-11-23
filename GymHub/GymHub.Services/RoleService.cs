@@ -1,14 +1,11 @@
-﻿using GymHub.Common;
-using GymHub.Data;
-using GymHub.Data.Data;
+﻿using GymHub.Data.Data;
 using GymHub.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-namespace GymHub.Web.Services
+namespace GymHub.Services
 {
     public class RoleService : IRoleService
     {
@@ -29,7 +26,7 @@ namespace GymHub.Web.Services
             }
         }
 
-        public async Task<Role> GetRoleAsync (string name)
+        public async Task<Role> GetRoleAsync(string name)
         {
             return this.context.Roles.FirstOrDefault(x => x.Name == name);
         }

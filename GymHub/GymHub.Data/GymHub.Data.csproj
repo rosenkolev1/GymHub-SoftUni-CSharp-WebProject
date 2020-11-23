@@ -10,6 +10,8 @@
     <Compile Remove="Migrations\20201117101941_Add products comments likes.Designer.cs" />
     <Compile Remove="Migrations\20201117102831_Add products comments likes.cs" />
     <Compile Remove="Migrations\20201117102831_Add products comments likes.Designer.cs" />
+    <Compile Remove="Migrations\20201123174151_Add foreign key reference to product comment for product rating along with isDeleted and DeletedOn.cs" />
+    <Compile Remove="Migrations\20201123174151_Add foreign key reference to product comment for product rating along with isDeleted and DeletedOn.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

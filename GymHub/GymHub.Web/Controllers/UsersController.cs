@@ -1,14 +1,7 @@
-﻿using GymHub.Common;
-using GymHub.Data.Models;
-using GymHub.Web.Models;
-using GymHub.Web.Models.InputModels;
-using GymHub.Web.Models.ViewModels;
-using GymHub.Web.Services;
-using Microsoft.AspNetCore.Authorization;
+﻿using GymHub.Data.Models;
+using GymHub.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace GymHub.Web.Controllers
 {

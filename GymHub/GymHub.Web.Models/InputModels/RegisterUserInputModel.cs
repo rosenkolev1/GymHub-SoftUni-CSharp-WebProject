@@ -1,13 +1,11 @@
 ﻿using GymHub.Common;
 using GymHub.Data.Data;
 using GymHub.Web.Models.CustomAttributes;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace GymHub.Web.Models.InputModels
 {
@@ -72,7 +70,7 @@ namespace GymHub.Web.Models.InputModels
             //Validate gender exists in the database
             if (dbContext.Genders.Any(x => x.Id == GenderId) == false)
             {
-                validationResults.Add(new ValidationResult($"Gender should be a valid gender from: {string.Join(", ", dbContext.Genders.Select(x => x.Name).ToList())}", new List<string> { nameof(GenderId)}));
+                validationResults.Add(new ValidationResult($"Gender should be a valid gender from: {string.Join(", ", dbContext.Genders.Select(x => x.Name).ToList())}", new List<string> { nameof(GenderId) }));
             }
 
             return validationResults;

@@ -1,11 +1,10 @@
-﻿using GymHub.Data;
-using GymHub.Data.Data;
+﻿using GymHub.Data.Data;
 using GymHub.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GymHub.Web.Services
+namespace GymHub.Services
 {
     public class GenderService : IGenderService
     {

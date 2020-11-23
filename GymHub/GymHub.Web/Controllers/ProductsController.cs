@@ -4,12 +4,11 @@ using GymHub.Services;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
-using GymHub.Web.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -24,13 +23,15 @@ namespace GymHub.Web.Controllers
         private readonly IProductCommentService productCommentService;
         private readonly IMapper mapper;
         private readonly JavaScriptEncoder javaScriptEncoder;
-        public ProductsController(IProductService productService, IMapper mapper, IProductCommentService productCommentService, IUserService userService, JavaScriptEncoder javaScriptEncoder)
+        private readonly UserManager<User> userManager;
+        public ProductsController(IProductService productService, IMapper mapper, IProductCommentService productCommentService, IUserService userService, JavaScriptEncoder javaScriptEncoder, UserManager<User> userManager)
         {
             this.productService = productService;
             this.mapper = mapper;
             this.productCommentService = productCommentService;
             this.userService = userService;
             this.javaScriptEncoder = javaScriptEncoder;
+            this.userManager = userManager;
         }
 
         [Authorize]
@@ -104,12 +105,12 @@ namespace GymHub.Web.Controllers
             var typeOfInputModel = TempData["InputModelFromPOSTRequestType"];
 
             //If input model is for adding review
-            if(typeOfInputModel?.ToString() == nameof(AddReviewInputModel))
+            if (typeOfInputModel?.ToString() == nameof(AddReviewInputModel))
             {
                 complexModel = AssignViewAndInputModels<AddReviewInputModel, ProductInfoViewModel>(viewModel);
             }
             //If input model is for replying to a comment
-            else if(typeOfInputModel?.ToString() == nameof(ReplyCommentInputModel))
+            else if (typeOfInputModel?.ToString() == nameof(ReplyCommentInputModel))
             {
                 var replyCommentInputModelsJSON = TempData["InputModelFromPOSTRequest"]?.ToString();
                 var replyCommentInputModel = JsonSerializer.Deserialize<ReplyCommentInputModel>(replyCommentInputModelsJSON);
@@ -145,13 +146,16 @@ namespace GymHub.Web.Controllers
             }
 
             return complexModel;
-        } 
+        }
 
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddReview(ComplexModel<AddReviewInputModel, ProductInfoViewModel> complexModel, string pageFragment)
         {
             var productId = complexModel.InputModel.ProductId;
+
+            //Sanitize pageFragment
+            pageFragment = this.javaScriptEncoder.Encode(pageFragment);
 
             //Store input model for passing in get action
             TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(complexModel.InputModel);
@@ -252,7 +256,7 @@ namespace GymHub.Web.Controllers
             var userId = this.userService.GetUserId(this.User.Identity.Name);
 
             var oldProductRating = new ProductRating();
-            if(inputModel?.Rating > 0)
+            if (inputModel?.Rating > 0)
             {
                 //Check if rating from this user for this product already exists
                 if (this.productService.ProductRatingExists(userId, productId) == true)
@@ -298,8 +302,8 @@ namespace GymHub.Web.Controllers
                 return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
             }
 
-            if(oldComment != null) await this.productCommentService.EditCommentText(oldComment, inputModel.Text);
-            if(oldProductRating != null) await this.productService.EditProductRating(oldProductRating, (double)inputModel.Rating);
+            if (oldComment != null) await this.productCommentService.EditCommentTextAsync(oldComment, inputModel.Text);
+            if (oldProductRating != null) await this.productService.EditProductRating(oldProductRating, (double)inputModel.Rating);
 
             return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
         }
@@ -340,8 +344,8 @@ namespace GymHub.Web.Controllers
 
             var userId = this.userService.GetUserId(this.User.Identity.Name);
 
-            //Check if comment from this user for this product exists
-            if (this.productCommentService.CommentExists(commentId) == false)
+            //Check if parent comment for this product exists
+            if (this.productCommentService.CommentMatchesUserAndProduct(commentId, userId, productId) == false)
             {
                 this.ModelState.AddModelError($"ParentCommentId_{inputModel.CommentCounter}", "Can't reply to nonexistent comment");
             }
@@ -372,7 +376,7 @@ namespace GymHub.Web.Controllers
 
             await this.productCommentService.AddAsync(replyComment);
 
-            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, toReplyComment = replyComment.Id}, pageFragment);
+            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, toReplyComment = replyComment.Id }, pageFragment);
         }
 
         [Authorize]
@@ -380,6 +384,40 @@ namespace GymHub.Web.Controllers
         public async Task<IActionResult> LoadReplyToComment(ReplyCommentInputModel inputModel)
         {
             return this.PartialView("Views/Products/_ProductCommentReplyPartial.cshtml", inputModel);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> RemoveComment(RemoveCommentInputModel removeCommentInputModel, string pageFragment, string productId)
+        {
+            var commentId = removeCommentInputModel.RemoveCommentId;
+
+            //Sanitize pageFragment
+            pageFragment = this.javaScriptEncoder.Encode(pageFragment);
+
+            if (this.ModelState.IsValid == false)
+            {
+                return this.RedirectToAction(nameof(All), "Products");
+            }
+
+            var userId = this.userService.GetUserId(this.User.Identity.Name);
+
+            if (this.productCommentService.CommentMatchesUserAndProduct(commentId, userId, productId) == false)
+            {
+                this.ModelState.AddModelError(nameof(removeCommentInputModel.RemoveCommentId), "Comment doesn't exist");
+            }
+
+            if (this.ModelState.IsValid == false)
+            {
+                //Store input model for passing in get action
+                TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(removeCommentInputModel);
+                TempData["InputModelFromPOSTRequestType"] = nameof(ReplyCommentInputModel);
+                return this.RedirectToAction(nameof(All), "Products");
+            }
+
+            await this.productCommentService.RemoveAsync(commentId);
+
+            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
         }
     }
 }

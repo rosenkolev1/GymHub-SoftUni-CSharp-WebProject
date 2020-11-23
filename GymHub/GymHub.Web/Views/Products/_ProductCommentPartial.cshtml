@@ -1,4 +1,5 @@
 ﻿@using GymHub.Data.Models
+@using GymHub.Common
 @model ProductCommentPartialViewModel
 @{
     var comment = Model.Comment;
@@ -41,7 +42,7 @@
         {
             @await Html.PartialAsync("_ProductEditReviewPartial.cshtml", new EditReviewInputModel((int)userProductRating.AverageRating, comment.Text, comment.ProductId, comment.Id, comment.ParentCommentId == null, Model.CommentCounter));
         }
-        @{ 
+        @{
             var replyCommentInputModel = Model.ReplyCommentInputModel;
         }
         @if (replyCommentInputModel != null && comment.Id == replyCommentInputModel.ParentCommentId)
@@ -50,20 +51,31 @@
             @await Html.PartialAsync("_ProductCommentReplyPartial.cshtml", replyCommentInputModel);
         }
         @*else
-        {
-            @await Html.PartialAsync("_ProductCommentReplyPartial.cshtml", new ReplyCommentInputModel(comment.ProductId, comment.Id, Model.CommentCounter));
-        }*@
+            {
+                @await Html.PartialAsync("_ProductCommentReplyPartial.cshtml", new ReplyCommentInputModel(comment.ProductId, comment.Id, Model.CommentCounter));
+            }*@
     </div>
-    @if (Model.RepliesCount > 0)
-    {
-        <button class="product-comment-replies-button">Show replies(@Model.RepliesCount)</button>
-    }
-    @if (Model.BelongsToCurrentUser)
-    {
-        <button class="product-comment-edit-button">Edit</button>
-    }
-    else
-    {
-        <button class="product-comment-reply-button">Reply</button>
-    }
+    <div class="container">
+        @if (Model.RepliesCount > 0)
+        {
+            <button class="product-comment-replies-button">Show replies(@Model.RepliesCount)</button>
+        }
+        @if (Model.BelongsToCurrentUser)
+        {
+            <button class="product-comment-edit-button">Edit</button>
+        }
+        else
+        {
+            <button class="product-comment-reply-button">Reply</button>
+        }
+        @if (Model.BelongsToCurrentUser == true || this.User.IsInRole(GlobalConstants.AdminRoleName))
+        {
+            <form method="post" asp-controller="Products" asp-action="RemoveComment" asp-route-productId="@comment.ProductId" class="product-comment-remove-form">
+                <input hidden class="post-pageFragment" name="pageFragment"/>
+                <input hidden name="RemoveCommentId" value="@comment.Id"/>
+                <button type="submit" class="product-comment-remove-button alert alert-danger">Remove</button>
+                @Html.ValidationMessage("RemoveCommentId", new { @class = "validation-message alert-danger"})
+            </form>
+        }
+    </div>
 </div>

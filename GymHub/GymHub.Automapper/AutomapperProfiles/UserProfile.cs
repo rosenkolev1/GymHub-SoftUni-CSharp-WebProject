@@ -11,14 +11,14 @@ namespace GymHub.Automapper.AutomapperProfiles
         public UserProfile()
         {
             CreateMap<RegisterUserInputModel, User>()
-                .ForMember(dest => 
+                .ForMember(dest =>
                     dest.RegisteredOn,
                     opt => opt.NullSubstitute(DateTime.UtcNow));
 
             CreateMap<UserDTO, User>()
                 .ForMember(dest =>
                     dest.RegisteredOn,
-                    opt => opt.NullSubstitute(DateTime.UtcNow)); 
+                    opt => opt.NullSubstitute(DateTime.UtcNow));
         }
     }
 }

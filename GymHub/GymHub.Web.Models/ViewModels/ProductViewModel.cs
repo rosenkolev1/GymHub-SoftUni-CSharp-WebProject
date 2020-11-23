@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Text;
-
-namespace GymHub.Web.Models.ViewModels
+﻿namespace GymHub.Web.Models.ViewModels
 {
     public class ProductViewModel
     {

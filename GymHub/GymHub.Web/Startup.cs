@@ -5,7 +5,6 @@ using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services;
 using GymHub.Services.SeederFolder;
-using GymHub.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -43,7 +42,8 @@ namespace GymHub.Web
             //Add Identity managers
 
             //Add Razor and views
-            services.AddControllersWithViews(option => {
+            services.AddControllersWithViews(option =>
+            {
                 option.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
             services.AddRazorPages();

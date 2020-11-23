@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 
 namespace GymHub.Web.Models.CustomAttributes
 {
@@ -34,7 +29,7 @@ namespace GymHub.Web.Models.CustomAttributes
             }
 
             //Check actual validation requirement
-            if(dateTimeValue <= currentDate && dateTimeValue >= minDate)
+            if (dateTimeValue <= currentDate && dateTimeValue >= minDate)
             {
                 return true;
             }

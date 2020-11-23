@@ -4,8 +4,6 @@ using GymHub.Common;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.DTOs;
-using GymHub.Web.Models.InputModels;
-using GymHub.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -120,8 +118,8 @@ namespace GymHub.Services.SeederFolder
         {
             var productsDTOs = JsonSerializer.Deserialize<List<ProductDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Products.json"));
             var products = productsDTOs
-                .Select(x => new Product 
-                { 
+                .Select(x => new Product
+                {
                     Name = x.Name,
                     Model = x.Model,
                     Warranty = x.Warranty,
@@ -130,7 +128,7 @@ namespace GymHub.Services.SeederFolder
                     Description = x.Description,
                     Price = x.Price,
                     ProductRatings = x.ProductRatings
-                        .Select((pr) => new ProductRating 
+                        .Select((pr) => new ProductRating
                         {
                             Rating = pr.Rating,
                             UserId = this.userService.GetUserId(pr.Username)
@@ -139,7 +137,7 @@ namespace GymHub.Services.SeederFolder
 
             foreach (var product in products)
             {
-                if(await this.productService.ProductExistsByModelAsync(product.Model) == false)
+                if (await this.productService.ProductExistsByModelAsync(product.Model) == false)
                 {
                     await this.productService.AddAsync(product);
                 }

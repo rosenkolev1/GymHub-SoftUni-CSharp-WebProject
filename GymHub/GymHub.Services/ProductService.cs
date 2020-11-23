@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Web.Models.InputModels;
@@ -8,11 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymHub.Web.Services
+namespace GymHub.Services
 {
     public class ProductService : IProductService
     {

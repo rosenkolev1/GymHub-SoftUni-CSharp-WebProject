@@ -35,6 +35,10 @@ namespace GymHub.Data.Models
         public string ProductId { get; set; }
         public virtual Product Product { get; set; }
 
+        [ForeignKey("ProductRating")]
+        public string ProductRatingId { get; set; }
+        public virtual ProductRating ProductRating { get; set; }
+
         //Simple properties
         [Required]
         public string Text { get; set; }

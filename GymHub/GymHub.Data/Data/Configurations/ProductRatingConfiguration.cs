@@ -14,6 +14,11 @@ namespace GymHub.Data.Data.Configurations
             builder
                 .Property(x => x.Rating)
                 .HasDefaultValue(0);
+
+            builder
+                .HasOne(x => x.ProductComment)
+                .WithOne(x => x.ProductRating)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

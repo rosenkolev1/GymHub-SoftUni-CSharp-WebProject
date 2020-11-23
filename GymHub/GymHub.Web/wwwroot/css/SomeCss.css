@@ -422,7 +422,7 @@ th {
     margin-left:50px;
 }
 
-.product-comment-replies-button, .product-comment-edit-button, .product-comment-reply-button {
+.product-comment-replies-button, .product-comment-edit-button, .product-comment-reply-button, .product-comment-remove-button {
     text-align: left;
     font-weight: bold;
     color: darkslategrey;
@@ -434,7 +434,15 @@ th {
     padding-left: 0px;
 }
 
-.product-comment-reply-button{
+.product-comment-remove-button {
+    text-align: right;
+    color: floralwhite;
+    background-color: indianred;
+    border-color: #ebccd1;
+    padding: 6px 6px;
+}
+
+.product-comment-reply-button {
     margin-left: 10px;
 }
 
@@ -465,4 +473,14 @@ th {
 .product-comment-editReview-textarea{
     height: 50px;
     width: 100%;
+}
+
+.product-comment-remove-form {
+    text-align: end;
+    display: inline-block;
+    float: right;
+}
+
+.validation-message{
+    display:block;
 }

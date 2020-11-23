@@ -1,6 +1,5 @@
 ﻿using GymHub.Data.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace GymHub.Data
 {

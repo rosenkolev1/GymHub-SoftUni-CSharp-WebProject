@@ -3,7 +3,7 @@ using GymHub.DTOs;
 using GymHub.Web.Models.InputModels;
 using System.Threading.Tasks;
 
-namespace GymHub.Web.Services
+namespace GymHub.Services
 {
     public interface IUserService
     {

@@ -2,7 +2,7 @@
 
 replyButtons.forEach(btn => {
     btn.addEventListener("click", e => {
-        let parentDivElement = btn.parentElement.parentElement.querySelector(".product-comment-child-container");
+        let parentDivElement = btn.parentElement.parentElement.parentElement.querySelector(".product-comment-child-container");
         if (parentDivElement.hasAttribute("hidden")) {
             parentDivElement.removeAttribute("hidden");
             let repliesCount = btn.textContent.split('(')[1].split(')')[0];

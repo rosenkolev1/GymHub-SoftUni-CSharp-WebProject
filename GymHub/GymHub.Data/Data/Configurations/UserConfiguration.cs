@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Security.Cryptography.X509Certificates;
 
 namespace GymHub.Data.Data.Configurations
 {

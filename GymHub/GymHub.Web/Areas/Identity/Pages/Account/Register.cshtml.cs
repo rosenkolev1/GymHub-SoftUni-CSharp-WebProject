@@ -1,24 +1,18 @@
 ﻿using AutoMapper;
 using GymHub.Common;
-using GymHub.Data.Data;
 using GymHub.Data.Models;
-using GymHub.Web.Models.CustomAttributes;
+using GymHub.Services;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
-using GymHub.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -77,7 +71,7 @@ namespace GymHub.Web.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
-            { 
+            {
                 var user = this.mapper.Map<User>(Input);
 
                 //Create User
@@ -122,7 +116,7 @@ namespace GymHub.Web.Areas.Identity.Pages.Account
                     {
                         ModelState.AddModelError(this.Input.Username, error.Description);
                     }
-                    else if(error.Code == "DuplicateEmail")
+                    else if (error.Code == "DuplicateEmail")
                     {
                         ModelState.AddModelError(this.Input.Email, error.Description);
                     }

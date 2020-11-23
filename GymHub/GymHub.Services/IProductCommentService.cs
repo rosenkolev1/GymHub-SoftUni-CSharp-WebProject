@@ -1,7 +1,5 @@
 ﻿using GymHub.Data.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GymHub.Services
@@ -14,6 +12,7 @@ namespace GymHub.Services
         public ProductComment GetProductComment(string commentId);
         public bool CommentExists(string commentId);
         public bool CommentMatchesUserAndProduct(string commentId, string userId, string productId);
-        public Task EditCommentText(ProductComment comment, string text);
+        public Task EditCommentTextAsync(ProductComment comment, string text);
+        public Task RemoveAsync(string commentId);
     }
 }

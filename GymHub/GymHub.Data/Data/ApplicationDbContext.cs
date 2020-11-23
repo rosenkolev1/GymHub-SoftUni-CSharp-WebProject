@@ -37,7 +37,7 @@ namespace GymHub.Data.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if(optionsBuilder.IsConfigured == false)
+            if (optionsBuilder.IsConfigured == false)
             {
                 optionsBuilder.UseSqlServer("Server=.;Database=GymHub;Integrated Security=true");
             }

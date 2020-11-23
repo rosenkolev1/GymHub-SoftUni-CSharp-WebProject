@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Web.Models.ViewModels;
@@ -8,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GymHub.Web.Services
+namespace GymHub.Services
 {
     public class CartService : ICartService
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GymHub.Web.Models
+﻿namespace GymHub.Web.Models
 {
     public class ComplexModel<InputType, ViewType>
     {

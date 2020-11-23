@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GymHub.DTOs
+﻿namespace GymHub.DTOs
 {
     public class ProductRatingDTO
     {

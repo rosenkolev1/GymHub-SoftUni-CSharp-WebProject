@@ -49,8 +49,8 @@
         @Html.ValidationMessage($"Rating_{Model.CommentCounter}", new { @class = "alert-danger", @style = "display:block" })
     }
     <input hidden asp-for="CommentCounter" value="@(Model.CommentCounter)" />
-    @Html.ValidationMessage($"CommentId_{Model.CommentCounter}", new { @class = "alert-danger", @style = "display:block" })
-    @Html.ValidationMessage($"Text_{Model.CommentCounter}", new { @class = "alert-danger", @style = "display:block" })
+    @Html.ValidationMessage($"CommentId_{Model.CommentCounter}", new { @class = "validation-message"})
+    @Html.ValidationMessage($"Text_{Model.CommentCounter}", new { @class = "validation-message" })
     <input type="hidden" value="" name="pageFragment" class="post-pageFragment" />
     <div class="product-comment-editReview-editButton-container">
         @if (inputModel.IsParrentComment)
