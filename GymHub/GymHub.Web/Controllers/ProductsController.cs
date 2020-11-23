@@ -41,12 +41,15 @@ namespace GymHub.Web.Controllers
             {
                 product.ShortDescription = this.productService.GetShordDescription(product.Description, 40);
             }
+
+            //This is for debugging purposes for now
             this.TempData.Clear();
+
             return this.View(products);
         }
 
         [Authorize]
-        public async Task<IActionResult> ProductPage(string productId)
+        public async Task<IActionResult> ProductPage(string productId, string toReplyComment)
         {
             var product = await this.productService.GetProductByIdAsync(productId);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
@@ -75,6 +78,9 @@ namespace GymHub.Web.Controllers
                     viewModel.ParentsChildrenComments.Add(comment, childComments);
                 }
             }
+
+            //toReplyComment query string
+            viewModel.ToReplyComment = toReplyComment;
 
             //Order comments and all of it's replies
             viewModel.ParentsChildrenComments.OrderBy(kv => kv.Key.CommentedOn);
@@ -111,7 +117,7 @@ namespace GymHub.Web.Controllers
 
                 complexModel = AssignViewAndInputModels<AddReviewInputModel, ProductInfoViewModel>(viewModel, true);
             }
-            //If there isn't an input model, aka if page has just loaded for the first time
+            //If there isn't an input model
             else
             {
                 complexModel = AssignViewAndInputModels<AddReviewInputModel, ProductInfoViewModel>(viewModel, true);
@@ -309,13 +315,13 @@ namespace GymHub.Web.Controllers
             //Sanitize pageFragment
             pageFragment = this.javaScriptEncoder.Encode(pageFragment);
 
-            //Store input model for passing in get action
-            TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
-            TempData["InputModelFromPOSTRequestType"] = nameof(ReplyCommentInputModel);
-
             //Check if data is valid without looking into the database
             if (this.ModelState.IsValid == false)
             {
+                //Store input model for passing in get action
+                TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
+                TempData["InputModelFromPOSTRequestType"] = nameof(ReplyCommentInputModel);
+
                 //Add suitable model state error for UI validation
                 var newModelState = new ModelStateDictionary(this.ModelState);
                 foreach (var modelStateEntry in this.ModelState.Values)
@@ -353,6 +359,10 @@ namespace GymHub.Web.Controllers
             //Check if model state is valid after checking into the database
             if (this.ModelState.IsValid == false)
             {
+                //Store input model for passing in get action
+                TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
+                TempData["InputModelFromPOSTRequestType"] = nameof(ReplyCommentInputModel);
+
                 //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
                 TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
@@ -362,7 +372,7 @@ namespace GymHub.Web.Controllers
 
             await this.productCommentService.AddAsync(replyComment);
 
-            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
+            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, toReplyComment = replyComment.Id}, pageFragment);
         }
 
         [Authorize]
