@@ -11,10 +11,10 @@ namespace GymHub.Web.Models.InputModels
         {
 
         }
-        public ReplyCommentInputModel(string productId, string commentId, int commentCounter)
+        public ReplyCommentInputModel(string productId, string parentCommentId, int commentCounter)
         {
             this.ProductId = productId;
-            this.CommentId = commentId;
+            this.ParentCommentId = parentCommentId;
             this.CommentCounter = commentCounter;
         }
 
@@ -28,6 +28,6 @@ namespace GymHub.Web.Models.InputModels
         public string ProductId { get; set; }
 
         [Required(ErrorMessage = "Comment is required")]
-        public string CommentId { get; set; }
+        public string ParentCommentId { get; set; }
     }
 }

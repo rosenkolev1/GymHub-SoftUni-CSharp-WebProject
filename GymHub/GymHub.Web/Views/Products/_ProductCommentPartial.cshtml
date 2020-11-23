@@ -34,15 +34,25 @@
             }
             @comment.Text
         </p>
-        <p></p>
+        <p hidden id="ReplyProductId">@comment.ProductId</p>
+        <p hidden id="ReplyCommentId">@comment.Id</p>
+        <p hidden id="ReplyCommentCounter">@Model.CommentCounter</p>
         @if (Model.BelongsToCurrentUser == true)
         {
             @await Html.PartialAsync("_ProductEditReviewPartial.cshtml", new EditReviewInputModel((int)userProductRating.AverageRating, comment.Text, comment.ProductId, comment.Id, comment.ParentCommentId == null, Model.CommentCounter));
         }
-        else
+        @{ 
+            var replyCommentInputModel = Model.ReplyCommentInputModel;
+        }
+        @if (replyCommentInputModel != null && comment.Id == replyCommentInputModel.ParentCommentId)
+        {
+            replyCommentInputModel.CommentCounter = Model.CommentCounter;
+            @await Html.PartialAsync("_ProductCommentReplyPartial.cshtml", replyCommentInputModel);
+        }
+        @*else
         {
             @await Html.PartialAsync("_ProductCommentReplyPartial.cshtml", new ReplyCommentInputModel(comment.ProductId, comment.Id, Model.CommentCounter));
-        }
+        }*@
     </div>
     @if (Model.RepliesCount > 0)
     {

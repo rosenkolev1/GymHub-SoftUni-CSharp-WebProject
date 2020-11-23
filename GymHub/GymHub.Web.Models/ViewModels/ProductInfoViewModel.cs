@@ -1,4 +1,5 @@
 ﻿using GymHub.Data.Models;
+using GymHub.Web.Models.InputModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,6 @@ namespace GymHub.Web.Models.ViewModels
         public ProductRatingViewModel ProductRating { get; set; }
         public Dictionary<User, ProductRatingViewModel> UsersProductRatings { get; set; } = new Dictionary<User, ProductRatingViewModel>();
         public Dictionary<ProductComment, List<ProductComment>> ParentsChildrenComments { get; set; } = new Dictionary<ProductComment, List<ProductComment>>();
+        public ReplyCommentInputModel ReplyCommentInputModel { get; set; }
     }
 }

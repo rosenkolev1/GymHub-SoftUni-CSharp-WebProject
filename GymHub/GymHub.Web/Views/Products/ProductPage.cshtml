@@ -181,12 +181,12 @@
                                     var userProductRating = viewModel.UsersProductRatings[parentComment.User];
                                     var repliesCount = childrenComments.Count;
                                     <div class="product-commentWithChildren-container">
-                                        @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(parentComment, userProductRating, viewModel.CurrentUserId, uniqueCommentCount++, repliesCount))
+                                        @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(parentComment, viewModel.ReplyCommentInputModel, userProductRating, viewModel.CurrentUserId, uniqueCommentCount++, repliesCount))
                                         <div hidden class="product-comment-child-container">
                                             @foreach (var childComment in childrenComments)
                                             {
                                                 var userProductRatingChild = viewModel.UsersProductRatings[childComment.User];
-                                                @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, userProductRatingChild, viewModel.CurrentUserId, uniqueCommentCount++))
+                                                @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, viewModel.ReplyCommentInputModel, userProductRatingChild, viewModel.CurrentUserId, uniqueCommentCount++))
                                                 uniqueCommentCount++;
                                             }
                                         </div>

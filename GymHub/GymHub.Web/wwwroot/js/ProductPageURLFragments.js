@@ -30,18 +30,24 @@
     })
 }
 
-function SetFormDataPageFragment() {
-    //Set hidden input value to current page fragment
-    var hiddenFragmentInputs = document.querySelectorAll('.post-pageFragment');
-    hiddenFragmentInputs.forEach(hiddenFragmentInput => {
-        hiddenFragmentInput.value = window.location.hash.substring(1);
-    })
-}
-
 $(document)
     .ready(SetActiveFragment());
 
-$(document.querySelectorAll('form'))
-    .submit(function (event) {
-        SetFormDataPageFragment();
-    });
+function SetFormDataPageFragment() {
+    function SetFormDataPageFragmentExecute() {
+        //Set hidden input value to current page fragment
+        var hiddenFragmentInputs = document.querySelectorAll('.post-pageFragment');
+        hiddenFragmentInputs.forEach(hiddenFragmentInput => {
+            hiddenFragmentInput.value = window.location.hash.substring(1);
+        })
+    }
+
+    $(document.querySelectorAll('form'))
+        .submit(function (event) {
+            SetFormDataPageFragmentExecute();
+        });
+}
+
+SetFormDataPageFragment();
+
+

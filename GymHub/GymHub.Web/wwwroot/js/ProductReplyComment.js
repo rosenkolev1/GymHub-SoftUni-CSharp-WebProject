@@ -3,27 +3,58 @@
     let productReplyButtonCloseTextContent = 'Stop reply';
     let productReplyButtonOpenTextContent = 'Reply';
 
-    //Get comment text field
-    let commentTextContent = document.querySelector('.product-comment-textfield');
-
 
     productReplyButtons.forEach(replyButton => {
         replyButton.addEventListener('click', e => {
-            //Show and hide edit button
-            let replyContainer = replyButton.parentElement.querySelector('.product-comment-reply-container');
-            let commentText = replyButton.parentElement.querySelector('.product-comment-text');
+            //Whole comment container
+            let commentTextfield = replyButton.parentElement.querySelector('.product-comment-textfield');
 
-            if (replyContainer.hasAttribute('hidden')) {
-                //Edit button shows up
-                //commentText.setAttribute("hidden", true);
-                replyContainer.removeAttribute('hidden');
-                replyButton.textContent = productReplyButtonCloseTextContent;
+            //Show and hide edit button
+            let replyContainer = commentTextfield.querySelector('.product-comment-reply-container');
+            let commentText = commentTextfield.querySelector('.product-comment-text');
+
+            //Hide or show reply editor if it has been loaded
+            if (replyContainer !== null) {
+                if (replyContainer.hasAttribute('hidden')) {
+                    //Show reply editor
+                    replyContainer.removeAttribute('hidden');
+                    replyButton.textContent = productReplyButtonCloseTextContent;
+                }
+                else {
+                    //Hide reply editor
+                    replyContainer.setAttribute('hidden', true);
+                    replyButton.textContent = productReplyButtonOpenTextContent;
+                }
             }
+            //Load reply editor if it hasn't been loaded
             else {
-                //Hide edit
-                //commentText.removeAttribute("hidden");
-                replyContainer.setAttribute('hidden', true);
-                replyButton.textContent = productReplyButtonOpenTextContent;
+                let replyProductId = commentTextfield.querySelector('#ReplyProductId').textContent;
+                let replyCommentId = commentTextfield.querySelector('#ReplyCommentId').textContent;
+                let replyCommentCounter = parseInt(commentTextfield.querySelector('#ReplyCommentCounter').textContent);
+                let requestData = {
+                    ProductId: replyProductId,
+                    ParentCommentId: replyCommentId,
+                    CommentCounter: replyCommentCounter
+                };
+
+                $.ajax({
+                    url: '/Products/LoadReplyToComment',
+                    data: requestData,
+                    method: 'GET',
+                    success: function (result) {
+                        commentTextfield.insertAdjacentHTML('beforeend', result);
+
+                        //Add url page fragment to form data on submit for the reply form
+                        SetFormDataPageFragment();
+
+                        //Change 'Reply' button to 'Stop reply'
+                        replyButton.textContent = productReplyButtonCloseTextContent;
+                    },
+                    error: function (response) {
+                        document.write(response.responseText);
+                    }
+                });
+
             }
         })
     })

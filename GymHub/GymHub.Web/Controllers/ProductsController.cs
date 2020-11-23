@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -40,6 +41,7 @@ namespace GymHub.Web.Controllers
             {
                 product.ShortDescription = this.productService.GetShordDescription(product.Description, 40);
             }
+            this.TempData.Clear();
             return this.View(products);
         }
 
@@ -95,10 +97,21 @@ namespace GymHub.Web.Controllers
             object complexModel = null;
             var typeOfInputModel = TempData["InputModelFromPOSTRequestType"];
 
+            //If input model is for adding review
             if(typeOfInputModel?.ToString() == nameof(AddReviewInputModel))
             {
                 complexModel = AssignViewAndInputModels<AddReviewInputModel, ProductInfoViewModel>(viewModel);
             }
+            //If input model is for replying to a comment
+            else if(typeOfInputModel?.ToString() == nameof(ReplyCommentInputModel))
+            {
+                var replyCommentInputModelsJSON = TempData["InputModelFromPOSTRequest"]?.ToString();
+                var replyCommentInputModel = JsonSerializer.Deserialize<ReplyCommentInputModel>(replyCommentInputModelsJSON);
+                viewModel.ReplyCommentInputModel = replyCommentInputModel;
+
+                complexModel = AssignViewAndInputModels<AddReviewInputModel, ProductInfoViewModel>(viewModel, true);
+            }
+            //If there isn't an input model, aka if page has just loaded for the first time
             else
             {
                 complexModel = AssignViewAndInputModels<AddReviewInputModel, ProductInfoViewModel>(viewModel, true);
@@ -291,7 +304,7 @@ namespace GymHub.Web.Controllers
         {
             var productId = inputModel.ProductId;
 
-            var commentId = inputModel.CommentId;
+            var commentId = inputModel.ParentCommentId;
 
             //Sanitize pageFragment
             pageFragment = this.javaScriptEncoder.Encode(pageFragment);
@@ -309,7 +322,7 @@ namespace GymHub.Web.Controllers
                 {
                     foreach (var modelStateError in modelStateEntry.Errors)
                     {
-                        newModelState.AddModelError($"CommentId_{inputModel.CommentCounter}", modelStateError.ErrorMessage);
+                        newModelState.AddModelError($"ParentCommentId_{inputModel.CommentCounter}", modelStateError.ErrorMessage);
                     }
                 }
 
@@ -324,7 +337,7 @@ namespace GymHub.Web.Controllers
             //Check if comment from this user for this product exists
             if (this.productCommentService.CommentExists(commentId) == false)
             {
-                this.ModelState.AddModelError($"CommentId_{inputModel.CommentCounter}", "Can't reply to nonexistent comment");
+                this.ModelState.AddModelError($"ParentCommentId_{inputModel.CommentCounter}", "Can't reply to nonexistent comment");
             }
 
             //Create new reply comment
@@ -353,10 +366,10 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LoadReplyToComment(ReplyCommentInputModel inputModel)
         {
-
-            return this.PartialView("_ProductCommentReplyPartial.cshtml", inputModel);
+            return this.PartialView("Views/Products/_ProductCommentReplyPartial.cshtml", inputModel);
         }
     }
 }
