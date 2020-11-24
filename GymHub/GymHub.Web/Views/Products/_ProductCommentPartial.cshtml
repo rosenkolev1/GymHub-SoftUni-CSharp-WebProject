@@ -9,22 +9,25 @@
 <div class="container-md product-comment-container">
     <div class="product-comment-userinfo-container">
         <span>
-            <b>@comment.User.UserName</b> | Commented On: @comment.CommentedOn.ToLongDateString() @comment.CommentedOn.ToLongTimeString() | Rated:
+            <b>@comment.User.UserName</b> | Commented On: @comment.CommentedOn.ToLongDateString() @comment.CommentedOn.ToLongTimeString() | Rated: @(Model.HasReviewed == true ? "" : "None")
         </span>
-        <span style="margin-left:5px;">
-            @for (int i = 0; i < userProductRating.FullStarsCount; i++)
-            {
-                <i class="fa fa-star gold"></i>
-            }
-            @if (userProductRating.HasHalfStar == true)
-            {
-                <i class="fa fa-star-half-o gold"></i>
-            }
-            @for (int i = 0; i < userProductRating.EmptyStarsCount; i++)
-            {
-                <i class="fa fa-star-o gold"></i>
-            }
-        </span>
+        @if (Model.HasReviewed)
+        {
+            <span style="margin-left:5px;">
+                @for (int i = 0; i < userProductRating.FullStarsCount; i++)
+                {
+                    <i class="fa fa-star gold"></i>
+                }
+                @if (userProductRating.HasHalfStar == true)
+                {
+                    <i class="fa fa-star-half-o gold"></i>
+                }
+                @for (int i = 0; i < userProductRating.EmptyStarsCount; i++)
+                {
+                    <i class="fa fa-star-o gold"></i>
+                }
+            </span>
+        }
         <hr class="product-comment-userinfo-hr" />
     </div>
     <div class="product-comment-textfield">
@@ -40,7 +43,7 @@
         <p hidden id="ReplyCommentCounter">@Model.CommentCounter</p>
         @if (Model.BelongsToCurrentUser == true)
         {
-            @await Html.PartialAsync("_ProductEditReviewPartial.cshtml", new EditReviewInputModel((int)userProductRating.AverageRating, comment.Text, comment.ProductId, comment.Id, comment.ParentCommentId == null, Model.CommentCounter));
+            @await Html.PartialAsync("_ProductEditReviewPartial.cshtml", new EditReviewInputModel(userProductRating, comment.Text, comment.ProductId, comment.Id, comment.ParentCommentId == null, Model.CommentCounter));
         }
         @{
             var replyCommentInputModel = Model.ReplyCommentInputModel;

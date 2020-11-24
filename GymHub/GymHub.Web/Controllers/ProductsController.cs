@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GymHub.Common;
 using GymHub.Data.Models;
 using GymHub.Services;
 using GymHub.Web.Models;
@@ -37,7 +38,7 @@ namespace GymHub.Web.Controllers
         [Authorize]
         public async Task<IActionResult> All()
         {
-            var products = await this.productService.GetAllProductsAsync();
+            var products = this.productService.GetAllProducts();
             foreach (var product in products)
             {
                 product.ShortDescription = this.productService.GetShordDescription(product.Description, 40);
@@ -52,7 +53,7 @@ namespace GymHub.Web.Controllers
         [Authorize]
         public async Task<IActionResult> ProductPage(string productId, string toReplyComment)
         {
-            var product = await this.productService.GetProductByIdAsync(productId);
+            var product = this.productService.GetProductById(productId);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
 
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
@@ -187,17 +188,19 @@ namespace GymHub.Web.Controllers
             };
 
             //Check if user has alread left a review for this product
-            if (this.productService.ProductRatingExists(newProductRating) == true && await this.productCommentService.CommentExists(newComment) == true)
+            if (this.productService.ProductRatingExists(newProductRating) == true && this.productCommentService.CommentExists(newComment) == true)
             {
                 this.ModelState.AddModelError("InputModel.Rating", "You have already given a review for this product!!!");
             }
+
             //Check if rating from this user for this product already exists
             else if (this.productService.ProductRatingExists(newProductRating) == true)
             {
                 this.ModelState.AddModelError("InputModel.Rating", "You have already given a review with this rating for this product!!!");
             }
+
             //Check if comment already from this user for this product already exists(as part of his review, he can still have comments as replies to other people for the same product)
-            else if (await this.productCommentService.CommentExists(newComment) == true)
+            else if (this.productCommentService.CommentExists(newComment) == true)
             {
                 this.ModelState.AddModelError("InputModel.Text", "You have already given a review with a comment for this product!!!");
             }
@@ -212,9 +215,20 @@ namespace GymHub.Web.Controllers
                 return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
             }
 
-            await this.productService.AddRatingAsync(productId, userId, (int)complexModel.InputModel.Rating);
+            //Set the rating foreign key for new comment
+            var newRating = new ProductRating
+            {
+                ProductCommentId = newComment.Id,
+                ProductId = productId,
+                UserId = userId,
+                Rating = (int)complexModel.InputModel.Rating
+            };
 
             await this.productCommentService.AddAsync(newComment);
+
+            newComment.ProductRating = newRating;
+
+            await this.productService.AddRatingAsync(newRating);
 
             return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
         }
@@ -256,7 +270,7 @@ namespace GymHub.Web.Controllers
             var userId = this.userService.GetUserId(this.User.Identity.Name);
 
             var oldProductRating = new ProductRating();
-            if (inputModel?.Rating > 0)
+            if (inputModel?.ProductRatingViewModel?.AverageRating > 0)
             {
                 //Check if rating from this user for this product already exists
                 if (this.productService.ProductRatingExists(userId, productId) == true)
@@ -303,9 +317,9 @@ namespace GymHub.Web.Controllers
             }
 
             if (oldComment != null) await this.productCommentService.EditCommentTextAsync(oldComment, inputModel.Text);
-            if (oldProductRating != null) await this.productService.EditProductRating(oldProductRating, (double)inputModel.Rating);
+            if (oldProductRating != null) await this.productService.EditProductRating(oldProductRating, (double)inputModel.ProductRatingViewModel.AverageRating);
 
-            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
+            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, toReplyComment = oldComment.Id }, pageFragment);
         }
 
         [HttpPost]
@@ -345,9 +359,15 @@ namespace GymHub.Web.Controllers
             var userId = this.userService.GetUserId(this.User.Identity.Name);
 
             //Check if parent comment for this product exists
-            if (this.productCommentService.CommentMatchesUserAndProduct(commentId, userId, productId) == false)
+            if (this.productCommentService.CommentExists(commentId) == false)
             {
-                this.ModelState.AddModelError($"ParentCommentId_{inputModel.CommentCounter}", "Can't reply to nonexistent comment");
+                this.ModelState.AddModelError($"ParentCommentId_{inputModel.CommentCounter}", "Can't reply to nonexistent comment.");
+            }
+
+            //Check if the user isn't trying to reply to himself
+            if (this.productCommentService.CommentBelongsToUser(commentId, userId))
+            {
+                this.ModelState.AddModelError($"ParentCommentId_{inputModel.CommentCounter}", "Can't reply to yourself.");
             }
 
             //Create new reply comment
@@ -402,7 +422,8 @@ namespace GymHub.Web.Controllers
 
             var userId = this.userService.GetUserId(this.User.Identity.Name);
 
-            if (this.productCommentService.CommentMatchesUserAndProduct(commentId, userId, productId) == false)
+            //Check if comment belongs to user and/or exists
+            if (this.productCommentService.CommentMatchesUserAndProduct(commentId, userId, productId) == false && this.User.IsInRole(GlobalConstants.AdminRoleName) == false)
             {
                 this.ModelState.AddModelError(nameof(removeCommentInputModel.RemoveCommentId), "Comment doesn't exist");
             }

@@ -1,5 +1,7 @@
-﻿using GymHub.Data.Data;
+﻿using GymHub.Data;
+using GymHub.Data.Data;
 using GymHub.Data.Models;
+using GymHub.Services.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,32 +10,44 @@ using System.Threading.Tasks;
 
 namespace GymHub.Services
 {
-    public class ProductCommentService : IProductCommentService
+    public class ProductCommentService : DeleteableEntityService, IProductCommentService
     {
-        private readonly ApplicationDbContext context;
+        //private readonly ApplicationDbContext context;
         private readonly ProductService productService;
 
         public ProductCommentService(ApplicationDbContext context)
+            :base(context)
+
         {
-            this.context = context;
+            
         }
 
         public ProductCommentService(ApplicationDbContext context, ProductService productService)
+            :base(context)
         {
-            this.context = context;
             this.productService = productService;
         }
+
         public async Task AddAsync(ProductComment productComment)
         {
             await this.context.AddAsync(productComment);
             await this.context.SaveChangesAsync();
         }
 
-        public async Task<bool> CommentExists(ProductComment productComment)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commentId">The id of the comment to chech</param>
+        /// <param name="hardCheck">If true then it also checks deleted entities</param>
+        /// <returns></returns>
+        public bool CommentExists(ProductComment productComment, bool hardCheck = false)
         {
-            if (this.context.ProductsComments.Any(x => x.Id == productComment.Id) == true)
+            var something = this.context.ProductsComments.IgnoreAllQueryFilter(hardCheck);
+
+            if (this.context.ProductsComments.IgnoreAllQueryFilter(hardCheck).Any(x => x.Id == productComment.Id) == true)
                 return true;
-            if (this.context.ProductsComments.Any(
+
+            if (this.context.ProductsComments.IgnoreAllQueryFilter(hardCheck).Any(
                 x => x.ParentCommentId == productComment.ParentCommentId && productComment.ParentCommentId == null && x.ProductId == productComment.ProductId && x.UserId == productComment.UserId) == true)
             {
                 return true;
@@ -42,9 +56,17 @@ namespace GymHub.Services
             return false;
         }
 
-        public bool CommentExists(string commentId)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commentId">The id of the comment to chech</param>
+        /// <param name="hardCheck">If true then it also checks deleted entities</param>
+        /// <returns></returns>
+        public bool CommentExists(string commentId, bool hardCheck = false)
         {
-            return this.context.ProductsComments.Any(x => x.Id == commentId);
+            return this.context.ProductsComments
+                .IgnoreAllQueryFilter(hardCheck)
+                .Any(x => x.Id == commentId);
         }
 
         public async Task<List<ProductComment>> GetAllChildCommentsAsync(ProductComment productComment)
@@ -65,12 +87,12 @@ namespace GymHub.Services
             return children;
         }
 
-        public ProductComment GetProductComment(string commentId)
+        public ProductComment GetProductComment(string commentId, bool hardCheck = false)
         {
-            return this.context.ProductsComments.FirstOrDefault(x => x.Id == commentId);
+            return this.context.ProductsComments.IgnoreAllQueryFilter(hardCheck).FirstOrDefault(x => x.Id == commentId);
         }
 
-        public async Task EditCommentText(ProductComment comment, string text)
+        public async Task EditCommentTextAsync(ProductComment comment, string text)
         {
             if (comment != null) comment.Text = text;
             await this.context.SaveChangesAsync();
@@ -85,27 +107,34 @@ namespace GymHub.Services
             return comment.UserId == userId && comment.ProductId == productId;
         }
 
-        public Task EditCommentTextAsync(ProductComment comment, string text)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task RemoveAsync(string commentId)
         {
+            //Remove parent comment
             var removedComment = this.context.ProductsComments
                 .Include(x => x.ProductRating)
                 .FirstOrDefault(x => x.Id == commentId);
-            removedComment.IsDeleted = true;
-            removedComment.DeletedOn = DateTime.UtcNow;
+            await this.DeleteEntity(removedComment);
 
-            if (removedComment.ProductRatingId != null)
+            //Remove parent rating
+            if (removedComment.ProductRating != null)
             {
                 var ratingFromComment = removedComment.ProductRating;
-                ratingFromComment.IsDeleted = true;
-                ratingFromComment.DeletedOn = DateTime.UtcNow;
+                await this.DeleteEntity(ratingFromComment);
+            }
+
+            var repliesToRemovedComment = await GetAllChildCommentsAsync(removedComment);
+            foreach (var reply in repliesToRemovedComment)
+            {
+                await this.DeleteEntity(reply);
             }
 
             await this.context.SaveChangesAsync();
         }
+
+        public bool CommentBelongsToUser(string commentId, string userId)
+        {
+            return this.context.ProductsComments.FirstOrDefault(x => x.Id == commentId)?.UserId == userId && userId != null;
+        }
+
     }
 }

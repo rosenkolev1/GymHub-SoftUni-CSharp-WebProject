@@ -61,7 +61,7 @@ namespace GymHub.Web.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            this.ViewModel.Genders = await genderService.GetAllGendersAsync();
+            this.ViewModel.Genders =  genderService.GetAllGenders();
 
             return Page();
         }

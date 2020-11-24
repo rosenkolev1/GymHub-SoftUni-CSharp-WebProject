@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
+using GymHub.Services.Common;
 using GymHub.Web.Models.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,20 +9,20 @@ using System.Threading.Tasks;
 
 namespace GymHub.Services
 {
-    public class CartService : ICartService
+    public class CartService : DeleteableEntityService, ICartService
     {
-        private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+
         public CartService(ApplicationDbContext context, IMapper mapper)
+            :base(context)
         {
-            this.context = context;
             this.mapper = mapper;
         }
         public async Task AddToCartAsync(string productId, string userId, int quantity = 1)
         {
-            if (await this.ProductIsInCartAsync(productId, userId))
+            if (this.ProductIsInCart(productId, userId))
             {
-                var productCart = await this.GetProductFromCartAsync(productId, userId);
+                var productCart = this.GetProductFromCart(productId, userId);
                 productCart.Quantity += quantity;
             }
             else
@@ -31,17 +32,17 @@ namespace GymHub.Services
             this.context.SaveChanges();
         }
 
-        public async Task<bool> ProductIsInCartAsync(string productId, string userId)
+        public bool ProductIsInCart(string productId, string userId)
         {
             return this.context.Carts.Any(x => x.ProductId == productId && x.UserId == userId);
         }
 
-        public async Task<ProductCart> GetProductFromCartAsync(string productId, string userId)
+        public ProductCart GetProductFromCart(string productId, string userId)
         {
             return this.context.Carts.FirstOrDefault(x => x.ProductId == productId && x.UserId == userId);
         }
 
-        public async Task<List<ProductCartViewModel>> GetAllProductsFromCartAsync(string userId)
+        public List<ProductCartViewModel> GetAllProductsFromCart(string userId)
         {
             return this.context.Carts.Where(x => x.UserId == userId).Select(x => new ProductCartViewModel
             {

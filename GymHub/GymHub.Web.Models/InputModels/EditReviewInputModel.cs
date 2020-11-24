@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GymHub.Web.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace GymHub.Web.Models.InputModels
@@ -9,9 +11,9 @@ namespace GymHub.Web.Models.InputModels
         {
 
         }
-        public EditReviewInputModel(int rating, string text, string productId, string commentId, bool isParentComment, int commentCounter)
+        public EditReviewInputModel(ProductRatingViewModel productRatingViewModel, string text, string productId, string commentId, bool isParentComment, int commentCounter)
         {
-            this.Rating = rating;
+            this.ProductRatingViewModel = productRatingViewModel;
             this.Text = text;
             this.ProductId = productId;
             this.CommentId = commentId;
@@ -22,10 +24,9 @@ namespace GymHub.Web.Models.InputModels
         //Used for validation purposes
         public int CommentCounter { get; set; }
 
-        [Range(1, 10, ErrorMessage = "Rating should be between 1 and 10.")]
-        public int? Rating { get; set; }
-        public int FullStarsCount => this.Rating != null ? (int)Math.Floor((double)Rating) : 0;
-        public int EmptyStarsCount => this.Rating != null ? 10 - (int)Math.Ceiling((double)Rating) : 0;
+        public ProductRatingViewModel ProductRatingViewModel { get; set; }
+
+        public bool HasReviewed => this.ProductRatingViewModel != null;
 
         [Required]
         public string Text { get; set; }

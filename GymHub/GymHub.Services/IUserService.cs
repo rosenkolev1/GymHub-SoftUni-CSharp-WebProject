@@ -9,13 +9,13 @@ namespace GymHub.Services
     {
         public Task<User> GetUserAsync(LoginUserInputModel inputModel);
         public Task<bool> UserExistsAsync(string username, string password);
-        public Task<bool> UserIsTakenAsync(string username, string password, string email, string phoneNumber = null);
+        public bool UserIsTaken(string username, string password, string email, string phoneNumber = null, bool hardCheck = false);
         public Task<User> CreateUserAsync(RegisterUserInputModel inputModel, params Role[] roles);
         public Task<User> CreateUserAsync(UserDTO userDTO);
         public Task<string> GetIdByUsernameAndPasswordAsync(LoginUserInputModel inputModel);
-        public Task<bool> UsernameExistsAsync(string username);
-        public Task<bool> EmailExistsAsync(string email);
-        public Task<bool> PhoneNumberExistsAsync(string phoneNumber);
-        public string GetUserId(string username);
+        public bool UsernameExists(string username);
+        public bool EmailExists(string email);
+        public bool PhoneNumberExists(string phoneNumber);
+        public string GetUserId(string username, bool hardCheck = false);
     }
 }

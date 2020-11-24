@@ -2,6 +2,7 @@
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.DTOs;
+using GymHub.Services.Common;
 using GymHub.Web.Models.InputModels;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -10,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace GymHub.Services
 {
-    public class UserService : IUserService
+    public class UserService : DeleteableEntityService, IUserService
     {
-        private readonly ApplicationDbContext context;
         private readonly IRoleService roleService;
         private readonly IGenderService genderService;
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
+
         public UserService(ApplicationDbContext context, IRoleService roleService, IGenderService genderService, UserManager<User> userManager, IMapper mapper)
+            :base(context)
         {
-            this.context = context;
             this.roleService = roleService;
             this.genderService = genderService;
             this.userManager = userManager;
@@ -35,17 +36,17 @@ namespace GymHub.Services
             return (await this.userManager.FindByNameAsync(inputModel.Username)).Id;
         }
 
-        public async Task<bool> UsernameExistsAsync(string username)
+        public bool UsernameExists(string username)
         {
             return this.context.Users.Any(x => x.UserName == username);
         }
 
-        public async Task<bool> EmailExistsAsync(string email)
+        public bool EmailExists(string email)
         {
             return this.context.Users.Any(x => x.Email == email);
         }
 
-        public async Task<bool> PhoneNumberExistsAsync(string phoneNumber)
+        public bool PhoneNumberExists(string phoneNumber)
         {
             return this.context.Users.Any(x => x.PhoneNumber == phoneNumber);
         }
@@ -98,7 +99,7 @@ namespace GymHub.Services
         {
             var newUser = mapper.Map<User>(userDTO);
             var roleNames = userDTO.RoleNames;
-            newUser.GenderId = await this.genderService.GetGenderIdByNameAsync(userDTO.GenderName);
+            newUser.GenderId = this.genderService.GetGenderIdByName(userDTO.GenderName);
 
             var newUserPassword = userDTO.Password;
 
@@ -106,7 +107,7 @@ namespace GymHub.Services
 
             foreach (var roleName in roleNames)
             {
-                var role = await this.roleService.GetRoleAsync(roleName);
+                var role = this.roleService.GetRole(roleName);
                 await this.userManager.AddToRoleAsync(newUser, role.Name);
             }
 
@@ -115,15 +116,15 @@ namespace GymHub.Services
             return newUser;
         }
 
-        public async Task<bool> UserIsTakenAsync(string username, string password, string email, string phoneNumber = null)
+        public bool UserIsTaken(string username, string password, string email, string phoneNumber = null, bool hardCheck = false)
         {
             var passwordHash = this.userManager.PasswordHasher.HashPassword(null, password);
-            return this.context.Users.Where(x => x.PhoneNumber != null).Any(x => x.UserName == username || x.PasswordHash == password || x.Email == email || x.PhoneNumber == phoneNumber);
+            return this.context.Users.IgnoreAllQueryFilter(hardCheck).Where(x => x.PhoneNumber != null).Any(x => x.UserName == username || x.PasswordHash == password || x.Email == email || x.PhoneNumber == phoneNumber);
         }
 
-        public string GetUserId(string username)
+        public string GetUserId(string username, bool hardCheck = false)
         {
-            return this.context.Users.FirstOrDefault(x => x.UserName == username).Id;
+            return this.context.Users.IgnoreAllQueryFilter(hardCheck).FirstOrDefault(x => x.UserName == username).Id;
         }
     }
 }

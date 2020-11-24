@@ -7,8 +7,8 @@ namespace GymHub.Services
     public interface IGenderService
     {
         public Task AddAsync(string name);
-        public Task<string> GetGenderIdByNameAsync(string name);
-        public Task<List<Gender>> GetAllGendersAsync();
-        public Task<bool> GenderExistsAsync(string name);
+        public string GetGenderIdByName(string name);
+        public List<Gender> GetAllGenders();
+        public bool GenderExists(string name, bool hardCheck = false);
     }
 }

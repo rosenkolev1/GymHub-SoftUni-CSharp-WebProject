@@ -1,17 +1,18 @@
 ﻿using GymHub.Data.Data;
 using GymHub.Data.Models;
+using GymHub.Services.Common;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace GymHub.Services
 {
-    public class GenderService : IGenderService
+    public class GenderService : DeleteableEntityService, IGenderService
     {
-        private readonly ApplicationDbContext context;
         public GenderService(ApplicationDbContext context)
+            :base(context)
         {
-            this.context = context;
+
         }
 
         public async Task AddAsync(string name)
@@ -20,17 +21,17 @@ namespace GymHub.Services
             await this.context.SaveChangesAsync();
         }
 
-        public async Task<bool> GenderExistsAsync(string name)
+        public bool GenderExists(string name, bool hardCheck = false)
         {
-            return this.context.Genders.Any(x => x.Name == name);
+            return this.context.Genders.IgnoreAllQueryFilter(hardCheck).Any(x => x.Name == name);
         }
 
-        public async Task<List<Gender>> GetAllGendersAsync()
+        public List<Gender> GetAllGenders()
         {
             return this.context.Genders.ToList();
         }
 
-        public async Task<string> GetGenderIdByNameAsync(string name)
+        public string GetGenderIdByName(string name)
         {
             return this.context.Genders.FirstOrDefault(x => x.Name == name).Id;
         }

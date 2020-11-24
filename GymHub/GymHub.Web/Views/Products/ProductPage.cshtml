@@ -182,28 +182,20 @@
                                     var repliesCount = childrenComments.Count;
                                     <div class="product-commentWithChildren-container">
                                         @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(parentComment, viewModel.ReplyCommentInputModel, userProductRating, viewModel.CurrentUserId, uniqueCommentCount++, repliesCount))
-                                        @if(childrenComments.Any(childComment => childComment.Id == viewModel.ToReplyComment))
-                                        {
-                                            <div class="product-comment-child-container">
+                                        <div @(childrenComments.Any(childComment => childComment.Id == viewModel.ToReplyComment) == true ? "" : "hidden") class="product-comment-child-container">
                                             @foreach (var childComment in childrenComments)
                                             {
-                                                var userProductRatingChild = viewModel.UsersProductRatings[childComment.User];
+                                                ProductRatingViewModel userProductRatingChild = null;
+
+                                                @if (viewModel.UsersProductRatings.ContainsKey(childComment.User))
+                                                {
+                                                    userProductRatingChild = viewModel.UsersProductRatings[childComment.User];
+                                                }
+
                                                 @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, viewModel.ReplyCommentInputModel, userProductRatingChild, viewModel.CurrentUserId, uniqueCommentCount++))
                                                 uniqueCommentCount++;
                                             }
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div hidden class="product-comment-child-container">
-                                            @foreach (var childComment in childrenComments)
-                                            {
-                                                var userProductRatingChild = viewModel.UsersProductRatings[childComment.User];
-                                                @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, viewModel.ReplyCommentInputModel, userProductRatingChild, viewModel.CurrentUserId, uniqueCommentCount++))
-                                                uniqueCommentCount++;
-                                            }
-                                            </div>
-                                        }
+                                        </div>
                                     </div>
                                 }
                             }

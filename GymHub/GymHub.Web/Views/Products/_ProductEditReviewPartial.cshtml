@@ -7,40 +7,43 @@
     @if (inputModel.IsParrentComment == true)
     {
     <div class="product-comment-editReview-ratings-container">
-        <span class="product-comment-addReview-ratings-container">
-            @if (inputModel != null)
-            {
-                @for (int i = 1; i <= inputModel.FullStarsCount; i++)
+        @if (inputModel.HasReviewed == true)
+        {
+            <span class="product-comment-addReview-ratings-container">
+                @if (inputModel != null)
                 {
-                    <i class="fa fa-star gold product-comment-addReview-rating" id="star-review-@i"></i>
+                    @for (int i = 1; i <= inputModel.ProductRatingViewModel.FullStarsCount; i++)
+                    {
+                        <i class="fa fa-star gold product-comment-addReview-rating" id="star-review-@i"></i>
+                    }
+                    @for (int i = inputModel.ProductRatingViewModel.FullStarsCount + 1; i <= 10; i++)
+                    {
+                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-@i"></i>
+                    }
                 }
-                @for (int i = inputModel.FullStarsCount + 1; i <= 10; i++)
+                else
                 {
-                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-@i"></i>
+                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-1"></i>
+                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-2"></i>
+                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-3"></i>
+                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-4"></i>
+                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-5"></i>
+                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-6"></i>
+                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-7"></i>
+                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-8"></i>
+                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-9"></i>
+                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-10"></i>
                 }
-            }
-            else
-            {
-                <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-1"></i>
-                <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-2"></i>
-                <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-3"></i>
-                <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-4"></i>
-                <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-5"></i>
-                <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-6"></i>
-                <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-7"></i>
-                <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-8"></i>
-                <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-9"></i>
-                <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-10"></i>
-            }
-        </span>
-        <span class="h4" id="span-rating">@(inputModel?.Rating != null ? inputModel.Rating : 0)/10</span>
+            </span>
+            <span class="h4" id="span-rating">@(inputModel?.ProductRatingViewModel?.AverageRating != null ? inputModel.ProductRatingViewModel.AverageRating : 0)/10</span>
+        }
     </div>
     }
 <form method="post" class="product-review-form product-comment-editReview-form">
     <input type="hidden" value="@inputModel.CommentId" asp-for="CommentId" />
     @if (inputModel.IsParrentComment)
     {
-        <input type="hidden" value="@(inputModel?.Rating != null ? inputModel.Rating : 0)" id="Rating" name="Rating" />
+        <input type="hidden" value="@(inputModel?.ProductRatingViewModel.AverageRating != null ? inputModel.ProductRatingViewModel.AverageRating : 0)" id="Rating" name="ProductRatingViewModel.AverageRating" />
     }
     <input type="hidden" asp-for="ProductId" value="@Model.ProductId" />
     <textarea class="product-comment-editReview-textarea" placeholder="What are your thoughts?" name="Text">@inputModel.Text</textarea>
@@ -49,8 +52,8 @@
         @Html.ValidationMessage($"Rating_{Model.CommentCounter}", new { @class = "alert-danger", @style = "display:block" })
     }
     <input hidden asp-for="CommentCounter" value="@(Model.CommentCounter)" />
-    @Html.ValidationMessage($"CommentId_{Model.CommentCounter}", new { @class = "validation-message"})
-    @Html.ValidationMessage($"Text_{Model.CommentCounter}", new { @class = "validation-message" })
+    @Html.ValidationMessage($"CommentId_{Model.CommentCounter}", new { @class = "alert-danger validation-message"})
+    @Html.ValidationMessage($"Text_{Model.CommentCounter}", new { @class = "alert-danger validation-message" })
     <input type="hidden" value="" name="pageFragment" class="post-pageFragment" />
     <div class="product-comment-editReview-editButton-container">
         @if (inputModel.IsParrentComment)

@@ -6,7 +6,7 @@ namespace GymHub.Services
     public interface IRoleService
     {
         public Task AddAsync(string name);
-        public Task<Role> GetRoleAsync(string name);
-        public Task<bool> RoleExistsAsync(string name);
+        public Role GetRole(string name);
+        public bool RoleExists(string name, bool hardCheck = false);
     }
 }

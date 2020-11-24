@@ -10,8 +10,9 @@
     productEditButtons.forEach(editButton => {
         editButton.addEventListener('click', e => {
             //Show and hide edit button
-            let editContainer = editButton.parentElement.querySelector('.product-comment-edit-container');
-            let commentText = editButton.parentElement.querySelector('.product-comment-text');
+            let productCommentContainer = editButton.parentElement.parentElement;
+            let editContainer = productCommentContainer.querySelector('.product-comment-edit-container');
+            let commentText = productCommentContainer.querySelector('.product-comment-text');
 
             if (editContainer.hasAttribute('hidden')) {
                 //Edit button shows up

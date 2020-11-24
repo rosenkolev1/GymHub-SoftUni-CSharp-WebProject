@@ -17,15 +17,17 @@ namespace GymHub.Services.SeederFolder
 {
     public class Seeder
     {
-        private IGenderService genderService;
-        private IRoleService roleService;
-        private IUserService userService;
-        private IProductService productService;
-        private IMapper mapper;
-        private IProductCommentService productCommentService;
+        private readonly IGenderService genderService;
+        private readonly IRoleService roleService;
+        private readonly IUserService userService;
+        private readonly IProductService productService;
+        private readonly IMapper mapper;
+        private readonly IProductCommentService productCommentService;
+        private readonly ApplicationDbContext context;
+
         public Seeder(IServiceProvider serviceProvider)
         {
-            var context = new ApplicationDbContext();
+            this.context = new ApplicationDbContext();
             this.genderService = new GenderService(context);
 
 
@@ -71,7 +73,7 @@ namespace GymHub.Services.SeederFolder
 
             foreach (var roleName in roles)
             {
-                if (await this.roleService.RoleExistsAsync(roleName) == false)
+                if (this.roleService.RoleExists(roleName, true) == false)
                 {
                     await this.roleService.AddAsync(roleName);
                 }
@@ -90,7 +92,7 @@ namespace GymHub.Services.SeederFolder
 
             foreach (var genderName in genders)
             {
-                if (await this.genderService.GenderExistsAsync(genderName) == false)
+                if (this.genderService.GenderExists(genderName, true) == false)
                 {
                     await this.genderService.AddAsync(genderName);
                 }
@@ -105,7 +107,7 @@ namespace GymHub.Services.SeederFolder
 
             foreach (var newUser in users)
             {
-                if (await this.userService.UserIsTakenAsync(newUser.Username, newUser.Password, newUser.Email) == false)
+                if (this.userService.UserIsTaken(newUser.Username, newUser.Password, newUser.Email, null, false) == false)
                 {
                     await this.userService.CreateUserAsync(newUser);
                 }
@@ -131,7 +133,7 @@ namespace GymHub.Services.SeederFolder
 
             foreach (var product in products)
             {
-                if (await this.productService.ProductExistsByModelAsync(product.Model) == false)
+                if (this.productService.ProductExistsByModel(product.Model, true) == false)
                 {
                     await this.productService.AddAsync(product);
                 }
@@ -156,7 +158,7 @@ namespace GymHub.Services.SeederFolder
 
             foreach (var productComment in productsComments)
             {
-                if (await this.productCommentService.CommentExists(productComment) == false)
+                if (this.productCommentService.CommentExists(productComment, true) == false)
                 {
                     await this.productCommentService.AddAsync(productComment);
                 }
@@ -168,15 +170,17 @@ namespace GymHub.Services.SeederFolder
                 .Select(x => new ProductRating
                 {
                     Id = x.Id,
-                    UserId = this.userService.GetUserId(x.Username),
-                    ProductId = this.productService.GetProductId(x.ProductModel),
+                    UserId = this.userService.GetUserId(x.Username, true),
+                    ProductId = this.productService.GetProductId(x.ProductModel, true),
                     ProductCommentId = x.CommentId,
+                    ProductComment = this.productCommentService.GetProductComment(x.CommentId, true),
                     Rating = x.Rating,
-                }).ToList();
+                })
+                .ToList();
 
             foreach (var productRating in productsRatings)
             {
-                if (this.productService.ProductRatingExists(productRating) == false)
+                if (this.productService.ProductRatingExists(productRating, true) == false)
                 {
                     await this.productService.AddRatingAsync(productRating);
                 }
@@ -185,7 +189,11 @@ namespace GymHub.Services.SeederFolder
             //Add reference to product comments for product ratings
             foreach (var productRating in productsRatings)
             {
-                productRating.ProductComment.ProductRatingId = productRating.Id;
+                if(productRating.ProductComment != null)
+                {
+                    if (productRating.ProductComment.ProductRatingId == null) productRating.ProductComment.ProductRatingId = productRating.Id;
+                }
+                await this.context.SaveChangesAsync();
             }
 
             return true;

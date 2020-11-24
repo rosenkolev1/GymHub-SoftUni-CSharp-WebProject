@@ -24,6 +24,7 @@ namespace GymHub.Web.Models.ViewModels
         public int CommentCounter { get; set; }
         public ProductComment Comment { get; set; }
         public ProductRatingViewModel UserProductRating { get; set; }
+        public bool HasReviewed => UserProductRating != null;
         public int RepliesCount { get; set; }
         public bool BelongsToCurrentUser => this.Comment.UserId == this.CurrentUserId;
         public string CurrentUserId { get; set; }

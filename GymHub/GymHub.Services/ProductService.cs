@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
+using GymHub.Services.Common;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +13,13 @@ using System.Threading.Tasks;
 
 namespace GymHub.Services
 {
-    public class ProductService : IProductService
+    public class ProductService : DeleteableEntityService, IProductService
     {
-        private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
 
         public ProductService(ApplicationDbContext context, IMapper mapper)
+            :base(context)
         {
-            this.context = context;
             this.mapper = mapper;
         }
         public async Task AddAsync(string name, string mainImage, decimal price, string description, int warranty, int quantityInStock)
@@ -44,26 +44,26 @@ namespace GymHub.Services
             await this.context.SaveChangesAsync();
         }
 
-        public async Task<bool> ProductExistsByIdAsync(string id)
+        public bool ProductExistsById(string id)
         {
             return this.context.Products.Any(x => x.Id == id);
         }
 
-        public async Task<bool> ProductExistsByNameAsync(string name)
+        public bool ProductExistsByName(string name)
         {
             return this.context.Products.Any(x => x.Name == name);
         }
-        public async Task<bool> ProductExistsByModelAsync(string model)
+        public bool ProductExistsByModel(string model, bool hardCheck)
         {
-            return this.context.Products.Any(x => x.Model == model);
+            return this.context.Products.IgnoreAllQueryFilter(hardCheck).Any(x => x.Model == model);
         }
 
-        public async Task<List<ProductViewModel>> GetAllProductsAsync()
+        public List<ProductViewModel> GetAllProducts()
         {
             return this.context.Products.Select(product => mapper.Map<ProductViewModel>(product)).ToList();
         }
 
-        public async Task<Product> GetProductByIdAsync(string productId)
+        public Product GetProductById(string productId)
         {
             return this.context.Products
                 .Include(x => x.ProductComments)
@@ -128,15 +128,16 @@ namespace GymHub.Services
             return returnString.ToString();
         }
 
-        public string GetProductId(string model)
+        public string GetProductId(string model, bool hardCheck = false)
         {
-            return this.context.Products.FirstOrDefault(x => x.Model == model).Id;
+            return this.context.Products.IgnoreAllQueryFilter(hardCheck).FirstOrDefault(x => x.Model == model).Id;
         }
 
-        public async Task AddRatingAsync(string productId, string userId, double rating)
+        public async Task AddRatingAsync(string commentId, string productId, string userId, double rating)
         {
             var newRating = new ProductRating
             {
+                ProductCommentId = commentId,
                 ProductId = productId,
                 UserId = userId,
                 Rating = rating
@@ -145,9 +146,9 @@ namespace GymHub.Services
             await this.context.SaveChangesAsync();
         }
 
-        public bool ProductRatingExists(ProductRating productRating)
+        public bool ProductRatingExists(ProductRating productRating, bool hardCheck = false)
         {
-            return this.context.ProductsRatings.Any(x => x.ProductId == productRating.ProductId && x.UserId == productRating.UserId);
+            return this.context.ProductsRatings.IgnoreAllQueryFilter(hardCheck).Any(x => x.ProductId == productRating.ProductId && x.UserId == productRating.UserId);
         }
 
         public ProductRating GetProductRating(string userId, string productId)

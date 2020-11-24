@@ -26,7 +26,7 @@ namespace GymHub.Web.Controllers
         public async Task<IActionResult> All()
         {
             var currentUserId = this.userManager.GetUserId(this.User);
-            var productsInCart = await this.cartService.GetAllProductsFromCartAsync(currentUserId);
+            var productsInCart = this.cartService.GetAllProductsFromCart(currentUserId);
 
             var complexModel = new ComplexModel<List<BuyProductInputModel>, List<ProductCartViewModel>>
             {

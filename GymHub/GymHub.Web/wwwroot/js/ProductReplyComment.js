@@ -6,8 +6,11 @@
 
     productReplyButtons.forEach(replyButton => {
         replyButton.addEventListener('click', e => {
+
+            let productCommentContainer = replyButton.parentElement.parentElement;
+
             //Whole comment container
-            let commentTextfield = replyButton.parentElement.querySelector('.product-comment-textfield');
+            let commentTextfield = productCommentContainer.querySelector('.product-comment-textfield');
 
             //Show and hide edit button
             let replyContainer = commentTextfield.querySelector('.product-comment-reply-container');

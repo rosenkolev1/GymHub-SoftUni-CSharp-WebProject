@@ -1,5 +1,6 @@
 ﻿using GymHub.Data.Data;
 using GymHub.Data.Models;
+using GymHub.Services.Common;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
@@ -7,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace GymHub.Services
 {
-    public class RoleService : IRoleService
+    public class RoleService : DeleteableEntityService, IRoleService
     {
-        private readonly ApplicationDbContext context;
         private readonly RoleManager<Role> roleManager;
         public RoleService(ApplicationDbContext context, RoleManager<Role> roleManager)
+            :base(context)
         {
-            this.context = context;
             this.roleManager = roleManager;
         }
 
@@ -26,14 +26,14 @@ namespace GymHub.Services
             }
         }
 
-        public async Task<Role> GetRoleAsync(string name)
+        public Role GetRole(string name)
         {
             return this.context.Roles.FirstOrDefault(x => x.Name == name);
         }
 
-        public async Task<bool> RoleExistsAsync(string name)
+        public bool RoleExists(string name, bool hardCheck = false)
         {
-            return this.context.Roles.Any(x => x.Name == name);
+            return this.context.Roles.IgnoreAllQueryFilter(hardCheck).Any(x => x.Name == name);
         }
     }
 }
