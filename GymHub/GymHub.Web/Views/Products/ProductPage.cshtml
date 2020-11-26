@@ -11,6 +11,7 @@
 
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="~/css/ProductPageForOnlineShop.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
     <link href="/css/ProductPageCommentBox.css" rel="stylesheet" />
@@ -20,6 +21,17 @@
     var viewModel = Model.ViewModel;
     var inputModel = Model.InputModel;
 }
+
+<div class="product-comment-dimPage-container" hidden>
+    <div class="product-comment-remove-popup-container container alert-danger">
+        <h4>Are you sure you want to delete this comment?</h4>
+        <h4>(This will delete all of the comment's replies. If a review comment, it will also delete that particular review from the user for this product)</h4>
+        <button class="alert-primary product-comment-close-button-popup">Cancel</button>
+        <button type="submit" class="product-comment-remove-button-popup alert alert-danger">Remove</button>
+    </div>
+</div>
+
+
 <div class="container-fluid">
     <div class="content-wrapper">
         <div class="item-container">
@@ -70,7 +82,14 @@
                     </div>
                     <hr>
                     <div class="product-price">$ @viewModel.Price</div>
-                    <div class="product-stock">In Stock: @viewModel.QuantityInStock</div>
+                    @if (viewModel.QuantityInStock > 0)
+                    {
+                        <div class="product-stock">In Stock: @viewModel.QuantityInStock</div>
+                    }
+                    else
+                    {
+                        <div class="product-stock alert-danger">Out of stock</div>
+                    }
                     <hr>
                     <div class="btn-group cart">
                         <form method="post">
@@ -218,5 +237,6 @@
     <script src="/js/ProductPageURLFragments.js" asp-append-version="true"></script>
     <script src="/js/ProductEditComment.js" asp-append-version="true"></script>
     <script src="/js/ProductReplyComment.js" asp-append-version="true"></script>
+    <script src="/js/ProductRemoveCommentPopup.js" asp-append-version="true"></script>
     <partial name="_ValidationScriptsPartial.cshtml">
 }

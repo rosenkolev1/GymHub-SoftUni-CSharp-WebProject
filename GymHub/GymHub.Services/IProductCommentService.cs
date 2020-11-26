@@ -15,5 +15,10 @@ namespace GymHub.Services
         public Task EditCommentTextAsync(ProductComment comment, string text);
         public Task RemoveAsync(string commentId);
         public bool CommentBelongsToUser(string commentId, string userId);
+        public Task LoadCommentLikesAsync(ProductComment comment);
+        public bool UserHasLikedComment(string commentId, string userId);
+        public int GetCommentLikesCount(string commentId);
+        public Task LikeCommentAsync(string commentId, string userId);
+        public void UnlikeCommentAsync(string commentId, string userId);
     }
 }

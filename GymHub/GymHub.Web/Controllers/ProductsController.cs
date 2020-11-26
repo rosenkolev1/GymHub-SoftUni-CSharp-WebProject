@@ -56,6 +56,12 @@ namespace GymHub.Web.Controllers
             var product = this.productService.GetProductById(productId);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
 
+            ////Load commentsLikes for each comment
+            //foreach (var productComment in viewModel.ProductComments)
+            //{
+            //    await this.productCommentService.LoadCommentLikes(productComment);
+            //}
+
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
             viewModel.CurrentUserId = currentUserId;
 
@@ -77,6 +83,7 @@ namespace GymHub.Web.Controllers
                 if (comment.ParentCommentId == null)
                 {
                     var childComments = await this.productCommentService.GetAllChildCommentsAsync(comment);
+
                     viewModel.ParentsChildrenComments.Add(comment, childComments);
                 }
             }
@@ -440,6 +447,24 @@ namespace GymHub.Web.Controllers
             await this.productCommentService.RemoveAsync(commentId);
 
             return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> LikeComment(string commentId)
+        {
+            var userId = this.userService.GetUserId(this.User.Identity.Name);
+
+            if(this.productCommentService.UserHasLikedComment(commentId, userId) == true)
+            {
+                this.productCommentService.UnlikeCommentAsync(commentId, userId);
+            }
+            else
+            {
+                await this.productCommentService.LikeCommentAsync(commentId, userId);
+            }
+
+            return this.Ok();
         }
     }
 }

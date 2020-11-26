@@ -422,7 +422,7 @@ th {
     margin-left:50px;
 }
 
-.product-comment-replies-button, .product-comment-edit-button, .product-comment-reply-button, .product-comment-remove-button {
+.product-comment-replies-button, .product-comment-edit-button, .product-comment-reply-button, .product-comment-remove-button, .product-comment-close-button-popup, .product-comment-remove-button-popup {
     text-align: left;
     font-weight: bold;
     color: darkslategrey;
@@ -434,12 +434,30 @@ th {
     padding-left: 0px;
 }
 
-.product-comment-remove-button {
+.product-comment-remove-button, .product-comment-remove-button-popup, .product-comment-close-button-popup {
     text-align: right;
     color: floralwhite;
     background-color: indianred;
     border-color: #ebccd1;
     padding: 6px 6px;
+}
+
+.product-comment-remove-button-popup, .product-comment-close-button-popup {
+    text-align: center;
+    color: floralwhite;
+    padding: 6px 6px;
+    font-size: 20px;
+    margin-left: 15px;
+}
+
+.product-comment-remove-button-popup {
+    background-color: indianred;
+    border-color: #ebccd1;
+}
+
+.product-comment-close-button-popup {
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
 }
 
 .product-comment-reply-button {
@@ -481,6 +499,41 @@ th {
     float: right;
 }
 
-.validation-message{
-    display:block;
+.product-stock{
+    color: darkred;
+}
+
+.validation-message {
+    display: block;
+}
+
+.product-comment-dimPage-container {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0,0,0, 0.6);
+    z-index: 10001;
+}
+
+.product-comment-remove-popup-container {
+    position: fixed;
+    top: 45vh;
+    width: 50vw;
+    left: 25vw;
+    z-index: 10002;
+    text-align: center;
+}
+
+.product-comment-likes-container{
+    display:inline-block;
+    margin: 5px;
+    margin-right: 10px;
+}
+
+.product-comment-like-button, .product-comment-dislike-button {
+    margin: 4px;
+    font-size: 20px;
+    color: mediumblue;
 }

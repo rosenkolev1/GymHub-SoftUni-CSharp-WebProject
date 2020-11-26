@@ -1,5 +1,7 @@
 ﻿using GymHub.Data.Models;
 using GymHub.Web.Models.InputModels;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GymHub.Web.Models.ViewModels
 {
@@ -12,6 +14,7 @@ namespace GymHub.Web.Models.ViewModels
             this.CommentCounter = commentCounter;
             this.ReplyCommentInputModel = replyCommentInputModels;
         }
+
         public ProductCommentPartialViewModel(ProductComment comment, ReplyCommentInputModel replyCommentInputModels, ProductRatingViewModel userProductRating, string currentUserId, int commentCounter, int repliesCount = 0)
         {
             this.Comment = comment;
@@ -21,6 +24,8 @@ namespace GymHub.Web.Models.ViewModels
             this.CommentCounter = commentCounter;
             this.ReplyCommentInputModel = replyCommentInputModels;
         }
+
+
         public int CommentCounter { get; set; }
         public ProductComment Comment { get; set; }
         public ProductRatingViewModel UserProductRating { get; set; }

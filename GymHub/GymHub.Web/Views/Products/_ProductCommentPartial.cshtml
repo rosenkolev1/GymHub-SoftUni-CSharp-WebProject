@@ -1,5 +1,8 @@
 ﻿@using GymHub.Data.Models
 @using GymHub.Common
+@using GymHub.Services
+@inject IProductCommentService productCommentService
+
 @model ProductCommentPartialViewModel
 @{
     var comment = Model.Comment;
@@ -59,6 +62,17 @@
             }*@
     </div>
     <div class="container">
+        <div class="product-comment-likes-container">
+            <span>@productCommentService.GetCommentLikesCount(Model.Comment.Id)</span>
+            @if (productCommentService.UserHasLikedComment(Model.Comment.Id, Model.CurrentUserId) == false)
+            {
+                <i class="far fa-thumbs-up blue product-comment-like-button"></i>
+            }
+            else
+            {
+                <i class="fas fa-thumbs-up blue product-comment-like-button"></i>
+            }
+        </div>
         @if (Model.RepliesCount > 0)
         {
             <button class="product-comment-replies-button">Show replies(@Model.RepliesCount)</button>

@@ -87,6 +87,7 @@ $(document)
     .ready(SetActiveFragment());
 
 function SetFormDataPageFragment() {
+
     function SetFormDataPageFragmentExecute() {
         //Set hidden input value to current page fragment
         var hiddenFragmentInputs = document.querySelectorAll('.post-pageFragment');

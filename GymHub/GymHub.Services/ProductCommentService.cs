@@ -95,6 +95,7 @@ namespace GymHub.Services
         public async Task EditCommentTextAsync(ProductComment comment, string text)
         {
             if (comment != null) comment.Text = text;
+            comment.ModifiedOn = DateTime.UtcNow;
             await this.context.SaveChangesAsync();
         }
 
@@ -112,6 +113,7 @@ namespace GymHub.Services
             //Remove parent comment
             var removedComment = this.context.ProductsComments
                 .Include(x => x.ProductRating)
+                .Include(x => x.CommentLikes)
                 .FirstOrDefault(x => x.Id == commentId);
             await this.DeleteEntity(removedComment);
 
@@ -122,6 +124,13 @@ namespace GymHub.Services
                 await this.DeleteEntity(ratingFromComment);
             }
 
+            //Remove comments' likes
+            foreach (var commentLike in removedComment.CommentLikes)
+            {
+                await this.DeleteEntity(commentLike);
+            }
+
+            //Remove child comments if it has any
             var repliesToRemovedComment = await GetAllChildCommentsAsync(removedComment);
             foreach (var reply in repliesToRemovedComment)
             {
@@ -136,5 +145,31 @@ namespace GymHub.Services
             return this.context.ProductsComments.FirstOrDefault(x => x.Id == commentId)?.UserId == userId && userId != null;
         }
 
+        public async Task LoadCommentLikesAsync(ProductComment comment)
+        {
+            await this.context.Entry(comment)
+                .Collection(x => x.CommentLikes)
+                .LoadAsync();
+        }
+
+        public bool UserHasLikedComment(string commentId, string userId)
+        {
+            return this.context.ProductCommentLikes.Any(x => x.ProductCommentId == commentId && x.UserId == userId);
+        }
+
+        public int GetCommentLikesCount(string commentId)
+        {
+            return this.context.ProductCommentLikes.Count(x => x.ProductCommentId == commentId);
+        }
+
+        public async Task LikeCommentAsync(string commentId, string userId)
+        {
+            await this.context.AddAsync(new ProductCommentLike { ProductCommentId = commentId, UserId = userId });
+        }
+
+        public void UnlikeCommentAsync(string commentId, string userId)
+        {
+            this.context.Remove(this.context.ProductCommentLikes.FirstOrDefault(x => x.ProductCommentId == commentId && x.UserId == userId));
+        }
     }
 }

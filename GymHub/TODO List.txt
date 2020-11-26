@@ -1,18 +1,8 @@
 -Add product info page.
 
--Add functionality for edditing your comments |---(Also add modifiedOn column to database)---|
-
--Move page center to comment on edit,reply or validation error(Same thing as fragments, but with the comments)
-
--Add out of stock text for product
-
 -Add likes
 
--Add remove comment popup for confirming said delete.
-
 -Sort comments so that the user's own comment shows up at the top and then sort the rest by likes.
-
-
 
 
 -Add email address sender and email confirmation
@@ -27,7 +17,11 @@
 
 -Make imageUrl for products support online urls for images instead of only local files system images.
 
+-Add email subscription for product availability
+
 -Add vaptcha validation
+
+-Move page center to comment on edit,reply or validation error(Same thing as fragments, but with the comments)(Пълна лигавщина за мазохисти перфекционисти като мен :) )
 
 **Things to keep in mind
 
