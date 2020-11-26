@@ -85,6 +85,8 @@ namespace GymHub.Services
             var ratingsSum = productRatings.Sum(x => x.Rating);
             var ratingIncrement = 0.5d;
 
+            if (ratingsSum == 0 || ratingsCount == 0) return 0;
+
             var ratingAverage = RoundRatingNumber(ratingsSum / ratingsCount, ratingIncrement);
 
             return ratingAverage;

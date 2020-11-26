@@ -499,7 +499,7 @@ th {
     float: right;
 }
 
-.product-stock{
+.product-outOfStock{
     color: darkred;
 }
 

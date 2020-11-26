@@ -19,6 +19,6 @@ namespace GymHub.Services
         public bool UserHasLikedComment(string commentId, string userId);
         public int GetCommentLikesCount(string commentId);
         public Task LikeCommentAsync(string commentId, string userId);
-        public void UnlikeCommentAsync(string commentId, string userId);
+        public Task UnlikeCommentAsync(string commentId, string userId);
     }
 }

@@ -56,12 +56,6 @@ namespace GymHub.Web.Controllers
             var product = this.productService.GetProductById(productId);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
 
-            ////Load commentsLikes for each comment
-            //foreach (var productComment in viewModel.ProductComments)
-            //{
-            //    await this.productCommentService.LoadCommentLikes(productComment);
-            //}
-
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
             viewModel.CurrentUserId = currentUserId;
 
@@ -90,14 +84,6 @@ namespace GymHub.Web.Controllers
 
             //toReplyComment query string
             viewModel.ToReplyComment = toReplyComment;
-
-            //Order comments and all of it's replies
-            viewModel.ParentsChildrenComments.OrderBy(kv => kv.Key.CommentedOn);
-            foreach (var kv in viewModel.ParentsChildrenComments)
-            {
-                var childrenComments = kv.Value;
-                childrenComments.OrderBy(x => x.CommentedOn);
-            }
 
             //Check if user has already given a review on this product
             viewModel.ReviewedByCurrentUser = viewModel.ParentsChildrenComments.Keys.Any(x => x.UserId == currentUserId);
@@ -130,6 +116,20 @@ namespace GymHub.Web.Controllers
             else
             {
                 complexModel = AssignViewAndInputModels<AddReviewInputModel, ProductInfoViewModel>(viewModel, true);
+            }
+
+            //Order comments and all of it's replies
+            viewModel.ParentsChildrenComments = viewModel.ParentsChildrenComments
+                .OrderByDescending(kv => kv.Key.UserId == currentUserId)
+                .ThenByDescending(kv => this.productCommentService.GetCommentLikesCount(kv.Key.Id))
+                .ThenByDescending(kv => kv.Value.Count).ToDictionary(x => x.Key, x => x.Value);
+
+            for (int i = 0; i < viewModel.ParentsChildrenComments.Count; i++)
+            {
+                var kv = viewModel.ParentsChildrenComments.ElementAt(i);
+                viewModel.ParentsChildrenComments[kv.Key] = viewModel.ParentsChildrenComments[kv.Key]
+                    .OrderBy(x => x.CommentedOn)
+                    .ToList();
             }
 
             return this.View("ProductPage", complexModel);
@@ -451,20 +451,21 @@ namespace GymHub.Web.Controllers
 
         [Authorize]
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LikeComment(string commentId)
         {
             var userId = this.userService.GetUserId(this.User.Identity.Name);
 
             if(this.productCommentService.UserHasLikedComment(commentId, userId) == true)
             {
-                this.productCommentService.UnlikeCommentAsync(commentId, userId);
+                await this.productCommentService.UnlikeCommentAsync(commentId, userId);
             }
             else
             {
                 await this.productCommentService.LikeCommentAsync(commentId, userId);
             }
 
-            return this.Ok();
+            return this.Json(this.productCommentService.GetCommentLikesCount(commentId));
         }
     }
 }

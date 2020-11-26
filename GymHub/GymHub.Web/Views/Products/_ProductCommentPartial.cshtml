@@ -63,6 +63,7 @@
     </div>
     <div class="container">
         <div class="product-comment-likes-container">
+            <input hidden value="@Model.Comment.Id"/>
             <span>@productCommentService.GetCommentLikesCount(Model.Comment.Id)</span>
             @if (productCommentService.UserHasLikedComment(Model.Comment.Id, Model.CurrentUserId) == false)
             {

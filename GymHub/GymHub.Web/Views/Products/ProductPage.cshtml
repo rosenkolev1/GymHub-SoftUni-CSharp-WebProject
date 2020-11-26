@@ -88,7 +88,7 @@
                     }
                     else
                     {
-                        <div class="product-stock alert-danger">Out of stock</div>
+                        <div class=".product-outOfStock alert-danger">Out of stock</div>
                     }
                     <hr>
                     <div class="btn-group cart">
@@ -190,33 +190,40 @@
                             @{
                                 var uniqueCommentCount = 0;
                             }
-                            @foreach (var kv in viewModel.ParentsChildrenComments)
+                            @if (viewModel.ParentsChildrenComments.Count > 0)
                             {
-
-                                var parentComment = kv.Key;
-                                var childrenComments = kv.Value;
-                                if (parentComment.ParentCommentId == null)
+                                @foreach (var kv in viewModel.ParentsChildrenComments)
                                 {
-                                    var userProductRating = viewModel.UsersProductRatings[parentComment.User];
-                                    var repliesCount = childrenComments.Count;
-                                    <div class="product-commentWithChildren-container">
-                                        @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(parentComment, viewModel.ReplyCommentInputModel, userProductRating, viewModel.CurrentUserId, uniqueCommentCount++, repliesCount))
-                                        <div @(childrenComments.Any(childComment => childComment.Id == viewModel.ToReplyComment) == true ? "" : "hidden") class="product-comment-child-container">
-                                            @foreach (var childComment in childrenComments)
-                                            {
-                                                ProductRatingViewModel userProductRatingChild = null;
 
-                                                @if (viewModel.UsersProductRatings.ContainsKey(childComment.User))
+                                    var parentComment = kv.Key;
+                                    var childrenComments = kv.Value;
+                                    if (parentComment.ParentCommentId == null)
+                                    {
+                                        var userProductRating = viewModel.UsersProductRatings[parentComment.User];
+                                        var repliesCount = childrenComments.Count;
+                                        <div class="product-commentWithChildren-container">
+                                            @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(parentComment, viewModel.ReplyCommentInputModel, userProductRating, viewModel.CurrentUserId, uniqueCommentCount++, repliesCount))
+                                            <div @(childrenComments.Any(childComment => childComment.Id == viewModel.ToReplyComment) == true ? "" : "hidden") class="product-comment-child-container">
+                                                @foreach (var childComment in childrenComments)
                                                 {
-                                                    userProductRatingChild = viewModel.UsersProductRatings[childComment.User];
-                                                }
+                                                    ProductRatingViewModel userProductRatingChild = null;
 
-                                                @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, viewModel.ReplyCommentInputModel, userProductRatingChild, viewModel.CurrentUserId, uniqueCommentCount++))
-                                                uniqueCommentCount++;
-                                            }
+                                                    @if (viewModel.UsersProductRatings.ContainsKey(childComment.User))
+                                                    {
+                                                        userProductRatingChild = viewModel.UsersProductRatings[childComment.User];
+                                                    }
+
+                                                    @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, viewModel.ReplyCommentInputModel, userProductRatingChild, viewModel.CurrentUserId, uniqueCommentCount++))
+                                                    uniqueCommentCount++;
+                                                }
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                <h3>There are no comments for this product</h3>
                             }
                         </section>
 
@@ -238,5 +245,6 @@
     <script src="/js/ProductEditComment.js" asp-append-version="true"></script>
     <script src="/js/ProductReplyComment.js" asp-append-version="true"></script>
     <script src="/js/ProductRemoveCommentPopup.js" asp-append-version="true"></script>
+    <script src="/js/ProductCommentLike.js" asp-append-version="true"></script>
     <partial name="_ValidationScriptsPartial.cshtml">
 }

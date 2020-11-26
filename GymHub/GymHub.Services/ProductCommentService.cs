@@ -115,26 +115,27 @@ namespace GymHub.Services
                 .Include(x => x.ProductRating)
                 .Include(x => x.CommentLikes)
                 .FirstOrDefault(x => x.Id == commentId);
-            await this.DeleteEntity(removedComment);
+
+            await this.DeleteEntityAsync(removedComment);
 
             //Remove parent rating
             if (removedComment.ProductRating != null)
             {
                 var ratingFromComment = removedComment.ProductRating;
-                await this.DeleteEntity(ratingFromComment);
+                await this.DeleteEntityAsync(ratingFromComment);
             }
 
             //Remove comments' likes
             foreach (var commentLike in removedComment.CommentLikes)
             {
-                await this.DeleteEntity(commentLike);
+                await this.DeleteEntityAsync(commentLike);
             }
 
             //Remove child comments if it has any
             var repliesToRemovedComment = await GetAllChildCommentsAsync(removedComment);
             foreach (var reply in repliesToRemovedComment)
             {
-                await this.DeleteEntity(reply);
+                await this.DeleteEntityAsync(reply);
             }
 
             await this.context.SaveChangesAsync();
@@ -164,12 +165,29 @@ namespace GymHub.Services
 
         public async Task LikeCommentAsync(string commentId, string userId)
         {
-            await this.context.AddAsync(new ProductCommentLike { ProductCommentId = commentId, UserId = userId });
+            //
+            var existingProductComment = this.context.ProductCommentLikes
+                .IgnoreAllQueryFilter(true)
+                .FirstOrDefault(x => x.ProductCommentId == commentId && x.UserId == userId);
+
+            if (existingProductComment == null)
+            {
+                existingProductComment = new ProductCommentLike { ProductCommentId = commentId, UserId = userId };
+                await this.context.ProductCommentLikes.AddAsync(existingProductComment);
+            }
+            else
+            {
+                existingProductComment.IsDeleted = false;
+                existingProductComment.DeletedOn = null;
+            }
+
+            await this.context.SaveChangesAsync();
         }
 
-        public void UnlikeCommentAsync(string commentId, string userId)
+        public async Task UnlikeCommentAsync (string commentId, string userId)
         {
-            this.context.Remove(this.context.ProductCommentLikes.FirstOrDefault(x => x.ProductCommentId == commentId && x.UserId == userId));
+
+            await this.DeleteEntityAsync(this.context.ProductCommentLikes.FirstOrDefault(x => x.ProductCommentId == commentId && x.UserId == userId));
         }
     }
 }

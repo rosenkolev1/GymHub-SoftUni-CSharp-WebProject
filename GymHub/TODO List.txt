@@ -1,8 +1,8 @@
 -Add product info page.
 
--Add likes
+-Add ordering options for user
 
--Sort comments so that the user's own comment shows up at the top and then sort the rest by likes.
+-Add paging
 
 
 -Add email address sender and email confirmation
@@ -20,8 +20,6 @@
 -Add email subscription for product availability
 
 -Add vaptcha validation
-
--Move page center to comment on edit,reply or validation error(Same thing as fragments, but with the comments)(Пълна лигавщина за мазохисти перфекционисти като мен :) )
 
 **Things to keep in mind
 

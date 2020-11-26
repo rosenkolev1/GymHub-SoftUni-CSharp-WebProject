@@ -18,7 +18,7 @@ namespace GymHub.Services.Common
             this.context = context;
         }
 
-        public async Task DeleteEntity<EntityType>(EntityType entity)
+        public async Task DeleteEntityAsync<EntityType>(EntityType entity)
             where EntityType : IDeletableEntity
         {
             entity.IsDeleted = true;
