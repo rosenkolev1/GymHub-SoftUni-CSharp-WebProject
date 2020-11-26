@@ -49,5 +49,6 @@ namespace GymHub.Data.Models
         [Required]
         public bool IsDeleted { get; set; }
         public DateTime? DeletedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; }
     }
 }

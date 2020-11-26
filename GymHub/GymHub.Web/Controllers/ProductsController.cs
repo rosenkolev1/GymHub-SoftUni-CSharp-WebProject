@@ -128,6 +128,7 @@ namespace GymHub.Web.Controllers
             return this.View("ProductPage", complexModel);
         }
 
+        [Authorize]
         public ComplexModel<InputModelType, ViewModelType> AssignViewAndInputModels<InputModelType, ViewModelType>(ViewModelType viewModel, bool onlyViewModel = false)
         {
             //Asign view model to complex model
