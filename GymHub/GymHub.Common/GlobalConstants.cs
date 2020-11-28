@@ -34,5 +34,8 @@
         //Product Validation Constants
         public const int ProductNameLengthMin = 3;
         public const int ProductNameLengthMax = 100;
+
+        //Product Comments Pagination
+        public const int CommentsPerPage = 1;
     }
 }

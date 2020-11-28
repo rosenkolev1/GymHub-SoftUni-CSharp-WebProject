@@ -4,15 +4,15 @@
 { var product = Model[i];
     <div class="product-container">
         <div class="product-content-container">
-            <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" class="product-name">@product.Name</a>
-            <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" class="product-name">Model: @product.Model</a>
+            <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-name">@product.Name</a>
+            <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-name">Model: @product.Model</a>
             <img class="product-mainImage" src="/ProductsImages/@product.MainImage">
             <p class="product-element-even">Price: @product.Price $</p>
             <p class="product-element-odd">Description: @product.ShortDescription</p>
             <p class="product-element-even">Warranty: @product.Warranty Months</p>
             <p class="product-element-odd">QuantityInStock: @product.QuantityInStock</p>
         </div>
-        <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" class="product-button">Info</a>
+        <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-button">Info</a>
         <form method="post">
             <input type="hidden" name="productId" value="@product.Id"/>
             <input type="hidden" name="quantity" value="1"/>

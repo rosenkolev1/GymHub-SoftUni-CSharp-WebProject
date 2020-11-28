@@ -1,4 +1,4 @@
-﻿function startUp () {
+﻿function EditButtonsInit () {
     let productEditButtons = Array.from(document.querySelectorAll(".product-comment-edit-button"));
     let productEditButtonCloseTextContent = 'Stop edit';
     let productEditButtonOpenTextContent = 'Edit';
@@ -41,7 +41,16 @@
                 if (validationListItems.length > 0) {
                     //Show the edited comment with all of it's replies if it has any
                     let childrenCommentsDiv = editContainer.closest('.product-comment-child-container');
-                    if (childrenCommentsDiv !== null) childrenCommentsDiv.removeAttribute('hidden');
+                    if (childrenCommentsDiv !== null) {
+                        //Show replies
+                        childrenCommentsDiv.removeAttribute('hidden');
+
+                        //Change 'Show replies()' to 'Hide replies()'
+                        let parentWithChildren = editContainer.closest('.product-commentWithChildren-container');
+                        let repliesButton = parentWithChildren.querySelector('.product-comment-parent-container').querySelector('.product-comment-replies-button');
+                        let repliesCount = repliesButton.textContent.split('(')[1].split(')')[0];
+                        repliesButton.textContent = `Hide replies(${repliesCount})`;
+                    }
 
                     editContainer.removeAttribute('hidden');
 
@@ -112,24 +121,24 @@
     DynamicProductRating();
 }
 
-startUp();
+//EditButtonsInit();
 
-let likeButtons = Array.from(document.querySelectorAll(".likeButton"));
+//let likeButtons = Array.from(document.querySelectorAll(".likeButton"));
 
-likeButtons.forEach(likeButton => {
-    likeButton.addEventListener('click', e => {
-        //Product container
-        let productContainer = likeButton.closest(".product-container");
+//likeButtons.forEach(likeButton => {
+//    likeButton.addEventListener('click', e => {
+//        //Product container
+//        let productContainer = likeButton.closest(".product-container");
 
-        //Product hiddent input with productId
-        let productIdInput = productContainer.querySelector(".input-productId");
+//        //Product hiddent input with productId
+//        let productIdInput = productContainer.querySelector(".input-productId");
 
-        $.ajax({
-            method: "POST",
-            data: {
-                ProductId: productIdInput.value
-            },
-            url: `Products/Like`
-        })
-    })
-})
+//        $.ajax({
+//            method: "POST",
+//            data: {
+//                ProductId: productIdInput.value
+//            },
+//            url: `Products/Like`
+//        })
+//    })
+//})

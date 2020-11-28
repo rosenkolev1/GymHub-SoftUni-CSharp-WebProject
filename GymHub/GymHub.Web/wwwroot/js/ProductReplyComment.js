@@ -1,4 +1,4 @@
-﻿function startUp() {
+﻿function ProductReplyCommentInit() {
     let productReplyButtons = Array.from(document.querySelectorAll(".product-comment-reply-button"));
     let productReplyButtonCloseTextContent = 'Stop reply';
     let productReplyButtonOpenTextContent = 'Reply';
@@ -49,6 +49,7 @@
 
                         //Add url page fragment to form data on submit for the reply form
                         SetFormDataPageFragment();
+                        SetFormDataCommentPage();
 
                         //Change 'Reply' button to 'Stop reply'
                         replyButton.textContent = productReplyButtonCloseTextContent;
@@ -73,9 +74,15 @@
 
                 if (validationListItems.length > 0) {
                     //Show the edited comment with all of it's replies
-                    //let childrenCommentsDiv = editContainer.closest('.product-commentWithChildren-container');
                     let childrenCommentsDiv = editContainer.closest('.product-comment-child-container');
                     childrenCommentsDiv.removeAttribute('hidden');
+
+                    //Change 'Show replies()' to 'Hide replies()'
+                    let parentWithChildren = editContainer.closest('.product-commentWithChildren-container');
+                    let repliesButton = parentWithChildren.querySelector('.product-comment-parent-container').querySelector('.product-comment-replies-button');
+                    let repliesCount = repliesButton.textContent.split('(')[1].split(')')[0];
+                    repliesButton.textContent = `Hide replies(${repliesCount})`;
+
                     editContainer.removeAttribute('hidden');
 
                     //Change reply button to textContent to "Stop reply"
@@ -85,4 +92,4 @@
         })
 }
 
-startUp();
+//ProductReplyCommentInit();

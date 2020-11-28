@@ -2,10 +2,11 @@
 
 -Add ordering/sorting options for product comments
 
--Add paging
+-Add paging(fix UI if pages are more than a given ammount). If there are a lot of pages then do ...{last page} for example.
 
 -Add justification for removing the comment if you are an admin
 
+-Force cart product quantity to be more than 0
 
 -Add email address sender and email confirmation
 

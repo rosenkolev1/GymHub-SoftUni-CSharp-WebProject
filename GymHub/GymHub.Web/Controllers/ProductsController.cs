@@ -51,7 +51,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> ProductPage(string productId, string toReplyComment)
+        public async Task<IActionResult> ProductPage(string productId, string toReplyComment, int commentsPage)
         {
             var product = this.productService.GetProductById(productId);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
@@ -65,28 +65,7 @@ namespace GymHub.Web.Controllers
             //Overall product rating
             viewModel.ProductRating = new ProductRatingViewModel(this.productService.GetAverageRating(viewModel.ProductRatings));
 
-            //Product rating for each user
-            foreach (var userProductRating in viewModel.ProductRatings)
-            {
-                viewModel.UsersProductRatings.Add(userProductRating.User, new ProductRatingViewModel(userProductRating.Rating));
-            }
-
-            //Product comments
-            foreach (var comment in viewModel.ProductComments)
-            {
-                if (comment.ParentCommentId == null)
-                {
-                    var childComments = await this.productCommentService.GetAllChildCommentsAsync(comment);
-
-                    viewModel.ParentsChildrenComments.Add(comment, childComments);
-                }
-            }
-
-            //toReplyComment query string
-            viewModel.ToReplyComment = toReplyComment;
-
-            //Check if user has already given a review on this product
-            viewModel.ReviewedByCurrentUser = viewModel.ParentsChildrenComments.Keys.Any(x => x.UserId == currentUserId);
+            await FillProductInfoViewModel(viewModel, productId, commentsPage, toReplyComment);
 
             //Add each model state error from the last action to this one
             if (TempData["ErrorsFromPOSTRequest"] != null)
@@ -116,20 +95,6 @@ namespace GymHub.Web.Controllers
             else
             {
                 complexModel = AssignViewAndInputModels<AddReviewInputModel, ProductInfoViewModel>(viewModel, true);
-            }
-
-            //Order comments and all of it's replies
-            viewModel.ParentsChildrenComments = viewModel.ParentsChildrenComments
-                .OrderByDescending(kv => kv.Key.UserId == currentUserId)
-                .ThenByDescending(kv => this.productCommentService.GetCommentLikesCount(kv.Key.Id))
-                .ThenByDescending(kv => kv.Value.Count).ToDictionary(x => x.Key, x => x.Value);
-
-            for (int i = 0; i < viewModel.ParentsChildrenComments.Count; i++)
-            {
-                var kv = viewModel.ParentsChildrenComments.ElementAt(i);
-                viewModel.ParentsChildrenComments[kv.Key] = viewModel.ParentsChildrenComments[kv.Key]
-                    .OrderBy(x => x.CommentedOn)
-                    .ToList();
             }
 
             return this.View("ProductPage", complexModel);
@@ -243,7 +208,7 @@ namespace GymHub.Web.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> EditReview(EditReviewInputModel inputModel, string pageFragment)
+        public async Task<IActionResult> EditReview(EditReviewInputModel inputModel, string pageFragment, string commentsPage)
         {
             var productId = inputModel.ProductId;
 
@@ -251,6 +216,8 @@ namespace GymHub.Web.Controllers
 
             //Sanitize pageFragment
             pageFragment = this.javaScriptEncoder.Encode(pageFragment);
+            //TODO Sanitize commentsPage
+            
 
             //Store input model for passing in get action
             TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
@@ -272,7 +239,7 @@ namespace GymHub.Web.Controllers
                 //Store needed info for get request in TempData
                 TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(newModelState);
 
-                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
+                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, commentsPage = commentsPage }, pageFragment);
             }
 
             var userId = this.userService.GetUserId(this.User.Identity.Name);
@@ -316,18 +283,18 @@ namespace GymHub.Web.Controllers
                 TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
                 //Reload same page with the TempData
-                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
+                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, commentsPage= commentsPage }, pageFragment);
             }
 
             if (oldComment != null) await this.productCommentService.EditCommentTextAsync(oldComment, inputModel.Text);
             if (oldProductRating != null) await this.productService.EditProductRating(oldProductRating, (double)inputModel.ProductRatingViewModel.AverageRating);
 
-            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, toReplyComment = oldComment.Id }, pageFragment);
+            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, toReplyComment = oldComment.Id, commentsPage = commentsPage }, pageFragment);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> ReplyToComment(ReplyCommentInputModel inputModel, string pageFragment)
+        public async Task<IActionResult> ReplyToComment(ReplyCommentInputModel inputModel, string pageFragment, string commentsPage)
         {
             var productId = inputModel.ProductId;
 
@@ -356,7 +323,7 @@ namespace GymHub.Web.Controllers
                 //Store needed info for get request in TempData
                 TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(newModelState);
 
-                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
+                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, commentsPage = commentsPage }, pageFragment);
             }
 
             var userId = this.userService.GetUserId(this.User.Identity.Name);
@@ -394,12 +361,12 @@ namespace GymHub.Web.Controllers
                 TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
                 //Reload same page with the TempData
-                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
+                return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, commentsPage = commentsPage }, pageFragment);
             }
 
             await this.productCommentService.AddAsync(replyComment);
 
-            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, toReplyComment = replyComment.Id }, pageFragment);
+            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId, toReplyComment = replyComment.Id, commentsPage = commentsPage }, pageFragment);
         }
 
         [Authorize]
@@ -451,7 +418,7 @@ namespace GymHub.Web.Controllers
         {
             var userId = this.userService.GetUserId(this.User.Identity.Name);
 
-            if(this.productCommentService.UserHasLikedComment(commentId, userId) == true)
+            if (this.productCommentService.UserHasLikedComment(commentId, userId) == true)
             {
                 await this.productCommentService.UnlikeCommentAsync(commentId, userId);
             }
@@ -461,6 +428,62 @@ namespace GymHub.Web.Controllers
             }
 
             return this.Json(this.productCommentService.GetCommentLikesCount(commentId));
+        }
+
+
+        private async Task FillProductInfoViewModel(ProductInfoViewModel viewModel, string productId, int commentsPage, string toReplyComment)
+        {
+            var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
+            viewModel.CurrentUserId = currentUserId;
+
+            //Product comments
+            foreach (var comment in viewModel.ProductComments)
+            {
+                if (comment.ParentCommentId == null)
+                {
+                    var childComments = await this.productCommentService.GetAllChildCommentsAsync(comment);
+
+                    viewModel.ParentsChildrenComments.Add(comment, childComments);
+                }
+            }
+
+            commentsPage = commentsPage <= 0 || (commentsPage - 1) * GlobalConstants.CommentsPerPage >= viewModel.ParentsChildrenComments.Keys.Count ? 1 : commentsPage;
+            viewModel.NumberOfCommentsPages = (viewModel.ParentsChildrenComments.Keys.Count % GlobalConstants.CommentsPerPage == 0) ? (viewModel.ParentsChildrenComments.Keys.Count / GlobalConstants.CommentsPerPage) : (viewModel.ParentsChildrenComments.Keys.Count / GlobalConstants.CommentsPerPage) + 1;
+
+            //Select the parent comments from the comments page and order these comments
+            viewModel.ParentsChildrenComments = viewModel.ParentsChildrenComments
+                .OrderByDescending(kv => kv.Key.UserId == currentUserId)
+                .ThenByDescending(kv => this.productCommentService.GetCommentLikesCount(kv.Key.Id))
+                .ThenByDescending(kv => kv.Value.Count)
+                .Skip((commentsPage - 1) * GlobalConstants.CommentsPerPage)
+                .Take(GlobalConstants.CommentsPerPage)
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            //Order the comments' replies
+            for (int i = 0; i < viewModel.ParentsChildrenComments.Count; i++)
+            {
+                var kv = viewModel.ParentsChildrenComments.ElementAt(i);
+                viewModel.ParentsChildrenComments[kv.Key] = viewModel.ParentsChildrenComments[kv.Key]
+                    .OrderBy(x => x.CommentedOn)
+                    .ToList();
+            }
+
+            //Select the product ratings for the selected comments
+            viewModel.ProductRatings = viewModel.ProductRatings
+                .Where(x => viewModel.ParentsChildrenComments.Keys.Any(y => y.Id == x.ProductCommentId))
+                .ToList();
+
+            //Product rating for each user
+            foreach (var userProductRating in viewModel.ProductRatings)
+            {
+                viewModel.UsersProductRatings.Add(userProductRating.User, new ProductRatingViewModel(userProductRating.Rating));
+            }
+
+            //toReplyComment query string
+            viewModel.ToReplyComment = toReplyComment;
+
+            //Check if user has already given a review on this product
+            viewModel.ReviewedByCurrentUser = this.productService.ProductRatingExists(currentUserId, productId);
         }
     }
 }

@@ -187,43 +187,24 @@
                             {
                                 <hr />
                             }
-                            @{
-                                var uniqueCommentCount = 0;
-                            }
+                            <div class="product-comments-all">
+                                <partial name="_ProductsLoadCommentsPartial.cshtml" for="@Model">
+                            </div>
                             @if (viewModel.ParentsChildrenComments.Count > 0)
                             {
-                                @foreach (var kv in viewModel.ParentsChildrenComments)
-                                {
-
-                                    var parentComment = kv.Key;
-                                    var childrenComments = kv.Value;
-                                    if (parentComment.ParentCommentId == null)
-                                    {
-                                        var userProductRating = viewModel.UsersProductRatings[parentComment.User];
-                                        var repliesCount = childrenComments.Count;
-                                        <div class="product-commentWithChildren-container">
-                                            @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(parentComment, viewModel.ReplyCommentInputModel, userProductRating, viewModel.CurrentUserId, uniqueCommentCount++, repliesCount))
-                                            <div @(childrenComments.Any(childComment => childComment.Id == viewModel.ToReplyComment) == true ? "" : "hidden") class="product-comment-child-container">
-                                                @foreach (var childComment in childrenComments)
-                                                {
-                                                    ProductRatingViewModel userProductRatingChild = null;
-
-                                                    @if (viewModel.UsersProductRatings.ContainsKey(childComment.User))
-                                                    {
-                                                        userProductRatingChild = viewModel.UsersProductRatings[childComment.User];
-                                                    }
-
-                                                    @await Html.PartialAsync("_ProductCommentPartial.cshtml", new ProductCommentPartialViewModel(childComment, viewModel.ReplyCommentInputModel, userProductRatingChild, viewModel.CurrentUserId, uniqueCommentCount++))
-                                                    uniqueCommentCount++;
-                                                }
-                                            </div>
-                                        </div>
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                <h3>There are no comments for this product</h3>
+                                <div class="container">
+                                    <nav aria-label="Page navigation example">
+                                        <input hidden class="product-comment-numberOfPages" value="@viewModel.NumberOfCommentsPages" />
+                                        <ul class="pagination product-comment-pagination">
+                                            <li class="page-item product-comment-page-previous"><a class="page-link">Previous</a></li>
+                                            @for (int i = 1; i <= viewModel.NumberOfCommentsPages; i++)
+                                            {
+                                                <li class="page-item product-comment-page-item"><a class="page-link">@i</a></li>
+                                            }
+                                            <li class="page-item product-comment-page-next"><a class="page-link">Next</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
                             }
                         </section>
 
@@ -246,5 +227,7 @@
     <script src="/js/ProductReplyComment.js" asp-append-version="true"></script>
     <script src="/js/ProductRemoveCommentPopup.js" asp-append-version="true"></script>
     <script src="/js/ProductCommentLike.js" asp-append-version="true"></script>
+    <script src="/js/ProductPageCommentsPagination.js" asp-append-version="true"></script>
+    <script src="/js/ProductPageScripts.js" asp-append-version="true"></script>
     <partial name="_ValidationScriptsPartial.cshtml">
 }

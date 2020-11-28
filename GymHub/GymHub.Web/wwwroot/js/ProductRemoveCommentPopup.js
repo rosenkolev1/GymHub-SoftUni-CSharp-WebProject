@@ -1,4 +1,4 @@
-﻿function myFunction() {
+﻿function ProductRemoveCommentPopupInit() {
     let removeButtons = Array.from(document.querySelectorAll(".product-comment-remove-button"));
 
     //Page popup
@@ -49,4 +49,4 @@
     })
 }
 
-myFunction();
+//ProductRemoveCommentPopupInit();

@@ -9,7 +9,7 @@
     var userProductRating = Model.UserProductRating;
 }
 
-<div class="container-md product-comment-container">
+<div class="container-md product-comment-container @(Model.Comment.ParentComment == null ? "product-comment-parent-container" : "")">
     <div class="product-comment-userinfo-container">
         <span>
             <b>@comment.User.UserName</b> | Commented On: @comment.CommentedOn.ToLongDateString() @comment.CommentedOn.ToLongTimeString() | Rated: @(Model.HasReviewed == true ? "" : "None")

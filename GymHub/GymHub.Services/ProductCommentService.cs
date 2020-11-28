@@ -42,8 +42,6 @@ namespace GymHub.Services
         /// <returns></returns>
         public bool CommentExists(ProductComment productComment, bool hardCheck = false)
         {
-            var something = this.context.ProductsComments.IgnoreAllQueryFilter(hardCheck);
-
             if (this.context.ProductsComments.IgnoreAllQueryFilter(hardCheck).Any(x => x.Id == productComment.Id) == true)
                 return true;
 

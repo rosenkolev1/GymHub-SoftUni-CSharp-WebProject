@@ -50,4 +50,4 @@
     }
 }
 
-DynamicRating();
+//DynamicRating();

@@ -34,6 +34,8 @@ namespace GymHub.Web
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             //Add Identity
             services.AddDefaultIdentity<User>(IdentityOptionsProvider.GetIdentityOptions)
                     .AddRoles<Role>().AddEntityFrameworkStores<ApplicationDbContext>()
@@ -74,8 +76,9 @@ namespace GymHub.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
+
             else
             {
                 app.UseExceptionHandler("/Home/Error");

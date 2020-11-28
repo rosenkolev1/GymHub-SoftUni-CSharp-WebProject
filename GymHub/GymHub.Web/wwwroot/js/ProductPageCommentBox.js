@@ -1,3 +1,7 @@
-﻿$(document).ready(function () {
-    $("[data-toggle=tooltip]").tooltip();
-});
+﻿function ProductPageCommentBoxInit() {
+    $(document).ready(function () {
+        $("[data-toggle=tooltip]").tooltip();
+    });
+}
+
+//ProductPageCommentBoxInit();
