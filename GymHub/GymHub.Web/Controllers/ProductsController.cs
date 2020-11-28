@@ -195,7 +195,7 @@ namespace GymHub.Web.Controllers
                 UserId = userId,
             };
 
-            //Check if user has alread left a review for this product
+            //Check if user has already left a review for this product
             if (this.productService.ProductRatingExists(newProductRating) == true && this.productCommentService.CommentExists(newComment) == true)
             {
                 this.ModelState.AddModelError("InputModel.Rating", "You have already given a review for this product!!!");
@@ -297,21 +297,16 @@ namespace GymHub.Web.Controllers
 
 
             var oldComment = new ProductComment();
-            //Check if comment from this user for this product exists
-            if (this.productCommentService.CommentExists(commentId) == true)
-            {
-                oldComment = this.productCommentService.GetProductComment(commentId);
-            }
-            else
+
+            //Check if the comment exists and if it belongs to the current user and is for this product TODO
+            if (this.productCommentService.CommentMatchesUserAndProduct(commentId, userId, productId) == false)
             {
                 oldComment = null;
                 this.ModelState.AddModelError($"CommentId_{inputModel.CommentCounter}", "You have not given a review with a comment for this product!!!");
             }
-
-            //Check if the comment belongs to this user and is for this product TODO
-            if (this.productCommentService.CommentMatchesUserAndProduct(commentId, userId, productId) == false)
+            else
             {
-                this.ModelState.AddModelError($"CommentId_{inputModel.CommentCounter}", "You have not given a review with a comment for this product!!!");
+                oldComment = this.productCommentService.GetProductComment(commentId);
             }
 
             //Check if model state is valid after checking into the database

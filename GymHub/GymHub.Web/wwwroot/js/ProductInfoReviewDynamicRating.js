@@ -1,13 +1,13 @@
 ﻿function DynamicRating() {
     let reviewForm = document.querySelector(".product-review-form");
 
-    let starsElements = Array.from(reviewForm.parentElement.parentElement.querySelectorAll(".fa"));
+    let starsElements = Array.from(reviewForm.closest('.product-comment-addReview-container').querySelectorAll(".fa"));
 
-    let spanRating = reviewForm.parentElement.parentElement.querySelector("#span-rating");
+    let spanRating = reviewForm.closest('.product-comment-addReview-container').querySelector("#span-rating");
 
     let reviewRatingInput = reviewForm.querySelector('#InputModel_Rating');
 
-    let starsContainer = reviewForm.parentElement.parentElement.querySelector(".product-comment-addReview-ratings-container");
+    let starsContainer = reviewForm.closest('.product-comment-addReview-container').querySelector(".product-comment-addReview-ratings-container");
 
     function matchReviewRatingInputWithSpanRating() {
         let ratingValue = reviewRatingInput.value;

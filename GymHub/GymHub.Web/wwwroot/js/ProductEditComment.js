@@ -10,7 +10,7 @@
     productEditButtons.forEach(editButton => {
         editButton.addEventListener('click', e => {
             //Show and hide edit button
-            let productCommentContainer = editButton.parentElement.parentElement;
+            let productCommentContainer = editButton.closest('.product-comment-container');
             let editContainer = productCommentContainer.querySelector('.product-comment-edit-container');
             let commentText = productCommentContainer.querySelector('.product-comment-text');
 
@@ -39,16 +39,17 @@
                 let validationListItems = Array.from(editContainer.querySelectorAll('.field-validation-error'));
 
                 if (validationListItems.length > 0) {
-                    //Show the edited comment with all of it's replies
-                    let childrenCommentsDiv = editContainer.parentElement.parentElement.parentElement;
-                    childrenCommentsDiv.removeAttribute('hidden');
+                    //Show the edited comment with all of it's replies if it has any
+                    let childrenCommentsDiv = editContainer.closest('.product-comment-child-container');
+                    if (childrenCommentsDiv !== null) childrenCommentsDiv.removeAttribute('hidden');
+
                     editContainer.removeAttribute('hidden');
 
                     //Hide normal comment text
-                    editContainer.parentElement.querySelector('.product-comment-text').setAttribute('hidden', true);
+                    editContainer.closest('.product-comment-textfield').querySelector('.product-comment-text').setAttribute('hidden', true);
 
                     //Change edit button to textContent to "Stop Edit"
-                    editContainer.parentElement.parentElement.querySelector('.product-comment-edit-button').textContent = productEditButtonCloseTextContent;
+                    editContainer.closest('.product-comment-container').querySelector('.product-comment-edit-button').textContent = productEditButtonCloseTextContent;
                 }  
             })
         })
@@ -58,11 +59,11 @@
         let editReviewContainers = Array.from(document.querySelectorAll(".product-comment-editReview-ratings-container"));
 
         editReviewContainers.forEach(editReviewContainer => {
-            let starsElements = Array.from(editReviewContainer.parentElement.querySelectorAll(".fa"));
+            let starsElements = Array.from(editReviewContainer.closest('.product-comment-edit-container').querySelectorAll(".fa"));
 
             let spanRating = editReviewContainer.querySelector("#span-rating");
 
-            let reviewRatingInput = editReviewContainer.parentElement.querySelector('#Rating');
+            let reviewRatingInput = editReviewContainer.closest('.product-comment-edit-container').querySelector('#Rating');
 
             let starsContainer = editReviewContainer.querySelector(".product-comment-addReview-ratings-container");
 

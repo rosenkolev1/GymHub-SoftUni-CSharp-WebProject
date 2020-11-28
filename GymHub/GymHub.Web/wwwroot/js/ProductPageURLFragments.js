@@ -39,7 +39,7 @@
         if (listItemFragment === pageFragment) {
             listItem.classList.add("active");
 
-            let tabDiv = myTabUl.parentElement.querySelector("#myTabContent").querySelector(`#${pageFragment}`);
+            let tabDiv = myTabUl.closest('.product-info').querySelector("#myTabContent").querySelector(`#${pageFragment}`);
 
             tabDiv.classList.add("in");
             tabDiv.classList.add("active");
@@ -67,7 +67,7 @@
             }
 
             //Set the appropriate page fragment content to visible and hide the rest of the content
-            let tabDivs = listItem.parentElement.parentElement.querySelector("#myTabContent").querySelectorAll(`.tab-pane`);
+            let tabDivs = listItem.closest('.product-info').querySelector("#myTabContent").querySelectorAll(`.tab-pane`);
             tabDivs.forEach(tabDiv => {
                 //If the tab div is with the new page fragment -> show it : else -> hide it
                 if (tabDiv.id === `${pageFragment}`) {

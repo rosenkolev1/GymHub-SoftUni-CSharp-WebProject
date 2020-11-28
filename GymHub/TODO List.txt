@@ -1,8 +1,10 @@
 -Add product info page.
 
--Add ordering options for user
+-Add ordering/sorting options for product comments
 
 -Add paging
+
+-Add justification for removing the comment if you are an admin
 
 
 -Add email address sender and email confirmation
@@ -20,6 +22,10 @@
 -Add email subscription for product availability
 
 -Add vaptcha validation
+
+-Add email sender for when there is availability for a sold out product.
+
+-Migrate project to .NET 5
 
 **Things to keep in mind
 

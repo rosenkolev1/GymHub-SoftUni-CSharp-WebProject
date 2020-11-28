@@ -83,7 +83,6 @@ namespace GymHub.Services
                 var childrenToChildren = await GetAllChildCommentsAsync(child);
                 children.AddRange(childrenToChildren);
             }
-
             return children;
         }
 

@@ -7,7 +7,7 @@
     productReplyButtons.forEach(replyButton => {
         replyButton.addEventListener('click', e => {
 
-            let productCommentContainer = replyButton.parentElement.parentElement;
+            let productCommentContainer = replyButton.closest('.product-comment-container');
 
             //Whole comment container
             let commentTextfield = productCommentContainer.querySelector('.product-comment-textfield');
@@ -73,12 +73,13 @@
 
                 if (validationListItems.length > 0) {
                     //Show the edited comment with all of it's replies
-                    let childrenCommentsDiv = editContainer.parentElement.parentElement.parentElement;
+                    //let childrenCommentsDiv = editContainer.closest('.product-commentWithChildren-container');
+                    let childrenCommentsDiv = editContainer.closest('.product-comment-child-container');
                     childrenCommentsDiv.removeAttribute('hidden');
                     editContainer.removeAttribute('hidden');
 
                     //Change reply button to textContent to "Stop reply"
-                    editContainer.parentElement.parentElement.querySelector('.product-comment-reply-button').textContent = productReplyButtonCloseTextContent;
+                    editContainer.closest('.product-comment-container').querySelector('.product-comment-reply-button').textContent = productReplyButtonCloseTextContent;
                 }  
             })
         })
