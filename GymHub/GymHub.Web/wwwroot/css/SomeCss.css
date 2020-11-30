@@ -398,7 +398,7 @@ th {
 }
 
 .product-commentWithChildren-container {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .product-comment-container {
@@ -524,6 +524,7 @@ th {
     left: 25vw;
     z-index: 10002;
     text-align: center;
+    overflow: hidden;
 }
 
 .product-comment-likes-container{
@@ -540,4 +541,22 @@ th {
 
 .product-comment-currentUser {
     background-color: antiquewhite;
+}
+
+.product-comments-ordering-container{
+    margin-bottom: 20px;
+}
+
+.product-comments-ordering-paragraph {
+    font-size: 16px;
+}
+
+.product-comment-remove-justification-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.product-comment-remove-justification-textarea {
+    width: 80%;
+    height: 15vh;
 }

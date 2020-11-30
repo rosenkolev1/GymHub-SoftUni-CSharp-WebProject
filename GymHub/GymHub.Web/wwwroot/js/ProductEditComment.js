@@ -1,4 +1,4 @@
-﻿function EditButtonsInit () {
+﻿function ProductEditCommentInit () {
     let productEditButtons = Array.from(document.querySelectorAll(".product-comment-edit-button"));
     let productEditButtonCloseTextContent = 'Stop edit';
     let productEditButtonOpenTextContent = 'Edit';
@@ -121,24 +121,4 @@
     DynamicProductRating();
 }
 
-//EditButtonsInit();
-
-//let likeButtons = Array.from(document.querySelectorAll(".likeButton"));
-
-//likeButtons.forEach(likeButton => {
-//    likeButton.addEventListener('click', e => {
-//        //Product container
-//        let productContainer = likeButton.closest(".product-container");
-
-//        //Product hiddent input with productId
-//        let productIdInput = productContainer.querySelector(".input-productId");
-
-//        $.ajax({
-//            method: "POST",
-//            data: {
-//                ProductId: productIdInput.value
-//            },
-//            url: `Products/Like`
-//        })
-//    })
-//})
+//ProductEditCommentInit();

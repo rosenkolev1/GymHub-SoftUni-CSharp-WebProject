@@ -1,4 +1,4 @@
-﻿function DynamicRating() {
+﻿function ProductInfoReviewDynamicRatingInit() {
     let reviewForm = document.querySelector(".product-review-form");
 
     let starsElements = Array.from(reviewForm.closest('.product-comment-addReview-container').querySelectorAll(".fa"));
@@ -50,4 +50,4 @@
     }
 }
 
-//DynamicRating();
+//ProductInfoReviewDynamicRatingInit();

@@ -6,6 +6,16 @@
 
 @if (viewModel.ParentsChildrenComments.Count > 0)
 {
+    <div class="container border-dark product-comments-ordering-container">
+        <span class="product-comments-ordering-paragraph">Order by: </span>
+        <select asp-for="ViewModel.CommentsOrderingOptions" class="product-comments-ordering-select">
+            <option value="1">Likes</option>
+            <option value="2">Highest Rating</option>
+            <option value="3">Lowest Rating</option>
+            <option value="4">Newest</option>
+            <option value="5">Oldest</option>
+        </select>
+    </div>
     @foreach (var kv in viewModel.ParentsChildrenComments)
     {
 

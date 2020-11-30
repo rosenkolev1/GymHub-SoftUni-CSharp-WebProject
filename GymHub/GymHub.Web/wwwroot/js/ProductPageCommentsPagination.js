@@ -23,6 +23,14 @@
 
     }, 100);
 
+    // Set active page item on page load
+    $(document)
+        .ready(() => {
+            commentsPageItems.forEach(pageItem => {
+                if (parseInt(pageItem.textContent) == commentsPagesQueryValue) pageItem.classList.add('active');
+            })
+        })
+
     //Set event handler for concrete page number item
     commentsPageItems.forEach(pageItem => {
         let pageItemNumber = parseInt(pageItem.textContent);

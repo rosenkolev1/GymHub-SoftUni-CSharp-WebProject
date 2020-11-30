@@ -1,11 +1,18 @@
 ﻿using GymHub.Data.Models;
+using GymHub.Data.Models.Enums;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GymHub.Services
 {
     public interface IProductCommentService
     {
+        public IOrderedEnumerable<KeyValuePair<ProductComment, List<ProductComment>>> OrderParentsChildrenComments
+            (
+            IOrderedEnumerable<KeyValuePair<ProductComment, List<ProductComment>>> parentsChildrenComments,
+            ProductCommentsOrderingOptions commentsOrderingOptions
+            );
         public Task AddAsync(ProductComment productComment);
         public bool CommentExists(ProductComment productComment, bool hardCheck = false);
         public Task<List<ProductComment>> GetAllChildCommentsAsync(ProductComment productComment);

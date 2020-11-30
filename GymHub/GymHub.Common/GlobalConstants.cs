@@ -36,7 +36,7 @@
         public const int ProductNameLengthMin = 3;
         public const int ProductNameLengthMax = 100;
 
-        //Product Comments Pagination
-        public const int CommentsPerPage = 1;
+        //Product Comments Pagination DEFAULT value is 10
+        public const int CommentsPerPage = 10;
     }
 }

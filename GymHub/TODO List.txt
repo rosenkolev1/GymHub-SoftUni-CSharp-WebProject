@@ -1,7 +1,5 @@
 -Add product info page.
 
--Add ordering/sorting options for product comments
-
 -Add justification for removing the comment if you are an admin
 
 -Force cart product quantity to be more than 0

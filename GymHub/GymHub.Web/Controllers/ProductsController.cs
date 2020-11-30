@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GymHub.Common;
 using GymHub.Data.Models;
+using GymHub.Data.Models.Enums;
 using GymHub.Services;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
@@ -51,7 +52,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> ProductPage(string productId, string toReplyComment, int commentsPage)
+        public async Task<IActionResult> ProductPage(string productId, string toReplyComment, int commentsPage, int commentsOrderingOption)
         {
             var product = this.productService.GetProductById(productId);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
@@ -65,7 +66,7 @@ namespace GymHub.Web.Controllers
             //Overall product rating
             viewModel.ProductRating = new ProductRatingViewModel(this.productService.GetAverageRating(viewModel.ProductRatings));
 
-            await FillProductInfoViewModel(viewModel, productId, commentsPage, toReplyComment);
+            await FillProductInfoViewModel(viewModel, productId, commentsPage, toReplyComment, commentsOrderingOption);
 
             //Add each model state error from the last action to this one
             if (TempData["ErrorsFromPOSTRequest"] != null)
@@ -408,6 +409,8 @@ namespace GymHub.Web.Controllers
 
             await this.productCommentService.RemoveAsync(commentId);
 
+            //TODO shit
+
             return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
         }
 
@@ -431,7 +434,7 @@ namespace GymHub.Web.Controllers
         }
 
 
-        private async Task FillProductInfoViewModel(ProductInfoViewModel viewModel, string productId, int commentsPage, string toReplyComment)
+        private async Task FillProductInfoViewModel(ProductInfoViewModel viewModel, string productId, int commentsPage, string toReplyComment, int commentsOrderingOption)
         {
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
             viewModel.CurrentUserId = currentUserId;
@@ -455,13 +458,14 @@ namespace GymHub.Web.Controllers
             viewModel.CurrentCommentsPage = commentsPage;
 
             //Select the parent comments from the comments page and order these comments
-            viewModel.ParentsChildrenComments = viewModel.ParentsChildrenComments
-                .OrderByDescending(kv => kv.Key.UserId == currentUserId)
-                .ThenByDescending(kv => this.productCommentService.GetCommentLikesCount(kv.Key.Id))
-                .ThenByDescending(kv => kv.Value.Count)
-                .Skip((commentsPage - 1) * GlobalConstants.CommentsPerPage)
-                .Take(GlobalConstants.CommentsPerPage)
-                .ToDictionary(x => x.Key, x => x.Value);
+            if (commentsOrderingOption < 1 || commentsOrderingOption > typeof(ProductCommentsOrderingOptions).GetEnumValues().Length) commentsOrderingOption = 1;
+            viewModel.CommentsOrderingOptions = (ProductCommentsOrderingOptions)commentsOrderingOption;
+
+            viewModel.ParentsChildrenComments = this.productCommentService.OrderParentsChildrenComments(viewModel.ParentsChildrenComments
+                     .OrderByDescending(kv => kv.Key.UserId == currentUserId), (ProductCommentsOrderingOptions)commentsOrderingOption)
+                     .Skip((commentsPage - 1) * GlobalConstants.CommentsPerPage)
+                     .Take(GlobalConstants.CommentsPerPage)
+                     .ToDictionary(x => x.Key, x => x.Value);
 
             //Order the comments' replies
             for (int i = 0; i < viewModel.ParentsChildrenComments.Count; i++)

@@ -1,6 +1,8 @@
-﻿using GymHub.Data;
+﻿using GymHub.Common;
+using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
+using GymHub.Data.Models.Enums;
 using GymHub.Services.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -185,6 +187,41 @@ namespace GymHub.Services
         {
 
             await this.DeleteEntityAsync(this.context.ProductCommentLikes.FirstOrDefault(x => x.ProductCommentId == commentId && x.UserId == userId));
+        }
+
+        public IOrderedEnumerable<KeyValuePair<ProductComment, List<ProductComment>>> OrderParentsChildrenComments
+            (IOrderedEnumerable<KeyValuePair<ProductComment, List<ProductComment>>> parentsChildrenComments, ProductCommentsOrderingOptions commentsOrderingOptions)
+        {
+            if(commentsOrderingOptions == ProductCommentsOrderingOptions.Likes)
+            {
+                return parentsChildrenComments
+                     .ThenByDescending(kv => this.GetCommentLikesCount(kv.Key.Id));
+
+            }
+            else if(commentsOrderingOptions == ProductCommentsOrderingOptions.HighestRating)
+            {
+                return parentsChildrenComments
+                     .ThenByDescending(kv => kv.Key.ProductRating.Rating);
+            }
+            else if (commentsOrderingOptions == ProductCommentsOrderingOptions.LowestRating)
+            {
+                return parentsChildrenComments
+                     .ThenBy(kv => kv.Key.ProductRating.Rating);
+            }
+            else if (commentsOrderingOptions == ProductCommentsOrderingOptions.Newest)
+            {
+                return parentsChildrenComments
+                     .ThenByDescending(kv => kv.Key.CommentedOn);
+            }
+            else if (commentsOrderingOptions == ProductCommentsOrderingOptions.Oldest)
+            {
+                return parentsChildrenComments
+                     .ThenBy(kv => kv.Key.CommentedOn);
+            }
+            else
+            {
+                throw new ArgumentException("CommentsOrderingOptions parameter has invalid value");
+            }
         }
     }
 }

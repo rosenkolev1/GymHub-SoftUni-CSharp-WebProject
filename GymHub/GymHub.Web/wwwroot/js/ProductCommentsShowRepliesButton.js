@@ -1,4 +1,4 @@
-﻿function ShowRepliesButton() {
+﻿function ProductCommentShowRepliesButtonInit() {
     let replyButtons = Array.from(document.querySelectorAll(".product-comment-replies-button"));
 
     replyButtons.forEach(btn => {
@@ -36,4 +36,4 @@
         })
 }
 
-//ShowRepliesButton();
+//ProductCommentShowRepliesButtonInit();

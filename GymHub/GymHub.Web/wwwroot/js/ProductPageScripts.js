@@ -1,14 +1,15 @@
 ﻿function Init() {
     let initFunctions = [
-        AddLikingComments,
+        ProductCommentLikeInit,
         SetFormDataPageFragment,
-        ShowRepliesButton,
-        EditButtonsInit,
-        DynamicRating,
+        ProductCommentShowRepliesButtonInit,
+        ProductEditCommentInit,
+        ProductInfoReviewDynamicRatingInit,
         ProductPageCommentBoxInit,
         ProductRemoveCommentPopupInit,
         ProductReplyCommentInit,
-        ProductPageCommentsPaginationInit
+        ProductPageCommentsPaginationInit,
+        ProductCommentsOrderingInit
     ]
 
     initFunctions.forEach(initFunction => {
