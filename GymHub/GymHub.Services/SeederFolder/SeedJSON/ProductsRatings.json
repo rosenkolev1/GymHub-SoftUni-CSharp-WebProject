@@ -19,5 +19,96 @@
     "Rating": 3,
     "Username": "adminRosen",
     "ProductModel": "LCM:5470-331"
+  },
+  {
+    "Id": "RootCommentFourRating",
+    "CommentId": "RootCommentFour",
+    "Rating": 3,
+    "Username": "userOne",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentFiveRating",
+    "CommentId": "RootCommentFive",
+    "Rating": 3,
+    "Username": "userTwo",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentSixRating",
+    "CommentId": "RootCommentSix",
+    "Rating": 3,
+    "Username": "userThree",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentSevenRating",
+    "CommentId": "RootCommentSeven",
+    "Rating": 3,
+    "Username": "userFour",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentEightRating",
+    "CommentId": "RootCommentEight",
+    "Rating": 3,
+    "Username": "userFive",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentNineRating",
+    "CommentId": "RootCommentNine",
+    "Rating": 3,
+    "Username": "userSix",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentTenRating",
+    "CommentId": "RootCommentTen",
+    "Rating": 3,
+    "Username": "userSeven",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentElevenRating",
+    "CommentId": "RootCommentEleven",
+    "Rating": 3,
+    "Username": "userEight",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentTwelveRating",
+    "CommentId": "RootCommentTwelve",
+    "Rating": 3,
+    "Username": "userNine",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentThirteenRating",
+    "CommentId": "RootCommentThirteen",
+    "Rating": 3,
+    "Username": "userTen",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentFourteenRating",
+    "CommentId": "RootCommentFourteen",
+    "Rating": 3,
+    "Username": "userEleven",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentFifteenRating",
+    "CommentId": "RootCommentFifteen",
+    "Rating": 3,
+    "Username": "userTwelve",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentSixteenRating",
+    "CommentId": "RootCommentSixteen",
+    "Rating": 3,
+    "Username": "userThirteen",
+    "ProductModel": "LEM:1082-45"
   }
 ]

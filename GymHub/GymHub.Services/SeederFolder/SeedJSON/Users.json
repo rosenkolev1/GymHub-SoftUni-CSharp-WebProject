@@ -50,6 +50,175 @@
     "RoleNames": [
       "Normal User"
     ]
+  },
+  {
+    "FirstName": "userOne",
+    "MiddleName": "userOne",
+    "LastName": "userOne",
+    "Username": "userOne",
+    "Password": "userOne",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userOne@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userTwo",
+    "MiddleName": "userTwo",
+    "LastName": "userTwo",
+    "Username": "userTwo",
+    "Password": "userTwo",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userTwo@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userThree",
+    "MiddleName": "userThree",
+    "LastName": "userThree",
+    "Username": "userThree",
+    "Password": "userThree",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userThree@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userFour",
+    "MiddleName": "userFour",
+    "LastName": "userFour",
+    "Username": "userFour",
+    "Password": "userFour",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userFour@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userFive",
+    "MiddleName": "userFive",
+    "LastName": "userFive",
+    "Username": "userFive",
+    "Password": "userFive",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userFive@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userSix",
+    "MiddleName": "userSix",
+    "LastName": "userSix",
+    "Username": "userSix",
+    "Password": "userSix",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userSix@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userSeven",
+    "MiddleName": "userSeven",
+    "LastName": "userSeven",
+    "Username": "userSeven",
+    "Password": "userSeven",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userSeven@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userEight",
+    "MiddleName": "userEight",
+    "LastName": "userEight",
+    "Username": "userEight",
+    "Password": "userEight",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userEight@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userNine",
+    "MiddleName": "userNine",
+    "LastName": "userNine",
+    "Username": "userNine",
+    "Password": "userNine",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userNine@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userTen",
+    "MiddleName": "userTen",
+    "LastName": "userTen",
+    "Username": "userTen",
+    "Password": "userTen",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userTen@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userEleven",
+    "MiddleName": "userEleven",
+    "LastName": "userEleven",
+    "Username": "userEleven",
+    "Password": "userEleven",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userEleven@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userTwelve",
+    "MiddleName": "userTwelve",
+    "LastName": "userTwelve",
+    "Username": "userTwelve",
+    "Password": "userTwelve",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userTwelve@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
+  },
+  {
+    "FirstName": "userThirteen",
+    "MiddleName": "userThirteen",
+    "LastName": "userThirteen",
+    "Username": "userThirteen",
+    "Password": "userThirteen",
+    "DateOfBirth": "1982-03-11T00:00:00Z",
+    "Email": "userThirteen@abv.bg",
+    "GenderName": "Female",
+    "RoleNames": [
+      "Normal User"
+    ]
   }
 ]
 

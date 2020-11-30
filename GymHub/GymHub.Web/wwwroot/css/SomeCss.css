@@ -537,3 +537,7 @@ th {
     font-size: 20px;
     color: mediumblue;
 }
+
+.product-comment-currentUser {
+    background-color: antiquewhite;
+}

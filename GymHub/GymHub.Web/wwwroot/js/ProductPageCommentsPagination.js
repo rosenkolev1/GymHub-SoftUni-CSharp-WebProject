@@ -2,6 +2,7 @@
     let commentsPageItems = Array.from(document.querySelectorAll('.product-comment-page-item'));
     let commentPagePrevious = document.querySelector('.product-comment-page-previous');
     let commentPageNext = document.querySelector('.product-comment-page-next');
+    let commentPageDots = Array.from(document.querySelectorAll('.product-comment-page-dots'));
 
     let numberOfCommentsPages = parseInt(commentsPageItems.slice().pop().textContent);
 
@@ -32,7 +33,7 @@
         }
 
         pageItem.addEventListener('click', e => {
-            FillQueryStringWithCommentsPage(pageItemNumber, -1, false);
+            FillQueryStringWithCommentsPage(pageItemNumber, 0, false);
         })
     })
 
@@ -49,6 +50,25 @@
             FillQueryStringWithCommentsPage(commentsPagesQueryValue, 1, true);
         }
     });
+
+    //Set event handle for dots button
+    commentPageDots.forEach(commentPageDot => {
+        commentPageDot.addEventListener('click', e => {
+            let pageItemEl;
+            let pageItemNumber;
+
+            if (commentPageDot.classList.contains('pageNumber=fromNext')) {
+                pageItemEl = commentPageDot.nextElementSibling;
+                pageItemNumber = parseInt(pageItemEl.textContent) - 1;
+            }
+            else if (commentPageDot.classList.contains('pageNumber=fromPrevious')) {
+                pageItemEl = commentPageDot.previousElementSibling;
+                pageItemNumber = parseInt(pageItemEl.textContent) + 1;
+            }
+
+            FillQueryStringWithCommentsPage(pageItemNumber, 0, false);
+        })
+    })
 
     function FillQueryStringWithCommentsPage(intialValue, increment, willIncrement) {
         let pageUrlParams = new URLSearchParams(window.location.search);

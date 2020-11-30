@@ -26,5 +26,6 @@ namespace GymHub.Web.Models.ViewModels
         public ReplyCommentInputModel ReplyCommentInputModel { get; set; }
         public string ToReplyComment { get; set; }
         public int NumberOfCommentsPages { get; set; }
+        public int CurrentCommentsPage { get; set; }
     }
 }

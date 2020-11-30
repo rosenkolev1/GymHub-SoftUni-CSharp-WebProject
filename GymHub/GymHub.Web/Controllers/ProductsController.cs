@@ -448,7 +448,11 @@ namespace GymHub.Web.Controllers
             }
 
             commentsPage = commentsPage <= 0 || (commentsPage - 1) * GlobalConstants.CommentsPerPage >= viewModel.ParentsChildrenComments.Keys.Count ? 1 : commentsPage;
-            viewModel.NumberOfCommentsPages = (viewModel.ParentsChildrenComments.Keys.Count % GlobalConstants.CommentsPerPage == 0) ? (viewModel.ParentsChildrenComments.Keys.Count / GlobalConstants.CommentsPerPage) : (viewModel.ParentsChildrenComments.Keys.Count / GlobalConstants.CommentsPerPage) + 1;
+            viewModel.NumberOfCommentsPages = (viewModel.ParentsChildrenComments.Keys.Count % GlobalConstants.CommentsPerPage == 0) 
+                ? (viewModel.ParentsChildrenComments.Keys.Count / GlobalConstants.CommentsPerPage) 
+                : (viewModel.ParentsChildrenComments.Keys.Count / GlobalConstants.CommentsPerPage) + 1;
+
+            viewModel.CurrentCommentsPage = commentsPage;
 
             //Select the parent comments from the comments page and order these comments
             viewModel.ParentsChildrenComments = viewModel.ParentsChildrenComments

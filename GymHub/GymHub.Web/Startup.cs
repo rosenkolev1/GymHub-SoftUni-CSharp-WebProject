@@ -71,7 +71,7 @@ namespace GymHub.Web
             MigrateDatabase(app, false);
 
             //Seed database at startup        
-            SeedDatabaseAsync(app, true).GetAwaiter().GetResult();
+            SeedDatabaseAsync(app, false).GetAwaiter().GetResult();
 
             if (env.IsDevelopment())
             {

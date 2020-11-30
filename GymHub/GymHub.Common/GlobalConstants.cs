@@ -17,7 +17,8 @@
         public const int UsernameLengthMin = 6;
         public const int UsernameLengthMax = 30;
 
-        public const int PasswordLengthMin = 8;
+        //Min length should be 8. Any other value is for debugging purposes only
+        public const int PasswordLengthMin = 6;
         public const int PasswordLengthMax = 30;
 
         public const int FirstNameLengthMin = 2;
