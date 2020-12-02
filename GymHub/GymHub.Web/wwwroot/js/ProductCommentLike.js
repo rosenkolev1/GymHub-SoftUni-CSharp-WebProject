@@ -4,15 +4,16 @@
     likeElements.forEach(likeElement => {
         likeElement.addEventListener('click', e => {
 
-            let commentId = likeElement.closest('.product-comment-likes-container').querySelector('input').value;
-            let anitForgeryToken;
+            let commentId = likeElement.closest('.product-comment-likes-container').querySelector('.product-comment-like-commentId').value;
+            let anitForgeryToken = Array.from(likeElement.closest('.product-comment-likes-container').querySelectorAll('input'))
+                .find(x => x.name == '__RequestVerificationToken').value;
 
             $.ajax({
                 method: "POST",
                 url: `/Products/LikeComment?commentId=${commentId}`,
                 data: {
                     commentId: commentId,
-
+                    __RequestVerificationToken: anitForgeryToken
                 },
                 success: (response) => {
                     let likesSpan = likeElement.closest('.product-comment-likes-container').querySelector('span');
