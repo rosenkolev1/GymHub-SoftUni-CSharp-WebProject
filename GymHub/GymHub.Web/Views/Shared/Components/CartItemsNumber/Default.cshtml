@@ -1,0 +1,23 @@
+﻿@model int
+@{
+    var numberOfItemsInCartForCurrentUser = Model;
+}
+<i class="fas fa-shopping-cart"></i>
+@if (numberOfItemsInCartForCurrentUser > 0)
+{
+    string numberOfItemsInCartForCurrentUserString = "";
+    if (numberOfItemsInCartForCurrentUser <= 9)
+    {
+        numberOfItemsInCartForCurrentUserString = numberOfItemsInCartForCurrentUser.ToString();
+    }
+    else
+    {
+        numberOfItemsInCartForCurrentUserString = "9+";
+    }
+<span class="fa-stack cart-container">
+    <!-- The icon that will wrap the number -->
+    <span class="fa fa-circle gold fa-stack-3x cart-circle"></span>
+    <!-- a strong element with the custom content, in this case a number -->
+    <strong class="fa-stack-1x cart-number">@numberOfItemsInCartForCurrentUserString</strong>
+</span>
+}

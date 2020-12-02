@@ -11,5 +11,6 @@ namespace GymHub.Services
         public bool ProductIsInCart(string productId, string userId);
         public ProductCart GetProductFromCart(string productId, string userId);
         public List<ProductCartViewModel> GetAllProductsFromCart(string userId);
+        public int GetNumberOfProductsInCart(string userId);
     }
 }

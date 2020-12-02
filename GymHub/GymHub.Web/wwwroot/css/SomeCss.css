@@ -573,3 +573,20 @@ th {
 .product-page-addToCart-validationMessage-container{
     margin-top: 3px;
 }
+
+.fa-sign-out-alt {
+    margin-right: 1px;
+    padding-left: 2px;
+}
+
+.fa-sign-in-alt {
+    margin-right: 4px;
+}
+
+.fa-shopping-cart{
+    margin-right: 3px;
+}
+
+.shop-button{
+    float:left;
+}

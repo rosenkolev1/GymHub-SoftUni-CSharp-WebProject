@@ -5,6 +5,7 @@ using GymHub.DTOs;
 using GymHub.Services.Common;
 using GymHub.Web.Models.InputModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -135,6 +136,12 @@ namespace GymHub.Services
         public User GetUser(string userId)
         {
             return this.context.Users.FirstOrDefault(x => x.Id == userId);
+        }
+
+        public User GetUserByUsername(string username)
+        {
+            return this.context.Users
+                .FirstOrDefault(x => x.UserName == username);
         }
     }
 }

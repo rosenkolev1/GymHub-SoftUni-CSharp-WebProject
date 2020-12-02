@@ -19,5 +19,6 @@ namespace GymHub.Services
         public string GetUserId(string username, bool hardCheck = false);
         public string GetEmail(string userId);
         public User GetUser(string userId);
+        public User GetUserByUsername(string username);
     }
 }

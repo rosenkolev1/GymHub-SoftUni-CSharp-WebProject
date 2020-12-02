@@ -1,0 +1,15 @@
+﻿@using GymHub.Data.Models
+@using GymHub.Common
+@model string
+@{ 
+    var gender = Model;
+}
+
+@if (gender == GlobalConstants.MaleGenderName)
+{
+    <i class="fas fa-user"></i>
+}
+else
+{
+    <i class="fa fa-female"></i>
+}

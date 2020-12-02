@@ -55,5 +55,10 @@ namespace GymHub.Services
                 QuantityInStock = x.Product.QuantityInStock
             }).ToList();
         }
+
+        public int GetNumberOfProductsInCart(string userId)
+        {
+            return this.context.Carts.Where(x => x.UserId == userId).Count();
+        }
     }
 }

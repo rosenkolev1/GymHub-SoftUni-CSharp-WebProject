@@ -10,8 +10,12 @@
 
     <title>GymHub</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    @RenderSection("AdditionalLinks", required:false)
+    @RenderSection("AdditionalLinks", required: false)
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
     <link href="/css/SomeCss.css" rel="stylesheet" />
+    <link href="/css/ShoppingCart.css" rel="stylesheet"/>
 </head>
 
 <body class="body-container">
@@ -21,27 +25,31 @@
         </div>
         @if (this.User.Identity.IsAuthenticated == false)
         {
-        <div class="nav-bar-element">
-            <a class="nav-bar-button" asp-area="Identity" asp-page="/Account/Register">Register</a>
-        </div>
-        <div class="nav-bar-element">
-            <a class="nav-bar-button" asp-area="Identity" asp-page="/Account/Login">Login</a>
-        </div>
+            <div class="nav-bar-element">
+                <a class="nav-bar-button" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            </div>
+            <div class="nav-bar-element">
+                <a class="nav-bar-button" asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-sign-in-alt"></i>Login</a>
+            </div>
         }
         else
         {
-        <form class="nav-bar-element" method="post" asp-area="Identity" asp-page="/Account/Logout">
-            <button style="padding: 0px; border-width: 0px; height: 50px; width: 96px; cursor: pointer" class="nav-bar-button" type="submit">Logout</button>
-        </form>
-        <div class="nav-bar-element">
-            <a class="nav-bar-button" asp-controller="Users" asp-action="Profile">Profile</a>
-        </div>
-        <div class="nav-bar-element">
-            <a class="nav-bar-button" asp-controller="Products" asp-action="All">Shop</a>
-        </div>
-        <div class="nav-bar-element">
-            <a class="nav-bar-button" asp-controller="Carts" asp-action="All">Cart</a>
-        </div>
+            <form class="nav-bar-element" method="post" asp-area="Identity" asp-page="/Account/Logout">
+                <button style="padding: 0px; border-width: 0px; height: 50px; width: 96px; cursor: pointer" class="nav-bar-button" type="submit"><i class="fas fa-sign-out-alt"></i>Logout</button>
+            </form>
+            <div class="nav-bar-element">
+                <a class="nav-bar-button" asp-controller="Users" asp-action="Profile">
+                    <vc:profile-picture-icon></vc:profile-picture-icon>
+                </a>
+            </div>
+            <div class="nav-bar-element">
+                <a class="nav-bar-button" asp-controller="Carts" asp-action="All">
+                    <vc:cart-items-number></vc:cart-items-number>
+                </a>
+            </div>
+            <div class="nav-bar-element shop-button">
+                <a class="nav-bar-button" asp-controller="Products" asp-action="All">Shop</a>
+            </div>
         }
     </nav>
     <main class="main-container">

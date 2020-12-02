@@ -35,5 +35,10 @@ namespace GymHub.Services
         {
             return this.context.Genders.FirstOrDefault(x => x.Name == name).Id;
         }
+
+        public string GetGenderNameById(string id)
+        {
+            return this.context.Genders.FirstOrDefault(x => x.Id == id).Name;
+        }
     }
 }

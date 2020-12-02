@@ -43,8 +43,6 @@ namespace GymHub.Web
                     .AddRoles<Role>().AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultTokenProviders();
 
-            //Add Identity managers
-
             //Add Razor and views
             services.AddControllersWithViews(option =>
             {

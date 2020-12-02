@@ -10,5 +10,6 @@ namespace GymHub.Services
         public string GetGenderIdByName(string name);
         public List<Gender> GetAllGenders();
         public bool GenderExists(string name, bool hardCheck = false);
+        public string GetGenderNameById(string id);
     }
 }
