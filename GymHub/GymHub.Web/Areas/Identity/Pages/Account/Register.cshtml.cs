@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 namespace GymHub.Web.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+    [ValidateAntiForgeryToken]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<User> _signInManager;

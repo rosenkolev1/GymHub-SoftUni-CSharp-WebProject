@@ -30,8 +30,8 @@
         @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
         {
         <div class="container product-comment-remove-justification-container">
-            <label for="removalJustificationText" class="alert-danger">Reason for removal. This will be send to the user's email</label>
-            <textarea name="removalJustificationText" class="product-comment-remove-justification-textarea" placeholder="Justify the removal of this comment."></textarea>
+            <label for="Justification" class="alert-danger">Reason for removal. This will be send to the user's email</label>
+            <textarea name="Justification" class="product-comment-remove-justification-textarea" placeholder="Justify the removal of this comment.">@GlobalConstants.CommentRemovalJustificationText</textarea>
         </div>
         }
         <button class="alert-primary product-comment-close-button-popup">Cancel</button>

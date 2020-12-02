@@ -5,12 +5,14 @@
         likeElement.addEventListener('click', e => {
 
             let commentId = likeElement.closest('.product-comment-likes-container').querySelector('input').value;
+            let anitForgeryToken;
 
             $.ajax({
                 method: "POST",
                 url: `/Products/LikeComment?commentId=${commentId}`,
                 data: {
-                    commentId: commentId
+                    commentId: commentId,
+
                 },
                 success: (response) => {
                     let likesSpan = likeElement.closest('.product-comment-likes-container').querySelector('span');

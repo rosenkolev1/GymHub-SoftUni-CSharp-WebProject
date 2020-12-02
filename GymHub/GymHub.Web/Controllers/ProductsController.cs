@@ -10,10 +10,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using YourProjectName.Services.Messaging;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace GymHub.Web.Controllers
@@ -26,7 +29,8 @@ namespace GymHub.Web.Controllers
         private readonly IMapper mapper;
         private readonly JavaScriptEncoder javaScriptEncoder;
         private readonly UserManager<User> userManager;
-        public ProductsController(IProductService productService, IMapper mapper, IProductCommentService productCommentService, IUserService userService, JavaScriptEncoder javaScriptEncoder, UserManager<User> userManager)
+        private readonly SendGridEmailSender sendGridEmailSender;
+        public ProductsController(IProductService productService, IMapper mapper, IProductCommentService productCommentService, IUserService userService, JavaScriptEncoder javaScriptEncoder, UserManager<User> userManager, SendGridEmailSender sendGridEmailSender)
         {
             this.productService = productService;
             this.mapper = mapper;
@@ -34,6 +38,7 @@ namespace GymHub.Web.Controllers
             this.userService = userService;
             this.javaScriptEncoder = javaScriptEncoder;
             this.userManager = userManager;
+            this.sendGridEmailSender = sendGridEmailSender;
         }
 
         [Authorize]
@@ -407,16 +412,29 @@ namespace GymHub.Web.Controllers
                 return this.RedirectToAction(nameof(All), "Products");
             }
 
+            var removedCommentUserEmail = this.userService.GetEmail(this.productCommentService.GetProductComment(commentId).UserId);
+            var currentUser = this.userService.GetUser(userId);
+
             await this.productCommentService.RemoveAsync(commentId);
 
-            //TODO shit
+            //Implement Send grid emai sending here
+            var justificationText = removeCommentInputModel.Justification;
+            if(justificationText != null)
+            {
+                await this.sendGridEmailSender.SendEmailAsync(
+                    "GymHub@support.com",
+                    currentUser.UserName,
+                    removedCommentUserEmail, 
+                    "Your comment has been removed",
+                    justificationText
+                    );
+            }
 
             return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = productId }, pageFragment);
         }
 
         [Authorize]
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LikeComment(string commentId)
         {
             var userId = this.userService.GetUserId(this.User.Identity.Name);

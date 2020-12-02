@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GymHub.Web.Models", "GymHub
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GymHub.Common", "GymHub.Common\GymHub.Common.csproj", "{F7B859AE-AA46-44A1-A614-B933164490D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GymHub.DTOs", "GymHub.DTOs\GymHub.DTOs.csproj", "{E4B09F36-4F9C-4E38-B78D-4E3B98B332E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GymHub.DTOs", "GymHub.DTOs\GymHub.DTOs.csproj", "{E4B09F36-4F9C-4E38-B78D-4E3B98B332E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GymHub.Automapper", "GymHub.Automapper\GymHub.Automapper.csproj", "{66794053-28CD-415B-BDAE-D34A88D98647}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GymHub.Automapper", "GymHub.Automapper\GymHub.Automapper.csproj", "{66794053-28CD-415B-BDAE-D34A88D98647}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,16 +1,22 @@
 -Add product info page.
 
--Add justification for removing the comment if you are an admin
+-Descaffold anything that you dont need from Identity
+
+-Integrate send grid with secrets so it's secure and not uploaded to github repo
+
+-Fix liking comment and loading replies antiforgerytoken
+
+-Add option to select quantity when buying a product as well
 
 -Force cart product quantity to be more than 0
 
 -Add product buying
 
--Add email address sender and email confirmation
+-Add product categories to database and add category based searching.
+
+-Add email confirmation on register
 
 -Add user profile pages and functionality
-
--Add product categories to database and add category based searching.
 
 -Add functionality for reinstating a comment if you are an admin
 
@@ -18,18 +24,17 @@
 
 -Add registered user welcome page.
 
--Make imageUrl for products support online urls for images instead of only local files system images.
-
--Add email subscription for product availability
+-Make imageUrl for products support online urls for images instead of only local files system images. Using cloudinary or something similar
 
 -Add vaptcha validation
 
 -Add email sender for when there is availability for a sold out product.
 
--Migrate project to .NET 5
+-Deploy to Azure and include Cloudinary as well
 
 **Things to keep in mind
 
+-Secret Manager Tool
 -HTML sanitizer for validating html
 -HTML encoder for validating html
 -Javascript encoder for validating javascript code

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 namespace GymHub.Web.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+    [ValidateAntiForgeryToken]
     public class LoginModel : PageModel
     {
         private readonly UserManager<User> _userManager;

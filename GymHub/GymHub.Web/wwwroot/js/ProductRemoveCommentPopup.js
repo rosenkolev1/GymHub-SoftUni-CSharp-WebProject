@@ -25,14 +25,32 @@
             let popupRemoveButton = popup.querySelector(".product-comment-remove-button-popup");
 
             popupRemoveButton.removeEventListener('click', sendRemovePostRequest);
-            popupRemoveButton.addEventListener("click", sendRemovePostRequest(commentRemoveForm));
+
+            //If user is admin and his comment is own, then don't show the textarea
+            let commentBelongsToCurrentUser = removeButton.closest('.product-comment-container').classList.contains('product-comment-currentUser');
+            if (commentBelongsToCurrentUser == true) {
+                let justificationContainer = popup.querySelector('.product-comment-remove-justification-container');
+                if (justificationContainer !== null) {
+                    justificationContainer.setAttribute('hidden', null);
+                }
+            }
+            else {
+                let justificationContainer = popup.querySelector('.product-comment-remove-justification-container');
+                justificationContainer.removeAttribute('hidden');
+            }
+
+            let justificationTextArea = popup.querySelector('.product-comment-remove-justification-textarea');
+            popupRemoveButton.addEventListener("click", sendRemovePostRequest(commentRemoveForm, justificationTextArea));
 
             return false;
         })
     })
 
-    function sendRemovePostRequest(commentRemoveForm) {
+    function sendRemovePostRequest(commentRemoveForm, justificationTextArea) {
         return (e) => {
+            if (justificationTextArea !== null) {
+                commentRemoveForm.appendChild(justificationTextArea);
+            }
             commentRemoveForm.requestSubmit();  
         }    
     }

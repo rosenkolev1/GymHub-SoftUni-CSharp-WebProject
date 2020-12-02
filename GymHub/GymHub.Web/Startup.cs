@@ -13,7 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SendGrid;
 using System.Threading.Tasks;
+using YourProjectName.Services.Messaging;
 
 namespace GymHub.Web
 {
@@ -50,6 +52,13 @@ namespace GymHub.Web
             });
             services.AddRazorPages();
 
+            // Add sendgrid
+            var sendGrid = new SendGridEmailSender(this.Configuration["SendGrid:ApiKey"]);
+            services.AddSingleton(sendGrid);
+
+            //Add Automapper
+            services.AddAutoMapper(typeof(UserProfile));
+
             //Services for working with the database
             services.AddTransient<IGenderService, GenderService>();
             services.AddTransient<IRoleService, RoleService>();
@@ -57,8 +66,6 @@ namespace GymHub.Web
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICartService, CartService>();
             services.AddTransient<IProductCommentService, ProductCommentService>();
-
-            services.AddAutoMapper(typeof(UserProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

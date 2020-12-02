@@ -126,5 +126,15 @@ namespace GymHub.Services
         {
             return this.context.Users.IgnoreAllQueryFilter(hardCheck).FirstOrDefault(x => x.UserName == username).Id;
         }
+
+        public string GetEmail(string userId)
+        {
+            return this.context.Users.FirstOrDefault(x => x.Id == userId).Email;
+        }
+
+        public User GetUser(string userId)
+        {
+            return this.context.Users.FirstOrDefault(x => x.Id == userId);
+        }
     }
 }
