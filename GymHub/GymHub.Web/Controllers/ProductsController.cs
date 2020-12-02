@@ -28,9 +28,13 @@ namespace GymHub.Web.Controllers
         private readonly IProductCommentService productCommentService;
         private readonly IMapper mapper;
         private readonly JavaScriptEncoder javaScriptEncoder;
+        private readonly HtmlEncoder htmlEncoder;
         private readonly UserManager<User> userManager;
         private readonly SendGridEmailSender sendGridEmailSender;
-        public ProductsController(IProductService productService, IMapper mapper, IProductCommentService productCommentService, IUserService userService, JavaScriptEncoder javaScriptEncoder, UserManager<User> userManager, SendGridEmailSender sendGridEmailSender)
+        public ProductsController
+            (IProductService productService, IMapper mapper, IProductCommentService productCommentService, IUserService userService,
+            JavaScriptEncoder javaScriptEncoder, UserManager<User> userManager, SendGridEmailSender sendGridEmailSender,
+            HtmlEncoder htmlEncoder)
         {
             this.productService = productService;
             this.mapper = mapper;
@@ -39,6 +43,7 @@ namespace GymHub.Web.Controllers
             this.javaScriptEncoder = javaScriptEncoder;
             this.userManager = userManager;
             this.sendGridEmailSender = sendGridEmailSender;
+            this.htmlEncoder = htmlEncoder;
         }
 
         [Authorize]
@@ -61,6 +66,9 @@ namespace GymHub.Web.Controllers
         {
             var product = this.productService.GetProductById(productId);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
+
+            //Sanitize commentsPage
+            commentsPage = int.Parse(this.htmlEncoder.Encode(commentsPage.ToString()));
 
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
             viewModel.CurrentUserId = currentUserId;
@@ -107,7 +115,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize]
-        public ComplexModel<InputModelType, ViewModelType> AssignViewAndInputModels<InputModelType, ViewModelType>(ViewModelType viewModel, bool onlyViewModel = false)
+        private ComplexModel<InputModelType, ViewModelType> AssignViewAndInputModels<InputModelType, ViewModelType>(ViewModelType viewModel, bool onlyViewModel = false)
         {
             //Asign view model to complex model
             var complexModel = new ComplexModel<InputModelType, ViewModelType>();
@@ -222,8 +230,13 @@ namespace GymHub.Web.Controllers
 
             //Sanitize pageFragment
             pageFragment = this.javaScriptEncoder.Encode(pageFragment);
-            //TODO Sanitize commentsPage
-            
+
+            //Sanitize commentsPage
+            if (commentsPage != null)
+            {
+                commentsPage = this.htmlEncoder.Encode(commentsPage);
+            }
+
 
             //Store input model for passing in get action
             TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
@@ -308,6 +321,12 @@ namespace GymHub.Web.Controllers
 
             //Sanitize pageFragment
             pageFragment = this.javaScriptEncoder.Encode(pageFragment);
+
+            //Sanitize commentsPage
+            if (commentsPage != null)
+            {
+                commentsPage = this.htmlEncoder.Encode(commentsPage);
+            }
 
             //Check if data is valid without looking into the database
             if (this.ModelState.IsValid == false)

@@ -1,16 +1,10 @@
 -Add product info page.
 
--Descaffold anything that you dont need from Identity
-
--Integrate send grid with secrets so it's secure and not uploaded to github repo
-
--Fix liking comment and loading replies antiforgerytoken
-
--Add option to select quantity when buying a product as well
-
--Force cart product quantity to be more than 0
+-Force cart product quantity to be more than 0(client side)
 
 -Add product buying
+
+-Add functionality for add a product when you are admin
 
 -Add product categories to database and add category based searching.
 

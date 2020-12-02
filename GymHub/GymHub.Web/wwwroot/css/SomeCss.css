@@ -115,6 +115,7 @@ footer {
     width: 100%;
     height: 40px;
     background: #0B8E4C;
+    z-index: 100;
 }
 
 footer p{
@@ -343,7 +344,7 @@ th {
 }
 
 .cart-input-quantity {
-    width: 4vw;
+    width: 8vw;
     text-align: center;
     padding-left: 15px;
 }
@@ -559,4 +560,16 @@ th {
 .product-comment-remove-justification-textarea {
     width: 80%;
     height: 15vh;
+}
+
+.product-page-addToCart-quantity{
+    width: 5vw;
+    text-align:center;
+    font-size: 14px;
+    height: 3vh;
+    margin-left: 6px;
+}
+
+.product-page-addToCart-validationMessage-container{
+    margin-top: 3px;
 }

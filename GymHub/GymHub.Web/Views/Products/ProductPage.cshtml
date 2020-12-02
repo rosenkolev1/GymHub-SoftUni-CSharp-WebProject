@@ -29,10 +29,10 @@
         <h4>(This will delete all of the comment's replies. If a review comment, it will also delete that particular review from the user for this product)</h4>
         @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
         {
-        <div class="container product-comment-remove-justification-container">
-            <label for="Justification" class="alert-danger">Reason for removal. This will be send to the user's email</label>
-            <textarea name="Justification" class="product-comment-remove-justification-textarea" placeholder="Justify the removal of this comment.">@GlobalConstants.CommentRemovalJustificationText</textarea>
-        </div>
+            <div class="container product-comment-remove-justification-container">
+                <label for="Justification" class="alert-danger">Reason for removal. This will be send to the user's email</label>
+                <textarea name="Justification" class="product-comment-remove-justification-textarea" placeholder="Justify the removal of this comment.">@GlobalConstants.CommentRemovalJustificationText</textarea>
+            </div>
         }
         <button class="alert-primary product-comment-close-button-popup">Cancel</button>
         <button type="submit" class="product-comment-remove-button-popup alert alert-danger">Remove</button>
@@ -100,12 +100,18 @@
                     }
                     <hr>
                     <div class="btn-group cart">
-                        <form method="post">
-                            <input type="hidden" name="productId" value="@viewModel.Id" />
-                            <input type="hidden" name="quantity" value="1" />
+                        <form method="post" class="product-page-addToCart-form">
+                            <input type="hidden" name="ProductId" value="@viewModel.Id" />
+                            <input type="hidden" name="quantityInStock" class="product-page-addToCart-quantityInStock" value="@viewModel.QuantityInStock" />
                             <button asp-controller="Carts" asp-action="AddToCart" type="submit" class="btn btn-success">
                                 Add
                             </button>
+                            <input type="number" class="product-page-addToCart-quantity" name="Quantity" value="1" />
+                            <div class="product-page-addToCart-validationMessage-container">
+                                @Html.ValidationMessage("QuantityInStock", new { @class = "alert-danger validation-message" })
+                                @Html.ValidationMessage("ProductId", new { @class = "alert-danger validation-message" })
+                                @Html.ValidationMessage("Quantity", new { @class = "alert-danger validation-message" })
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -132,59 +138,59 @@
                         <section class="container" style="margin-top: 10px;">
                             @if (viewModel.ReviewedByCurrentUser == false)
                             {
-                            <div class="container">
-                                <div class="row">
-                                    <h3>Add a review</h3>
-                                </div>
-
-                                <div class="row">
-
-                                    <div class="col-md-6">
-                                        <div class="widget-area no-padding blank product-comment-addReview-container">
-                                            <span class="product-comment-addReview-ratings-container">
-                                                @if (inputModel != null)
-                                                {
-                                                    @for (int i = 1; i <= inputModel.FullStarsCount; i++)
-                                                    {
-                                                        <i class="fa fa-star gold product-comment-addReview-rating" id="star-review-@i"></i>
-                                                    }
-                                                    @for (int i = inputModel.FullStarsCount + 1; i <= 10; i++)
-                                                    {
-                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-@i"></i>
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-1"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-2"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-3"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-4"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-5"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-6"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-7"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-8"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-9"></i>
-                                                    <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-10"></i>
-                                                }
-                                            </span>
-                                            <span class="h4" id="span-rating">@(inputModel?.Rating != null ? inputModel.Rating : 0)/10</span>
-                                            <div class="status-upload">
-                                                <form method="post" class="product-review-form">
-                                                    <input type="hidden" value="@(inputModel?.Rating != null ? inputModel.Rating : 0)" asp-for="InputModel.Rating" />
-                                                    <input type="hidden" asp-for="InputModel.ProductId" value="@Model.ViewModel.Id" />
-                                                    <textarea placeholder="What are your thoughts?" asp-for="InputModel.Text"></textarea>
-                                                    <span asp-validation-for="InputModel.Rating" class="alert-danger" style="display:block"></span>
-                                                    <span asp-validation-for="InputModel.Text" class="alert-danger" style="display:block"></span>
-                                                    <input type="hidden" value="" name="pageFragment" class="post-pageFragment" />
-                                                    <button type="submit" class="btn btn-success green" asp-controller="Products" asp-action="AddReview"><i class="fa fa-share"></i>Add review</button>
-                                                </form>
-                                            </div><!-- Status Upload  -->
-                                        </div><!-- Widget Area -->
+                                <div class="container">
+                                    <div class="row">
+                                        <h3>Add a review</h3>
                                     </div>
 
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="widget-area no-padding blank product-comment-addReview-container">
+                                                <span class="product-comment-addReview-ratings-container">
+                                                    @if (inputModel != null)
+                                                    {
+                                                        @for (int i = 1; i <= inputModel.FullStarsCount; i++)
+                                                        {
+                                                            <i class="fa fa-star gold product-comment-addReview-rating" id="star-review-@i"></i>
+                                                        }
+                                                        @for (int i = inputModel.FullStarsCount + 1; i <= 10; i++)
+                                                        {
+                                                            <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-@i"></i>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-1"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-2"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-3"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-4"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-5"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-6"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-7"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-8"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-9"></i>
+                                                        <i class="fa fa-star-o gold product-comment-addReview-rating" id="star-review-10"></i>
+                                                    }
+                                                </span>
+                                                <span class="h4" id="span-rating">@(inputModel?.Rating != null ? inputModel.Rating : 0)/10</span>
+                                                <div class="status-upload">
+                                                    <form method="post" class="product-review-form">
+                                                        <input type="hidden" value="@(inputModel?.Rating != null ? inputModel.Rating : 0)" asp-for="InputModel.Rating" />
+                                                        <input type="hidden" asp-for="InputModel.ProductId" value="@Model.ViewModel.Id" />
+                                                        <textarea placeholder="What are your thoughts?" asp-for="InputModel.Text"></textarea>
+                                                        <span asp-validation-for="InputModel.Rating" class="alert-danger" style="display:block"></span>
+                                                        <span asp-validation-for="InputModel.Text" class="alert-danger" style="display:block"></span>
+                                                        <input type="hidden" value="" name="pageFragment" class="post-pageFragment" />
+                                                        <button type="submit" class="btn btn-success green" asp-controller="Products" asp-action="AddReview"><i class="fa fa-share"></i>Add review</button>
+                                                    </form>
+                                                </div><!-- Status Upload  -->
+                                            </div><!-- Widget Area -->
+                                        </div>
+
+                                    </div>
                                 </div>
-                            </div>
-                            <hr />
+                                <hr />
                             }
                             <div class="product-comments-all">
                                 <partial name="_ProductsLoadCommentsPartial.cshtml" for="@Model">
@@ -277,19 +283,21 @@
 @section Scripts{
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js" asp-append-version="true"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js" asp-append-version="true"></script>
-    <script src="/js/ProductCommentsShowRepliesButton.js" asp-append-version="true"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js" asp-append-version="true"></script>
-    <script src="/js/ProductPageCommentBox.js" asp-append-version="true"></script>
-    <script src="/js/ProductInfoReviewDynamicRating.js" asp-append-version="true"></script>
-    <script src="/js/ProductPageURLFragments.js" asp-append-version="true"></script>
-    <script src="/js/ProductEditComment.js" asp-append-version="true"></script>
-    <script src="/js/ProductReplyComment.js" asp-append-version="true"></script>
-    <script src="/js/ProductRemoveCommentPopup.js" asp-append-version="true"></script>
-    <script src="/js/ProductCommentLike.js" asp-append-version="true"></script>
-    <script src="/js/ProductPageCommentsPagination.js" asp-append-version="true"></script>
-    <script src="/js/ProductCommentsOrdering.js" asp-append-version="true"></script>
+
+    <script src="/js/ProductPage/ProductCommentsShowRepliesButton.js" asp-append-version="true"></script>
+    <script src="/js/ProductPage/ProductPageCommentBox.js" asp-append-version="true"></script>
+    <script src="/js/ProductPage/ProductInfoReviewDynamicRating.js" asp-append-version="true"></script>
+    <script src="/js/ProductPage/ProductPageURLFragments.js" asp-append-version="true"></script>
+    <script src="/js/ProductPage/ProductEditComment.js" asp-append-version="true"></script>
+    <script src="/js/ProductPage/ProductReplyComment.js" asp-append-version="true"></script>
+    <script src="/js/ProductPage/ProductRemoveCommentPopup.js" asp-append-version="true"></script>
+    <script src="/js/ProductPage/ProductCommentLike.js" asp-append-version="true"></script>
+    <script src="/js/ProductPage/ProductPageCommentsPagination.js" asp-append-version="true"></script>
+    <script src="/js/ProductPage/ProductCommentsOrdering.js" asp-append-version="true"></script>
+    <script src="/js/ProductPage/ProductPageBuyingQuantity.js" asp-append-version="true"></script>
 
     <!--This one is last-->
-    <script src="/js/ProductPageScripts.js" asp-append-version="true"></script>
+    <script src="/js/ProductPage/ProductPageScripts.js" asp-append-version="true"></script>
     <partial name="_ValidationScriptsPartial.cshtml">
 }

@@ -9,7 +9,8 @@
         ProductRemoveCommentPopupInit,
         ProductReplyCommentInit,
         ProductPageCommentsPaginationInit,
-        ProductCommentsOrderingInit
+        ProductCommentsOrderingInit,
+        ProductPageBuyingQuantityInit
     ]
 
     initFunctions.forEach(initFunction => {

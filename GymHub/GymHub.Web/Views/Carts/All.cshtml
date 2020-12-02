@@ -20,10 +20,11 @@
         <tbody>
             @for (int i = 0; i < Model.ViewModel.Count; i++)
             {var product = viewModel[i];       
-            <tr class="cart-tr-row-even" id="@i">
+            <tr class="cart-tr-row-even cart-tr-row" id="@i">
                 <td hidden>
-                    <input type="hidden" asp-for="InputModel[i].Id" value="@product.Id" class="cart-input-product" />
-                    <input type="hidden" asp-for="InputModel[i].SinglePrice" value="@product.Price" class="cart-input-product-singlePrice" />
+                    <input hidden asp-for="ViewModel[i].QuantityInStock" class="cart-input-product-quantityInStock"/>
+                    <input hidden asp-for="InputModel[i].Id" value="@product.Id" class="cart-input-product" />
+                    <input hidden asp-for="InputModel[i].SinglePrice" value="@product.Price" class="cart-input-product-singlePrice" />
                 </td>
                 <td class="cart-td-mainImageElement">
                     <img class="cart-td-mainImage" src="/ProductsImages/@product.MainImage" />
@@ -38,11 +39,11 @@
                     <input class="cart-input-quantity" type="number" asp-for="InputModel[i].Quantity" value="@product.Quantity" />
                 </td>
                 <td class="cart-td-element">
-                    <p class="totalPrice">@((product.Price*product.Quantity).ToString("f2"))</p>
+                    <p class="totalPrice">@((product.Price*product.Quantity).ToString($"${0:f2}"))</p>
                 </td>
             </tr>
             }
-            <tr class="cart-tr-row-even" id="allProductsTotalPriceTr">
+            <tr class="cart-tr-row-even cart-tr-row" id="allProductsTotalPriceTr">
                 <td colspan="4" class="cart-td-totalPriceRow">
                 </td>
                 <td class="cart-td-element">
@@ -55,5 +56,5 @@
 </form>
 
 @section Scripts{ 
-    <script src="/js/CartProductDynamicTotalPrice.js" asp-append-version="true"></script>
+    <script src="/js/CartAll/CartProductDynamicTotalPrice.js" asp-append-version="true"></script>
 }

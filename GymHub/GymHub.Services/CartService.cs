@@ -27,9 +27,9 @@ namespace GymHub.Services
             }
             else
             {
-                this.context.Carts.Add(new ProductCart { UserId = userId, ProductId = productId, Quantity = quantity });
+                await this.context.Carts.AddAsync(new ProductCart { UserId = userId, ProductId = productId, Quantity = quantity });
             }
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
         }
 
         public bool ProductIsInCart(string productId, string userId)
@@ -51,7 +51,8 @@ namespace GymHub.Services
                 Price = x.Product.Price,
                 Id = x.Product.Id,
                 Quantity = x.Quantity,
-                Model = x.Product.Model
+                Model = x.Product.Model,
+                QuantityInStock = x.Product.QuantityInStock
             }).ToList();
         }
     }

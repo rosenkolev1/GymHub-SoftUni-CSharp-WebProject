@@ -26,6 +26,7 @@ namespace GymHub.Web.Models.ViewModels
         public Dictionary<ProductComment, List<ProductComment>> ParentsChildrenComments { get; set; } = new Dictionary<ProductComment, List<ProductComment>>();
         public ReplyCommentInputModel ReplyCommentInputModel { get; set; }
         public ProductCommentsOrderingOptions CommentsOrderingOptions { get; set; }
+        public AddToCartInputModel AddToCartInputModel { get; set; }
         public string ToReplyComment { get; set; }
         public int NumberOfCommentsPages { get; set; }
         public int CurrentCommentsPage { get; set; }
