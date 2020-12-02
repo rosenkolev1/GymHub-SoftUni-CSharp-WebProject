@@ -3,6 +3,7 @@ using GymHub.Common;
 using GymHub.Data.Models;
 using GymHub.Data.Models.Enums;
 using GymHub.Services;
+using GymHub.Web.AuthorizationPolicies;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
@@ -44,6 +45,28 @@ namespace GymHub.Web.Controllers
             this.userManager = userManager;
             this.sendGridEmailSender = sendGridEmailSender;
             this.htmlEncoder = htmlEncoder;
+        }
+
+        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
+        public async Task<IActionResult> Add()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
+        public async Task<IActionResult> Add(AddProductInputModel inputModel)
+        {
+            var newProduct = this.mapper.Map<Product>(inputModel);
+
+            if(this.ModelState.IsValid == false)
+            {
+                return this.View();
+            }
+
+            await this.productService.AddAsync(newProduct);
+
+            return this.RedirectToAction("All");
         }
 
         [Authorize]

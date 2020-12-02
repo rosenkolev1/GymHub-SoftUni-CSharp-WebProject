@@ -1,7 +1,3 @@
--Add product info page.
-
--Force cart product quantity to be more than 0(client side)
-
 -Add product buying
 
 -Add functionality for add a product when you are admin

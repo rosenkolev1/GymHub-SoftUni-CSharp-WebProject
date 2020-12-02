@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using GymHub.Common
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -47,6 +49,12 @@
                     <vc:cart-items-number></vc:cart-items-number>
                 </a>
             </div>
+            @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
+            {
+            <div class="nav-bar-element">
+                <a class="nav-bar-button" asp-controller="Products" asp-action="Add">Add Product</a>
+            </div>
+            }
             <div class="nav-bar-element shop-button">
                 <a class="nav-bar-button" asp-controller="Products" asp-action="All">Shop</a>
             </div>

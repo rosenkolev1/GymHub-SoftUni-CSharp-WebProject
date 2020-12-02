@@ -6,7 +6,7 @@
         <div class="product-content-container">
             <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-name">@product.Name</a>
             <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-name">Model: @product.Model</a>
-            <img class="product-mainImage" src="/ProductsImages/@product.MainImage">
+            <img class="product-mainImage" src="@product.MainImage">
             <p class="product-element-even">Price: @product.Price $</p>
             <p class="product-element-odd">Description: @product.ShortDescription</p>
             <p class="product-element-even">Warranty: @product.Warranty Months</p>

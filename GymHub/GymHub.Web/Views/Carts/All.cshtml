@@ -27,7 +27,7 @@
                     <input hidden asp-for="InputModel[i].SinglePrice" value="@product.Price" class="cart-input-product-singlePrice" />
                 </td>
                 <td class="cart-td-mainImageElement">
-                    <img class="cart-td-mainImage" src="/ProductsImages/@product.MainImage" />
+                    <img class="cart-td-mainImage" src="@product.MainImage" />
                 </td>
                 <td class="cart-td-nameElement">
                     <a class="cart-td-name" asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id">@product.Name: @product.Model</a>

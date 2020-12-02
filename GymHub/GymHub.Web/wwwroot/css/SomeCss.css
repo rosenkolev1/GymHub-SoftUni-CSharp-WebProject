@@ -41,12 +41,12 @@ p, label, a, h1, input, button, select, th, tr, table, thead, tbody, td {
     text-decoration: none;
     vertical-align: central;
     display: block;
-    width: 90px;
     height: 44px;
     text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px;
 }
 
 .nav-bar-home {
@@ -589,4 +589,8 @@ th {
 
 .shop-button{
     float:left;
+}
+
+.product-addProduct-images-container{
+    background-color: white;
 }

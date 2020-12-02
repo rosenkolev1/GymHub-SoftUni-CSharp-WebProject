@@ -18,17 +18,19 @@ namespace GymHub.Web.Controllers
         private readonly ICartService cartService;
         private readonly UserManager<User> userManager;
         private readonly IProductService productService;
-        public CartsController(ICartService cartService, UserManager<User> userManager, IProductService productService)
+        private readonly IUserService userService;
+        public CartsController(ICartService cartService, UserManager<User> userManager, IProductService productService, IUserService userService)
         {
             this.cartService = cartService;
             this.userManager = userManager;
             this.productService = productService;
+            this.userService = userService;
         }
 
         [Authorize]
         public async Task<IActionResult> All()
         {
-            var currentUserId = this.userManager.GetUserId(this.User);
+            var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
             var productsInCart = this.cartService.GetAllProductsFromCart(currentUserId);
 
             var complexModel = new ComplexModel<List<BuyProductInputModel>, List<ProductCartViewModel>>
@@ -53,7 +55,7 @@ namespace GymHub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToCart(AddToCartInputModel inputModel)
         {
-            var currentUserId = this.userManager.GetUserId(this.User);
+            var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
             var productId = inputModel.ProductId;
             var quantity = inputModel.Quantity;
             var product = this.productService.GetProductById(productId);

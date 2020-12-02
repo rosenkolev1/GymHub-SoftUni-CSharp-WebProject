@@ -5,6 +5,8 @@ using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services;
 using GymHub.Services.SeederFolder;
+using GymHub.Web.AuthorizationPolicies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -49,6 +51,15 @@ namespace GymHub.Web
                 option.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
             services.AddRazorPages();
+
+            //Authorization policies
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AuthorizeAsAdminHandler", policy =>
+                    policy.Requirements.Add(new AuthorizeAsAdminRequirement()));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, AuthorizeAsAdminHandler>();
 
             // Add sendgrid
             var sendGrid = new SendGridEmailSender(this.Configuration["SendGrid:ApiKey"]);

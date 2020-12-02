@@ -48,7 +48,8 @@
 
     function sendRemovePostRequest(commentRemoveForm, justificationTextArea) {
         return (e) => {
-            if (justificationTextArea !== null) {
+            if (justificationTextArea !== null && justificationTextArea.closest('.product-comment-remove-justification-container').hasAttribute('hidden') === false) {
+                justificationTextArea.toggleAttribute('hidden');
                 commentRemoveForm.appendChild(justificationTextArea);
             }
             commentRemoveForm.requestSubmit();  
