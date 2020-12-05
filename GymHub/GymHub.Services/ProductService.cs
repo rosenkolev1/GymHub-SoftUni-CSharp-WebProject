@@ -193,5 +193,58 @@ namespace GymHub.Services
             var productToDelete = this.GetProductById(productId);
             await this.DeleteEntityAsync(productToDelete);
         }
+
+        public async Task EditAsync(AddProductInputModel inputModel)
+        {
+            var productToEdit = this.GetProductById(inputModel.Id);
+            var newAdditionalImages = inputModel.AdditionalImages.Where(x => x != null).ToList();
+
+            //Edit all of the images for the product
+            this.context.ProductsImages.RemoveRange(productToEdit.AdditionalImages);
+
+            for (int i = 0; i < newAdditionalImages.Count; i++)
+            {
+                var newImage = newAdditionalImages[i];
+                productToEdit.AdditionalImages.Add(new ProductImage { Image = newImage, ProductId = productToEdit.Id});
+            }
+
+            //Edit all of the simple properties
+            productToEdit.Description = inputModel.Description;
+            productToEdit.Warranty = inputModel.Warranty;
+            productToEdit.MainImage = inputModel.MainImage;
+            productToEdit.Model = inputModel.Model;
+            productToEdit.Name = inputModel.Name;
+            productToEdit.Price = inputModel.Price;
+            productToEdit.QuantityInStock = inputModel.QuantityInStock;
+
+            await this.context.SaveChangesAsync();
+        }
+
+        public bool ProductExistsByName(string name, string excludedProductId)
+        {
+            return this.context.Products
+                .Where(x => x.Id != excludedProductId)
+                .Any(x =>x.Name == name);
+        }
+
+        public bool ProductExistsByModel(string model, string excludedProductId, bool hardCheck = false)
+        {
+            return this.context.Products
+                .IgnoreAllQueryFilter(hardCheck)
+                .Where(x => x.Id != excludedProductId)
+                .Any(x => x.Model == model);
+        }
+
+        public bool ProductImageExists(string imageUrl, string excludedProductId, bool hardCheck = false)
+        {
+            return this.context.Products.IgnoreAllQueryFilter(hardCheck).Where(x => x.Id != excludedProductId).Any(x => x.MainImage == imageUrl) ||
+                this.context.ProductsImages.IgnoreAllQueryFilter(hardCheck).Where(x => x.ProductId != excludedProductId).Any(x => x.Image == imageUrl);
+        }
+
+        public bool ImagesAreRepeated(string mainImage, List<string> additionalImages)
+        {
+            var additionalImagesAreSame = additionalImages.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().Count() != additionalImages.Where(x => !string.IsNullOrWhiteSpace(x)).Count();
+            return additionalImagesAreSame || additionalImages.Contains(mainImage);
+        }
     }
 }

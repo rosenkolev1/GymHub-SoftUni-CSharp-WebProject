@@ -24,7 +24,7 @@ p, label, a, h1, input, button, select, th, tr, table, thead, tbody, td {
 
 .nav-bar {
     position: fixed;
-    top:0px;
+    top: 0px;
     width: 100vw;
     height: 60px;
     background-color: #0B8E4C;
@@ -625,11 +625,23 @@ th {
     text-align:center;
     font-size: 14px;
     height: 3vh;
-    margin-left: 6px;
 }
 
-.product-page-addToCart-validationMessage-container, .product-page-removeProduct-validationMessage-container {
+.product-page-addToCart-quantity-label{
+    display: inline;
+    margin-left: 5px;
+}
+
+.product-page-addToCart-validationMessage-container, .product-page-removeProduct-validationMessage-container, .product-page-editProduct-validationMessage-container {
     margin-top: 3px;
+}
+
+.product-page-addToCart-container{
+    display:block;
+}
+
+.product-edit-container{
+    margin-top: 10px;
 }
 
 .fa-sign-out-alt {
@@ -664,4 +676,12 @@ th {
 
 .input-link{
     width: 40vw;
+}
+
+.product-add-name, .product-add-model{
+    width: 30vw;
+}
+
+.product-add-actionMessage-title, .product-edit-actionMessage-title {
+    text-align: center;
 }

@@ -15,6 +15,11 @@
                 document.querySelector('#Description').value,
                 parseInt(document.querySelector('#QuantityInStock').value)
             ];
+
+        if (isNaN(price)) price = 0;
+        if (isNaN(warranty)) warranty = 0;
+        if (isNaN(quantityInStock)) quantityInStock = 0;
+
         let additionalImages = Array.from(document.querySelectorAll('.product-addProduct-additionalImage')).map(x => x.value);
 
         let dataObject = {

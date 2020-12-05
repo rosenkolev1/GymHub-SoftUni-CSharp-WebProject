@@ -8,6 +8,8 @@ namespace GymHub.Web.Models.InputModels
 {
     public class AddProductInputModel
     {
+        public string Id { get; set; }
+
         [Required]
         [MaxLength(GlobalConstants.ProductNameLengthMax)]
         [MinLength(GlobalConstants.ProductNameLengthMin)]
@@ -38,5 +40,7 @@ namespace GymHub.Web.Models.InputModels
         public int QuantityInStock { get; set; }
 
         public string ShortDescription { get; set; }
+
+        public bool IsAdding { get; set; } = true;
     }
 }

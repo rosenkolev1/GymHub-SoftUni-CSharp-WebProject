@@ -14,7 +14,9 @@ namespace GymHub.Services
         public List<ProductViewModel> GetAllProducts();
         public bool ProductExistsById(string id);
         public bool ProductExistsByName(string name);
+        public bool ProductExistsByName(string name, string excludedProductId);
         public bool ProductExistsByModel(string model, bool hardCheck = false);
+        public bool ProductExistsByModel(string model, string excludedProductId, bool hardCheck = false);
         public Product GetProductById(string productId);
         public double GetAverageRating(List<ProductRating> productRatings);
         public string GetShordDescription(string description, int stringLength);
@@ -26,7 +28,10 @@ namespace GymHub.Services
         public bool ProductRatingExists(string userId, string productId);
         public Task EditProductRating(ProductRating productRating, double rating);
         public bool ProductImageExists(string imageUrl, bool hardCheck = false);
+        public bool ProductImageExists(string imageUrl, string excludedProductId, bool hardCheck = false);
         public Task AddProductImageAsync(ProductImage image);
         public Task RemoveProductAsync(string productId);
+        public Task EditAsync(AddProductInputModel inputModel);
+        public bool ImagesAreRepeated(string mainImage, List<string> additionalImages);
     }
 }

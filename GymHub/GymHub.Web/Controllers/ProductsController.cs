@@ -11,6 +11,7 @@ using GymHub.Web.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -67,12 +68,17 @@ namespace GymHub.Web.Controllers
         {
             var newProduct = this.mapper.Map<Product>(inputModel);
 
+            //Set additional images
+            newProduct.AdditionalImages = inputModel.AdditionalImages
+                .Where(x => x != null)
+                .Select(x => new ProductImage { Image = x, Product = newProduct }).ToList();
+
             //Set input model short description
             inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);
 
             //Store input model for passing in get action
             TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
-            TempData["InputModelFromPOSTRequestType"] = nameof(AddReviewInputModel);
+            TempData["InputModelFromPOSTRequestType"] = nameof(AddProductInputModel);
 
             //Check without looking into the database
             if (this.ModelState.IsValid == false)
@@ -83,23 +89,35 @@ namespace GymHub.Web.Controllers
                 return this.RedirectToAction(nameof(Add), "Products");
             }
 
-            if(this.productService.ProductExistsByModel(inputModel.Model) == true || this.productService.ProductExistsByName(inputModel.Name))
+            //Check if product with this model or name
+            if (this.productService.ProductExistsByModel(inputModel.Model) == true)
             {
-                this.ModelState.AddModelError("", "Product with this model or name or both already exists.");
+                this.ModelState.AddModelError("Model", "Product with this model already exists.");
+            }
+            if (this.productService.ProductExistsByName(inputModel.Name))
+            {
+                this.ModelState.AddModelError("Name", "Product with this name already exists.");
+            }
+
+            //Check if all of these images are unique
+            if (this.productService.ImagesAreRepeated(inputModel.MainImage, inputModel.AdditionalImages))
+            {
+                this.ModelState.AddModelError("", "There are 2 or more non-unique images");
             }
 
             //Check if main image is already used
             if (this.productService.ProductImageExists(inputModel.MainImage) == true)
             {
-                this.ModelState.AddModelError("", "This image is already used.");
+                this.ModelState.AddModelError("MainImage", "This image is already used.");
             }
 
             //Check if any of the additional images are used
-            foreach (var additionalImage in inputModel.AdditionalImages)
+            for (int i = 0; i < inputModel.AdditionalImages.Count; i++)
             {
+                var additionalImage = inputModel.AdditionalImages[i];
                 if (this.productService.ProductImageExists(additionalImage) == true)
                 {
-                    this.ModelState.AddModelError("", "This image is already used.");
+                    this.ModelState.AddModelError($"AdditionalImages[{i}]", "This image is already used.");
                 }
             }
 
@@ -113,7 +131,125 @@ namespace GymHub.Web.Controllers
 
             await this.productService.AddAsync(newProduct);
 
-            return this.RedirectToAction("All");
+            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = newProduct.Id });
+        }
+
+        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
+        public async Task<IActionResult> Edit(string productId, string errorReturnUrl)
+        {
+            //TODO add the errorReturnURL
+            //Check if product with this id exists. MAYBE I WILL REPLACE THIS LATER WILL HAVE TO SWITCH TO DEVELOPMENT AND SEED
+            if (this.productService.ProductExistsById(productId) == false)
+            {
+                return this.View("/Views/Shared/Error.cshtml");
+            }
+
+            AddProductInputModel inputModel = null;
+
+            //Add each model state error from the last action to this one. Fill the input model with he values from the last post action
+            if (TempData["ErrorsFromPOSTRequest"] != null && TempData["InputModelFromPOSTRequestType"]?.ToString() == nameof(AddProductInputModel))
+            {
+                var postRequestModelState = ModelStateHelper.DeserialiseModelState(TempData["ErrorsFromPOSTRequest"].ToString());
+                this.ModelState.Merge(postRequestModelState);
+
+                var inputModelJSON = TempData["InputModelFromPOSTRequest"]?.ToString();
+                inputModel = JsonSerializer.Deserialize<AddProductInputModel>(inputModelJSON);
+
+            }
+            //If there wasn't an error with the edit form prior to this, just fill the inputModel like normal
+            else
+            {
+                var product = this.productService.GetProductById(productId);
+                inputModel = this.mapper.Map<AddProductInputModel>(product);
+
+                //Set the correct additional images paths
+                for (int i = 0; i < product.AdditionalImages.Count; i++)
+                {
+                    var image = product.AdditionalImages.ToList()[i];
+                    inputModel.AdditionalImages[i] = image.Image;
+                }
+            }
+
+            //Set the input model mode to edit
+            inputModel.IsAdding = false;
+
+            return this.View("/Views/Products/Add.cshtml", inputModel);
+        }
+
+        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
+        [HttpPost]
+        public async Task<IActionResult> Edit(AddProductInputModel inputModel)
+        {
+            //Set input model short description
+            inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);
+
+            //Store input model for passing in get action
+            TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
+            TempData["InputModelFromPOSTRequestType"] = nameof(AddProductInputModel);
+
+            //Set input model mode to edit
+            inputModel.IsAdding = false;
+
+            //Check without looking into the database
+            if (this.ModelState.IsValid == false)
+            {
+                //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
+                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
+                return this.RedirectToAction(nameof(Edit), "Products", new { productId = inputModel.Id });
+            }
+
+            //Check if product with this id exists
+            if (this.productService.ProductExistsById(inputModel.Id) == false)
+            {
+                this.ModelState.AddModelError("", "The product that you are trying to edit doesn't exist.");
+            }
+
+            var productId = inputModel.Id;
+
+            //Check if product with this model or name exist and it is not the product that is currently being edited
+            if (this.productService.ProductExistsByModel(inputModel.Model, productId) == true)
+            {
+                this.ModelState.AddModelError("Model", "Product with this model already exists.");
+            }
+            if(this.productService.ProductExistsByName(inputModel.Name, productId))
+            {
+                this.ModelState.AddModelError("Name", "Product with this name already exists.");
+            }
+
+            //Check if all of these images are unique
+            if(this.productService.ImagesAreRepeated(inputModel.MainImage, inputModel.AdditionalImages))
+            {
+                this.ModelState.AddModelError("", "There are 2 or more non-unique images");
+            }
+
+            //Check if main image is already used
+            if (this.productService.ProductImageExists(inputModel.MainImage, productId) == true)
+            {
+                this.ModelState.AddModelError("MainImage", "This image is already used.");
+            }
+
+            //Check if any of the additional images are used
+            for (int i = 0; i < inputModel.AdditionalImages.Count; i++)
+            {
+                var additionalImage = inputModel.AdditionalImages[i];
+                if (this.productService.ProductImageExists(additionalImage, productId) == true)
+                {
+                    this.ModelState.AddModelError($"AdditionalImages[{i}]", "This image is already used.");
+                }
+            }
+
+            if (this.ModelState.IsValid == false)
+            {
+                //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
+                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
+                return this.RedirectToAction(nameof(Edit), "Products", new { productId = inputModel.Id});
+            }
+
+            await this.productService.EditAsync(inputModel);
+
+            return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = inputModel.Id});
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
@@ -140,6 +276,10 @@ namespace GymHub.Web.Controllers
             if (this.ModelState.IsValid == false)
             {
                 //TODO: add notification for failed removal of product
+
+                //Store needed info for get request in TempData
+                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
                 return this.Redirect(errorReturnUrl);
             }
 
@@ -148,6 +288,7 @@ namespace GymHub.Web.Controllers
 
             return this.RedirectToAction(nameof(All));
         }
+
         [Authorize]
         public async Task<IActionResult> All()
         {

@@ -7,8 +7,15 @@
     <link href="/css/ProductPageCommentBox.css" rel="stylesheet" />
     <!------ Include the above in your HEAD tag ---------->
 }
-<form asp-controller="Products" asp-action="Add" method="post" class="product-addProduct-form">
-    <h4>Create a new Product.</h4>
+<form asp-controller="Products" asp-action="@(Model?.IsAdding != false ? "Add" : "Edit")" method="post" class="product-addProduct-form">
+    @if (Model?.IsAdding != false)
+    {
+        <h4 class="product-add-actionMessage-title">Create a new Product.</h4>
+    }
+    else
+    {
+        <h4 class="product-edit-actionMessage-title">Edit Product.</h4>
+    }
     <hr />
     <div asp-validation-summary="All" class="alert-danger"></div>
     <div class="input-container">
@@ -16,29 +23,44 @@
         <input asp-for="MainImage" type="url" placeholder="Type url here" class="input-link">
         <span asp-validation-for="MainImage" class="validation-span"></span>
     </div>
-    <div class="input-container">
-        <label asp-for="AdditionalImages[0]" class="input-label">Additional image 1</label>
-        <input asp-for="AdditionalImages[0]" class="product-addProduct-additionalImage input-link" type="url" placeholder="Type url here">
-        <span asp-validation-for="AdditionalImages[0]" class="validation-span"></span>
-    </div>
-    <div class="input-container">
-        <label asp-for="AdditionalImages[1]" class="input-label">Additional image 2</label>
-        <input asp-for="AdditionalImages[1]" class="product-addProduct-additionalImage input-link" type="url" placeholder="Type url here">
-        <span asp-validation-for="AdditionalImages[1]" class="validation-span"></span>
-    </div>
-    <div class="input-container">
-        <label asp-for="AdditionalImages[2]" class="input-label">Additional image 3</label>
-        <input asp-for="AdditionalImages[2]" class="product-addProduct-additionalImage input-link" type="url" placeholder="Type url here">
-        <span asp-validation-for="AdditionalImages[2]" class="validation-span"></span>
-    </div>
+    @for (int i = 0; i < 3; i++)
+    {
+        @if (Model?.AdditionalImages != null)
+        {
+            @if (Model.AdditionalImages.Count <= i) Model.AdditionalImages.Add(null);
+            <div class="input-container">
+                <label asp-for="AdditionalImages[i]" class="input-label">Additional image @(i+1)</label>
+                <input asp-for="AdditionalImages[i]" class="product-addProduct-additionalImage input-link" type="url" placeholder="Type url here">
+                <span asp-validation-for="AdditionalImages[i]" class="validation-span"></span>
+            </div>
+        }
+        else
+        {
+            <div class="input-container">
+                <label asp-for="AdditionalImages[i]" class="input-label">Additional image @(i+1)</label>
+                <input asp-for="AdditionalImages[i]" class="product-addProduct-additionalImage input-link" type="url" placeholder="Type url here">
+                <span asp-validation-for="AdditionalImages[i]" class="validation-span"></span>
+            </div>
+        }
+    }
+    @*<div class="input-container">
+            <label asp-for="AdditionalImages[1]" class="input-label">Additional image 2</label>
+            <input asp-for="AdditionalImages[1]" class="product-addProduct-additionalImage input-link" type="url" placeholder="Type url here">
+            <span asp-validation-for="AdditionalImages[1]" class="validation-span"></span>
+        </div>
+        <div class="input-container">
+            <label asp-for="AdditionalImages[2]" class="input-label">Additional image 3</label>
+            <input asp-for="AdditionalImages[2]" class="product-addProduct-additionalImage input-link" type="url" placeholder="Type url here">
+            <span asp-validation-for="AdditionalImages[2]" class="validation-span"></span>
+        </div>*@
     <div class="input-container">
         <label asp-for="Name" class="input-label"></label>
-        <input type="text" asp-for="Name" class="input-label" placeholder="Type name here" />
+        <input type="text" asp-for="Name" class="input-label product-add-name" placeholder="Type name here" />
         <span asp-validation-for="Name" class="validation-span"></span>
     </div>
     <div class="input-container">
         <label asp-for="Model" class="input-label"></label>
-        <input type="text" asp-for="Model" class="input-label" placeholder="Type model here" />
+        <input type="text" asp-for="Model" class="input-label product-add-model" placeholder="Type model here" />
         <span asp-validation-for="Model" class="validation-span"></span>
     </div>
     <div class="input-container">
@@ -62,7 +84,15 @@
         <span asp-validation-for="QuantityInStock" class="validation-span"></span>
     </div>
     <div class="button-container">
-        <button type="submit">Add product</button>
+        @if (Model?.IsAdding != false)
+        {
+            <button type="submit">Add product</button>
+        }
+        else
+        {
+            <input hidden type="text" asp-for="Id" />
+            <button type="submit">Edit product</button>
+        }
     </div>
     <div class="button-container">
         <button class="product-addProduct-previewPage-button" type="button">Preview Page</button>

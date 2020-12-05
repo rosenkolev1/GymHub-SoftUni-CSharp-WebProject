@@ -1,6 +1,4 @@
 ﻿function ProductRemoveCommentPopupInit() {
-    //Set error return Url
-    document.querySelector('#productRemove_errorReturnUrl').value = window.location.href;
 
     let removeButtons = Array.from(document.querySelectorAll(".product-comment-remove-button"));
 

@@ -1,9 +1,3 @@
--Add functionality to remove product when you are admin
-
--Add functionality for editting a product when you are admin
-
--Add sort of a preview page for the product when adding it
-
 -Add product buying
 
 -Add product categories to database and add category based searching.

@@ -1,4 +1,7 @@
-﻿function RemoveProductInit(){
+﻿function RemoveProductInit() {
+    //Set error return Url
+    document.querySelector('#productRemove_errorReturnUrl').value = window.location.href;
+
     let removeButton = document.querySelector(".product-remove-button");
 
     //Page popup

@@ -79,10 +79,10 @@
 
                 <div class="col-md-7">
                     <div class="product-title">@viewModel.Name: @viewModel.Model</div>
-                    <div class="btn-group @*cart*@ product-remove-container">
+                    <div class="btn-group product-remove-container">
                         <form method="post" asp-controller="Products" asp-action="Remove" class="product-remove-form">
                             <input type="hidden" name="productId" value="@viewModel.Id" />
-                            <input type="hidden" id="productRemove_errorReturnUrl" name="errorReturnUrl" value="thisShouldBeThePageURL"/>
+                            <input type="hidden" id="productRemove_errorReturnUrl" name="errorReturnUrl" value="thisShouldBeThePageURL" />
                             <button type="submit" class="btn btn-danger product-remove-button">
                                 Remove
                             </button>
@@ -121,13 +121,14 @@
                         <div class=".product-outOfStock alert-danger">Out of stock</div>
                     }
                     <hr>
-                    <div class="btn-group cart">
+                    <div class="btn-group cart product-page-addToCart-container">
                         <form method="post" class="product-page-addToCart-form">
                             <input type="hidden" name="ProductId" value="@viewModel.Id" />
                             <input type="hidden" name="quantityInStock" class="product-page-addToCart-quantityInStock" value="@viewModel.QuantityInStock" />
                             <button asp-controller="Carts" asp-action="AddToCart" type="submit" class="btn btn-success">
                                 Add
                             </button>
+                            <label for="Quantity" class="product-page-addToCart-quantity-label">Quantity:</label>
                             <input type="number" class="product-page-addToCart-quantity" name="Quantity" value="1" />
                             <div class="product-page-addToCart-validationMessage-container">
                                 @Html.ValidationMessage("QuantityInStock", new { @class = "alert-danger validation-message" })
@@ -136,17 +137,18 @@
                             </div>
                         </form>
                     </div>
-                    @*<div class="btn-group cart">
-            <form method="post" class="product-page-removeProduct">
-                <input type="hidden" name="ProductId" value="@viewModel.Id" />
-                <button asp-controller="Products" asp-action="Remove" type="submit" class="btn btn-danger">
-                    Remove
-                </button>
-                <div class="product-page-removeProduct-validationMessage-container">
-                    @Html.ValidationMessage("s", new { @class = "alert-danger validation-message" })
-                </div>
-            </form>
-        </div>*@
+                    <div class="btn-group product-edit-container">
+                        <form method="get" asp-controller="Products" asp-action="Edit" asp-route-productId="@viewModel.Id" class="product-edit-form">
+                            <input type="hidden" name="productId" value="@viewModel.Id" />
+                            <input type="hidden" id="productEdit_errorReturnUrl" name="errorReturnUrl" value="thisShouldBeThePageURL" />
+                            <button type="submit" class="btn btn-warning product-edit-button">
+                                Edit
+                            </button>
+                            <div class="product-page-editProduct-validationMessage-container">
+                                @Html.ValidationMessage("editProduct_productId", new { @class = "alert-danger validation-message" })
+                            </div>
+                        </form>
+                    </div>                   
                 </div>
             </div>
         </div>
