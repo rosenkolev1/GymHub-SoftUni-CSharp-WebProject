@@ -127,6 +127,27 @@ namespace GymHub.Web.Controllers
 
             return this.PartialView("Views/Products/_AddProductPreviewPartial.cshtml", inputModel);
         }
+
+        [HttpPost]
+        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
+        public async Task<IActionResult> Remove(string productId, string errorReturnUrl)
+        {
+            if (this.productService.ProductExistsById(productId) == false)
+            {
+                this.ModelState.AddModelError("removeProduct_productId", "This product doesn't exist");
+            }
+
+            if (this.ModelState.IsValid == false)
+            {
+                //TODO: add notification for failed removal of product
+                return this.Redirect(errorReturnUrl);
+            }
+
+            //TODO: Add notification for successful removal of product 
+            await this.productService.RemoveProductAsync(productId);
+
+            return this.RedirectToAction(nameof(All));
+        }
         [Authorize]
         public async Task<IActionResult> All()
         {

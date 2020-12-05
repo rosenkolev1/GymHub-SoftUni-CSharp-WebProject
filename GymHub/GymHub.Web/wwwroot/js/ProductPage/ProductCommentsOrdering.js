@@ -25,3 +25,20 @@
             }
         })
 }
+
+function SetUrlCommentsOrderingOption() {
+    function SetUrlCommentsOrderingOptionExecute(form) {
+        //Insert hidden input value with current comments ordering option value
+        let pageUrlParams = new URLSearchParams(window.location.search);
+        let commentsOrderingOption = pageUrlParams.get('commentsOrderingOption');
+        if (commentsOrderingOption !== null) {
+            let commentsOrderingOptionInput = `<input hidden name="commentsOrderingOption" value="${commentsOrderingOption}"/>`
+            form.insertAdjacentHTML('afterbegin', commentsOrderingOptionInput);
+        }
+    }
+
+    $(document.querySelectorAll('form'))
+        .submit(function (event) {
+            SetUrlCommentsOrderingOptionExecute(event.target);
+        });
+}

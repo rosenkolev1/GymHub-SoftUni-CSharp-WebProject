@@ -36,6 +36,15 @@
     </div>
 </div>
 
+<div class="product-remove-dimPage-container" hidden>
+    <div class="product-remove-popup-container container alert-danger">
+        <h4>Are you sure you want to delete this product?</h4>
+        <h4>(This will delete everything about this comment, including replies, ratings, images etc...)</h4>
+        <button class="alert-primary product-close-button-popup">Cancel</button>
+        <button type="submit" class="product-remove-button-popup alert alert-danger">Remove</button>
+    </div>
+</div>
+
 
 <div class="container-fluid">
     <div class="content-wrapper">
@@ -64,21 +73,24 @@
                                     break;
                                 }
                             }
-                            @*<a id="item-1" class="service1-item">
-                                <img src="https://previews.123rf.com/images/oskanov/oskanov1809/oskanov180900136/107721371-new-fitness-machines-in-modern-gym-interior.jpg" class="product-additionalImage" alt="">
-                            </a>
-                            <a id="item-2" class="service1-item">
-                                <img src="http://www.corsair.com/Media/catalog/product/g/s/gs600_psu_sideview_blue_2.png" class="product-additionalImage" alt="">
-                            </a>
-                            <a id="item-3" class="service1-item">
-                                <img src="http://www.corsair.com/Media/catalog/product/g/s/gs600_psu_sideview_blue_2.png" class="product-additionalImage" alt="">
-                            </a>*@
                         </center>
                     </div>
                 </div>
 
                 <div class="col-md-7">
                     <div class="product-title">@viewModel.Name: @viewModel.Model</div>
+                    <div class="btn-group @*cart*@ product-remove-container">
+                        <form method="post" asp-controller="Products" asp-action="Remove" class="product-remove-form">
+                            <input type="hidden" name="productId" value="@viewModel.Id" />
+                            <input type="hidden" id="productRemove_errorReturnUrl" name="errorReturnUrl" value="thisShouldBeThePageURL"/>
+                            <button type="submit" class="btn btn-danger product-remove-button">
+                                Remove
+                            </button>
+                            <div class="product-page-removeProduct-validationMessage-container">
+                                @Html.ValidationMessage("removeProduct_productId", new { @class = "alert-danger validation-message" })
+                            </div>
+                        </form>
+                    </div>
                     <div class="product-desc">@viewModel.ShortDescription</div>
                     <div class="product-rating">
                         @{
@@ -124,6 +136,17 @@
                             </div>
                         </form>
                     </div>
+                    @*<div class="btn-group cart">
+            <form method="post" class="product-page-removeProduct">
+                <input type="hidden" name="ProductId" value="@viewModel.Id" />
+                <button asp-controller="Products" asp-action="Remove" type="submit" class="btn btn-danger">
+                    Remove
+                </button>
+                <div class="product-page-removeProduct-validationMessage-container">
+                    @Html.ValidationMessage("s", new { @class = "alert-danger validation-message" })
+                </div>
+            </form>
+        </div>*@
                 </div>
             </div>
         </div>
@@ -307,6 +330,9 @@
     <script src="/js/ProductPage/ProductPageCommentsPagination.js" asp-append-version="true"></script>
     <script src="/js/ProductPage/ProductCommentsOrdering.js" asp-append-version="true"></script>
     <script src="/js/ProductPage/ProductPageBuyingQuantity.js" asp-append-version="true"></script>
+    <script src="~/js/ProductPage/RemoveProduct.js" asp-append-version="true"></script>
+
+    <!--Shared scripts-->
     <script src="~/js/Shared/ChangeProductImage.js" asp-append-version="true"></script>
 
     <!--This one is last-->

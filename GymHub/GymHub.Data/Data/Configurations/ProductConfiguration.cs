@@ -8,9 +8,7 @@ namespace GymHub.Data.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
-            builder
-                .HasIndex(x => x.Model)
-                .IsUnique();
+            
         }
     }
 }

@@ -65,7 +65,8 @@ p, label, a, h1, input, button, select, th, tr, table, thead, tbody, td {
 }
 
 .nav-bar-cart-container {
-    width: 5vw;
+    width: 3vw;
+    text-align:center;
 }
 
 .nav-bar-home {
@@ -479,7 +480,8 @@ th {
     margin-left:50px;
 }
 
-.product-comment-replies-button, .product-comment-edit-button, .product-comment-reply-button, .product-comment-remove-button, .product-comment-close-button-popup, .product-comment-remove-button-popup {
+.product-comment-replies-button, .product-comment-edit-button, .product-comment-reply-button, .product-comment-remove-button, .product-comment-close-button-popup, .product-comment-remove-button-popup,
+.product-close-button-popup, .product-remove-button-popup{
     text-align: left;
     font-weight: bold;
     color: darkslategrey;
@@ -491,7 +493,7 @@ th {
     padding-left: 0px;
 }
 
-.product-comment-remove-button, .product-comment-remove-button-popup, .product-comment-close-button-popup {
+.product-comment-remove-button, .product-comment-remove-button-popup, .product-comment-close-button-popup, .product-close-button-popup, .product-remove-button-popup {
     text-align: right;
     color: floralwhite;
     background-color: indianred;
@@ -499,7 +501,7 @@ th {
     padding: 6px 6px;
 }
 
-.product-comment-remove-button-popup, .product-comment-close-button-popup {
+.product-comment-remove-button-popup, .product-comment-close-button-popup, .product-remove-button-popup, .product-close-button-popup {
     text-align: center;
     color: floralwhite;
     padding: 6px 6px;
@@ -507,12 +509,12 @@ th {
     margin-left: 15px;
 }
 
-.product-comment-remove-button-popup {
+.product-comment-remove-button-popup, .product-remove-button-popup {
     background-color: indianred;
     border-color: #ebccd1;
 }
 
-.product-comment-close-button-popup {
+.product-comment-close-button-popup, .product-close-button-popup {
     background-color: cornflowerblue;
     border-color: cornflowerblue;
 }
@@ -564,7 +566,7 @@ th {
     display: block;
 }
 
-.product-comment-dimPage-container {
+.product-comment-dimPage-container, .product-remove-dimPage-container {
     position: fixed;
     left: 0px;
     top: 0px;
@@ -574,7 +576,7 @@ th {
     z-index: 10001;
 }
 
-.product-comment-remove-popup-container {
+.product-comment-remove-popup-container, .product-remove-popup-container {
     position: fixed;
     top: 45vh;
     width: 50vw;
@@ -626,7 +628,7 @@ th {
     margin-left: 6px;
 }
 
-.product-page-addToCart-validationMessage-container{
+.product-page-addToCart-validationMessage-container, .product-page-removeProduct-validationMessage-container {
     margin-top: 3px;
 }
 

@@ -43,7 +43,7 @@ namespace GymHub.Web.Controllers
         }
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddReview(ComplexModel<AddReviewInputModel, ProductInfoViewModel> complexModel, string pageFragment)
+        public async Task<IActionResult> AddReview(ComplexModel<AddReviewInputModel, ProductInfoViewModel> complexModel, string pageFragment, string commentsPage, string commentsOrderingOption)
         {
             var productId = complexModel.InputModel.ProductId;
 
@@ -58,7 +58,7 @@ namespace GymHub.Web.Controllers
             if (this.ModelState.IsValid == false)
             {
                 //Store needed info for get request in TempData
-                return this.RedirectToAction("ProductPage", "Products", new { productId = productId }, pageFragment);
+                return this.RedirectToAction("ProductPage", "Products", new { productId, commentsOrderingOption, commentsPage }, pageFragment);
             }
 
             var userId = this.userService.GetUserId(this.User.Identity.Name);
@@ -104,7 +104,7 @@ namespace GymHub.Web.Controllers
                 TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
                 //Reload same page with the TempData
-                return this.RedirectToAction("ProductPage", "Products", new { productId = productId }, pageFragment);
+                return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption}, pageFragment);
             }
 
             //Set the rating foreign key for new comment
@@ -122,12 +122,12 @@ namespace GymHub.Web.Controllers
 
             await this.productService.AddRatingAsync(newRating);
 
-            return this.RedirectToAction("ProductPage", "Products", new { productId = productId }, pageFragment);
+            return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption}, pageFragment);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> EditReview(EditReviewInputModel inputModel, string pageFragment, string commentsPage)
+        public async Task<IActionResult> EditReview(EditReviewInputModel inputModel, string pageFragment, string commentsPage, string commentsOrderingOption)
         {
             var productId = inputModel.ProductId;
 
@@ -163,7 +163,7 @@ namespace GymHub.Web.Controllers
                 //Store needed info for get request in TempData
                 TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(newModelState);
 
-                return this.RedirectToAction("ProductPage", "Products", new { productId = productId, commentsPage = commentsPage }, pageFragment);
+                return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption}, pageFragment);
             }
 
             var userId = this.userService.GetUserId(this.User.Identity.Name);
@@ -207,18 +207,18 @@ namespace GymHub.Web.Controllers
                 TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
                 //Reload same page with the TempData
-                return this.RedirectToAction("ProductPage", "Products", new { productId = productId, commentsPage = commentsPage }, pageFragment);
+                return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption}, pageFragment);
             }
 
             if (oldComment != null) await this.productCommentService.EditCommentTextAsync(oldComment, inputModel.Text);
             if (oldProductRating != null) await this.productService.EditProductRating(oldProductRating, (double)inputModel.ProductRatingViewModel.AverageRating);
 
-            return this.RedirectToAction("ProductPage", "Products", new { productId = productId, toReplyComment = oldComment.Id, commentsPage = commentsPage }, pageFragment);
+            return this.RedirectToAction("ProductPage", "Products", new { productId, toReplyComment = oldComment.Id, commentsPage, commentsOrderingOption}, pageFragment);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> ReplyToComment(ReplyCommentInputModel inputModel, string pageFragment, string commentsPage)
+        public async Task<IActionResult> ReplyToComment(ReplyCommentInputModel inputModel, string pageFragment, string commentsPage, string commentsOrderingOption)
         {
             var productId = inputModel.ProductId;
 
@@ -253,7 +253,7 @@ namespace GymHub.Web.Controllers
                 //Store needed info for get request in TempData
                 TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(newModelState);
 
-                return this.RedirectToAction("ProductPage", "Products", new { productId = productId, commentsPage = commentsPage }, pageFragment);
+                return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption }, pageFragment);
             }
 
             var userId = this.userService.GetUserId(this.User.Identity.Name);
@@ -270,16 +270,6 @@ namespace GymHub.Web.Controllers
                 this.ModelState.AddModelError($"ParentCommentId_{inputModel.CommentCounter}", "Can't reply to yourself.");
             }
 
-            //Create new reply comment
-            var replyComment = new ProductComment
-            {
-                ProductId = productId,
-                ParentCommentId = commentId,
-                Text = inputModel.Text,
-                CommentedOn = DateTime.UtcNow,
-                UserId = userId
-            };
-
             //Check if model state is valid after checking into the database
             if (this.ModelState.IsValid == false)
             {
@@ -291,12 +281,22 @@ namespace GymHub.Web.Controllers
                 TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
                 //Reload same page with the TempData
-                return this.RedirectToAction("ProductPage", "Products", new { productId = productId, commentsPage = commentsPage }, pageFragment);
+                return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption }, pageFragment);
             }
+
+            //Create new reply comment
+            var replyComment = new ProductComment
+            {
+                ProductId = productId,
+                ParentCommentId = commentId,
+                Text = inputModel.Text,
+                CommentedOn = DateTime.UtcNow,
+                UserId = userId
+            };
 
             await this.productCommentService.AddAsync(replyComment);
 
-            return this.RedirectToAction("ProductPage", "Products", new { productId = productId, toReplyComment = replyComment.Id, commentsPage = commentsPage }, pageFragment);
+            return this.RedirectToAction("ProductPage", "Products", new { productId, toReplyComment = replyComment.Id, commentsPage, commentsOrderingOption }, pageFragment);
         }
 
         [Authorize]
@@ -308,7 +308,7 @@ namespace GymHub.Web.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> RemoveComment(RemoveCommentInputModel removeCommentInputModel, string pageFragment, string productId, string commentsPage)
+        public async Task<IActionResult> RemoveComment(RemoveCommentInputModel removeCommentInputModel, string pageFragment, string productId, string commentsPage, string commentsOrderingOption)
         {
             var commentId = removeCommentInputModel.RemoveCommentId;
 
@@ -316,8 +316,12 @@ namespace GymHub.Web.Controllers
             pageFragment = this.javaScriptEncoder.Encode(pageFragment);
 
             if (this.ModelState.IsValid == false)
-            {
-                return this.RedirectToAction("All", "Products");
+            {   //Store input model for passing in get action
+                TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(removeCommentInputModel);
+                TempData["InputModelFromPOSTRequestType"] = nameof(ReplyCommentInputModel);
+
+                //TODO: maybe add a remove comment failed notification
+                this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption }, pageFragment);
             }
 
             var userId = this.userService.GetUserId(this.User.Identity.Name);
@@ -333,7 +337,9 @@ namespace GymHub.Web.Controllers
                 //Store input model for passing in get action
                 TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(removeCommentInputModel);
                 TempData["InputModelFromPOSTRequestType"] = nameof(ReplyCommentInputModel);
-                return this.RedirectToAction("All", "Products");
+
+                //TODO: maybe add a remove comment failed notification
+                return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption }, pageFragment);
             }
 
             var removedCommentUserEmail = this.userService.GetEmail(this.productCommentService.GetProductComment(commentId).UserId);
@@ -355,7 +361,7 @@ namespace GymHub.Web.Controllers
                     );
             }
 
-            return this.RedirectToAction("ProductPage", "Products", new { productId = productId, commentsPage= commentsPage }, pageFragment);
+            return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption }, pageFragment);
         }
 
         [Authorize]

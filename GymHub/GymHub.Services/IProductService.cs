@@ -27,5 +27,6 @@ namespace GymHub.Services
         public Task EditProductRating(ProductRating productRating, double rating);
         public bool ProductImageExists(string imageUrl, bool hardCheck = false);
         public Task AddProductImageAsync(ProductImage image);
+        public Task RemoveProductAsync(string productId);
     }
 }

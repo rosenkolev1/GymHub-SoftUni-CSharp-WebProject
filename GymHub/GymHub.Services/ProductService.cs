@@ -187,5 +187,11 @@ namespace GymHub.Services
             await this.context.ProductsImages.AddAsync(image);
             await this.context.SaveChangesAsync();
         }
+
+        public async Task RemoveProductAsync(string productId)
+        {
+            var productToDelete = this.GetProductById(productId);
+            await this.DeleteEntityAsync(productToDelete);
+        }
     }
 }

@@ -49,8 +49,10 @@
 
                         //Add url page fragment to form data on submit for the reply form
                         SetFormDataPageFragment();
-                        //Add comments page to from data on submit for the reply form
+                        //Add comments page to form data on submit for the reply form
                         SetFormDataCommentPage();
+                        //Add url comments ordering option to form data on submit for the reply form
+                        SetUrlCommentsOrderingOption();
 
                         //Change 'Reply' button to 'Stop reply'
                         replyButton.textContent = productReplyButtonCloseTextContent;
