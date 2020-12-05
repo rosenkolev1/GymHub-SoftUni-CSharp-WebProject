@@ -58,11 +58,11 @@
     <div class="product-comment-editReview-editButton-container">
         @if (inputModel.IsParrentComment)
         {
-            <button type="submit" class="btn btn-success green" asp-controller="Products" asp-action="EditReview"><i class="fa fa-share"></i>Edit Review</button>
+            <button type="submit" class="btn btn-success green" asp-controller="ProductsComments" asp-action="EditReview"><i class="fa fa-share"></i>Edit Review</button>
         }
         else
         {
-            <button type="submit" class="btn btn-success green" asp-controller="Products" asp-action="EditReview"><i class="fa fa-share"></i>Edit Comment</button>
+            <button type="submit" class="btn btn-success green" asp-controller="ProductsComments" asp-action="EditReview"><i class="fa fa-share"></i>Edit Comment</button>
         }
     </div>
 </form>

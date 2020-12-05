@@ -13,7 +13,7 @@
         @Html.ValidationMessage($"Text_{Model.CommentCounter}", new { @class = "alert-danger validation-message" })
         <input type="hidden" value="" name="pageFragment" class="post-pageFragment" />
         <div class="product-comment-editReview-editButton-container">
-            <button type="submit" class="btn btn-success green" asp-controller="Products" asp-action="ReplyToComment"><i class="fa fa-share"></i>Reply to comment</button>
+            <button type="submit" class="btn btn-success green" asp-controller="ProductsComments" asp-action="ReplyToComment"><i class="fa fa-share"></i>Reply to comment</button>
         </div>
     </form>
 </div>

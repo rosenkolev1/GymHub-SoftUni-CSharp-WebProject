@@ -10,7 +10,7 @@
 
             $.ajax({
                 method: "POST",
-                url: `/Products/LikeComment?commentId=${commentId}`,
+                url: `/ProductsComments/LikeComment?commentId=${commentId}`,
                 data: {
                     commentId: commentId,
                     __RequestVerificationToken: anitForgeryToken

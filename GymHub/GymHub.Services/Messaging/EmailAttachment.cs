@@ -1,4 +1,4 @@
-﻿namespace YourProjectName.Services.Messaging
+﻿namespace GymHub.Services.Messaging
 {
     public class EmailAttachment
     {

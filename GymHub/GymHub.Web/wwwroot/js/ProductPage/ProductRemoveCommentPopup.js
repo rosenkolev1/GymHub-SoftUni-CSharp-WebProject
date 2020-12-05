@@ -52,6 +52,10 @@
                 justificationTextArea.toggleAttribute('hidden');
                 commentRemoveForm.appendChild(justificationTextArea);
             }
+
+            //Add comment page
+            SetFormDataCommentPage();
+
             commentRemoveForm.requestSubmit();  
         }    
     }

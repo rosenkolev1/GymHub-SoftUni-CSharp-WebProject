@@ -41,7 +41,7 @@
                 };
 
                 $.ajax({
-                    url: '/Products/LoadReplyToComment',
+                    url: '/ProductsComments/LoadReplyToComment',
                     data: requestData,
                     method: 'GET',
                     success: function (result) {
@@ -49,6 +49,7 @@
 
                         //Add url page fragment to form data on submit for the reply form
                         SetFormDataPageFragment();
+                        //Add comments page to from data on submit for the reply form
                         SetFormDataCommentPage();
 
                         //Change 'Reply' button to 'Stop reply'
@@ -75,13 +76,17 @@
                 if (validationListItems.length > 0) {
                     //Show the edited comment with all of it's replies
                     let childrenCommentsDiv = editContainer.closest('.product-comment-child-container');
-                    childrenCommentsDiv.removeAttribute('hidden');
+                    if (childrenCommentsDiv !== null) {
+                        childrenCommentsDiv.removeAttribute('hidden');
+                    }
 
                     //Change 'Show replies()' to 'Hide replies()'
-                    let parentWithChildren = editContainer.closest('.product-commentWithChildren-container');
-                    let repliesButton = parentWithChildren.querySelector('.product-comment-parent-container').querySelector('.product-comment-replies-button');
-                    let repliesCount = repliesButton.textContent.split('(')[1].split(')')[0];
-                    repliesButton.textContent = `Hide replies(${repliesCount})`;
+                    if (childrenCommentsDiv !== null) {
+                        let parentWithChildren = editContainer.closest('.product-commentWithChildren-container');
+                        let repliesButton = parentWithChildren.querySelector('.product-comment-parent-container').querySelector('.product-comment-replies-button');
+                        let repliesCount = repliesButton.textContent.split('(')[1].split(')')[0];
+                        repliesButton.textContent = `Hide replies(${repliesCount})`;
+                    }
 
                     editContainer.removeAttribute('hidden');
 

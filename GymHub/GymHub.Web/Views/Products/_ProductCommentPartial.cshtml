@@ -86,7 +86,7 @@
         }
         @if (Model.BelongsToCurrentUser == true || this.User.IsInRole(GlobalConstants.AdminRoleName))
         {
-            <form method="post" asp-controller="Products" asp-action="RemoveComment" asp-route-productId="@comment.ProductId" class="product-comment-remove-form">
+            <form method="post" asp-controller="ProductsComments" asp-action="RemoveComment" asp-route-productId="@comment.ProductId" class="product-comment-remove-form">
                 <input hidden class="post-pageFragment" name="pageFragment"/>
                 <input hidden name="RemoveCommentId" value="@comment.Id"/>
                 <button type="submit" class="product-comment-remove-button alert alert-danger">Remove</button>

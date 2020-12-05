@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace YourProjectName.Services.Messaging
+namespace GymHub.Services.Messaging
 {
     public class SendGridEmailSender : IEmailSender
     {

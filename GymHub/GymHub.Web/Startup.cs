@@ -4,6 +4,7 @@ using GymHub.Data;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services;
+using GymHub.Services.Messaging;
 using GymHub.Services.SeederFolder;
 using GymHub.Web.AuthorizationPolicies;
 using Microsoft.AspNetCore.Authorization;
@@ -15,9 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SendGrid;
 using System.Threading.Tasks;
-using YourProjectName.Services.Messaging;
 
 namespace GymHub.Web
 {
@@ -87,7 +86,7 @@ namespace GymHub.Web
             MigrateDatabase(app, false);
 
             //Seed database at startup        
-            SeedDatabaseAsync(app, true).GetAwaiter().GetResult();
+            SeedDatabaseAsync(app, false).GetAwaiter().GetResult();
 
             if (env.IsDevelopment())
             {
