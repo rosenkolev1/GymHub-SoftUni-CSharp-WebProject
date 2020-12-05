@@ -42,3 +42,9 @@
 -Lazy Kit
 -Cloudinary
 -Make website be hosted on secure(HTTPS) connection
+
+
+//////////////TEST THINGS
+https://yorkbarbell.com/wp-content/uploads/2017/01/55035_leg-press_main2_low.jpg
+https://sc01.alicdn.com/kf/Hf6fa861447dd4b0eab281a058eee5fa2v.jpg
+https://previews.123rf.com/images/oskanov/oskanov1809/oskanov180900136/107721371-new-fitness-machines-in-modern-gym-interior.jpg

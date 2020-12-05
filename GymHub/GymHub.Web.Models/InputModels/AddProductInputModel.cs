@@ -21,12 +21,13 @@ namespace GymHub.Web.Models.InputModels
         [Required]
         public string MainImage { get; set; }
 
+        public List<string> AdditionalImages{ get; set; }
+
         [Required]
         [Range(typeof(decimal), "0.01", "79228162514264337593543950335", ErrorMessage = "Price is either too high or is below or equal to 0")]
         public decimal Price { get; set; }
 
         [Required]
-        [MaxLength(GlobalConstants.ProductNameLengthMax)]
         [MinLength(GlobalConstants.ProductNameLengthMin)]
         public string Description { get; set; }
 
@@ -37,12 +38,5 @@ namespace GymHub.Web.Models.InputModels
         public int QuantityInStock { get; set; }
 
         public string ShortDescription { get; set; }
-
-        public string Id { get; set; }
-        public string CurrentUserId { get; set; }
-        public List<ProductRating> ProductRatings { get; set; }
-        public ProductRatingViewModel ProductRating { get; set; }
-        public Dictionary<User, ProductRatingViewModel> UsersProductRatings { get; set; } = new Dictionary<User, ProductRatingViewModel>();
-        public AddToCartInputModel AddToCartInputModel { get; set; }
     }
 }

@@ -1,13 +1,35 @@
 ﻿@model AddProductInputModel
 
-<form asp-controller="Products" asp-action="Add" method="post">
+@section AdditionalLinks{
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="~/css/ProductPageForOnlineShop.css" rel="stylesheet" />
+    <link href="/css/ProductPageCommentBox.css" rel="stylesheet" />
+    <!------ Include the above in your HEAD tag ---------->
+}
+<form asp-controller="Products" asp-action="Add" method="post" class="product-addProduct-form">
     <h4>Create a new Product.</h4>
     <hr />
-    <div asp-validation-summary="All"></div>
+    <div asp-validation-summary="All" class="alert-danger"></div>
     <div class="input-container">
-        <label asp-for="MainImage" class="input-label"></label>
+        <label asp-for="MainImage" class="input-label">Main image</label>
         <input asp-for="MainImage" type="url" placeholder="Type url here">
         <span asp-validation-for="MainImage" class="validation-span"></span>
+    </div>
+    <div class="input-container">
+        <label asp-for="AdditionalImages[0]" class="input-label">Additional image 1</label>
+        <input asp-for="AdditionalImages[0]" class="product-addProduct-additionalImage" type="url" placeholder="Type url here">
+        <span asp-validation-for="AdditionalImages[0]" class="validation-span"></span>
+    </div>
+    <div class="input-container">
+        <label asp-for="AdditionalImages[1]" class="input-label">Additional image 2</label>
+        <input asp-for="AdditionalImages[1]" class="product-addProduct-additionalImage" type="url" placeholder="Type url here">
+        <span asp-validation-for="AdditionalImages[1]" class="validation-span"></span>
+    </div>
+    <div class="input-container">
+        <label asp-for="AdditionalImages[2]" class="input-label">Additional image 3</label>
+        <input asp-for="AdditionalImages[2]" class="product-addProduct-additionalImage" type="url" placeholder="Type url here">
+        <span asp-validation-for="AdditionalImages[2]" class="validation-span"></span>
     </div>
     <div class="input-container">
         <label asp-for="Name" class="input-label"></label>
@@ -26,7 +48,7 @@
     </div>
     <div class="input-container">
         <label asp-for="Description" class="input-label"></label>
-        <textarea asp-for="Description" placeholder="Type description here"></textarea>
+        <textarea asp-for="Description" class="product-addProduct-description" placeholder="Type description here"></textarea>
         <span asp-validation-for="Description" class="validation-span"></span>
     </div>
     <div class="input-container">
@@ -42,108 +64,20 @@
     <div class="button-container">
         <button type="submit">Add product</button>
     </div>
+    <div class="button-container">
+        <button class="product-addProduct-previewPage-button" type="button">Preview Page</button>
+    </div>
 </form>
 @if (Model != null)
 {
-    <div class="container-fluid">
-        <div class="content-wrapper">
-            <div class="item-container">
-                <div class="container" style="padding-top:10px;">
-                    <div class="col-md-12">
-                        <div class="product col-md-3 service-image-left">
-
-                            <center>
-                                <img id="item-display" src="@Model.MainImage" alt="">
-                            </center>
-                        </div>
-
-                        <div class="container service1-items col-sm-2 col-md-2 pull-left">
-                            <center>
-                                <a id="item-1" class="service1-item">
-                                    <img src="http://www.corsair.com/Media/catalog/product/g/s/gs600_psu_sideview_blue_2.png" alt="">
-                                </a>
-                                <a id="item-2" class="service1-item">
-                                    <img src="http://www.corsair.com/Media/catalog/product/g/s/gs600_psu_sideview_blue_2.png" alt="">
-                                </a>
-                                <a id="item-3" class="service1-item">
-                                    <img src="http://www.corsair.com/Media/catalog/product/g/s/gs600_psu_sideview_blue_2.png" alt="">
-                                </a>
-                            </center>
-                        </div>
-                    </div>
-
-                    <div class="col-md-7">
-                        <div class="product-title">@Model.Name: @Model.Model</div>
-                        <div class="product-desc">@Model.ShortDescription</div>
-                        <div class="product-rating">
-                            @{
-                                var productRating = Model.ProductRating;
-                            }
-                            @for (int i = 0; i < productRating.FullStarsCount; i++)
-                            {
-                                <i class="fa fa-star gold"></i>
-                            }
-                            @if (productRating.HasHalfStar == true)
-                            {
-                                <i class="fa fa-star-half-o gold"></i>
-                            }
-                            @for (int i = 0; i < productRating.EmptyStarsCount; i++)
-                            {
-                                <i class="fa fa-star-o gold"></i>
-                            }
-                            <span> @productRating.AverageRating/10</span>
-                        </div>
-                        <hr>
-                        <div class="product-price">$ @Model.Price</div>
-                        @if (Model.QuantityInStock > 0)
-                        {
-                            <div class="product-stock">In Stock: @Model.QuantityInStock</div>
-                        }
-                        else
-                        {
-                            <div class=".product-outOfStock alert-danger">Out of stock</div>
-                        }
-                        <hr>
-                        <div class="btn-group cart">
-                            <form method="post" class="product-page-addToCart-form">
-                                <input type="hidden" name="ProductId" value="@Model.Id" />
-                                <input type="hidden" name="quantityInStock" class="product-page-addToCart-quantityInStock" value="@Model.QuantityInStock" />
-                                <button asp-controller="Carts" asp-action="AddToCart" type="submit" class="btn btn-success">
-                                    Add
-                                </button>
-                                <input type="number" class="product-page-addToCart-quantity" name="Quantity" value="1" />
-                                <div class="product-page-addToCart-validationMessage-container">
-                                    @Html.ValidationMessage("QuantityInStock", new { @class = "alert-danger validation-message" })
-                                    @Html.ValidationMessage("ProductId", new { @class = "alert-danger validation-message" })
-                                    @Html.ValidationMessage("Quantity", new { @class = "alert-danger validation-message" })
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="col-md-12 product-info">
-                    <ul id="myTab" class="nav nav-tabs nav_tabs">
-
-                        <li><a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@Model.Id" asp-fragment="Info" data-toggle="tab">Product info</a></li>
-                        <li><a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@Model.Id" asp-fragment="Reviews" data-toggle="tab">User reviews</a></li>
-
-                    </ul>
-                    <div id="myTabContent" class="tab-content">
-                        <div class="tab-pane fade" id="Info" name="Info">
-
-                            <section class="container product-info">
-                                @Model.Description
-                            </section>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <partial name="_AddProductPreviewPartial.cshtml" />
 }
 @section Scripts{
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js" asp-append-version="true"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/js/AddProductPage/PreviewPage.js" asp-append-version="true"></script>
+    <script src="~/js/Shared/ChangeProductImage.js" asp-append-version="true"></script>
+
     <partial name="_ValidationScriptsPartial.cshtml">
 }

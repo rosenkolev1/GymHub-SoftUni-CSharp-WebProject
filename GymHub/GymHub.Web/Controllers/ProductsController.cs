@@ -73,26 +73,35 @@ namespace GymHub.Web.Controllers
             //Set input model short description
             inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);
 
-            //Overall product rating
-            inputModel.ProductRating = new ProductRatingViewModel(this.productService.GetAverageRating(inputModel.ProductRatings));
-
             //Store input model for passing in get action
             TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
             TempData["InputModelFromPOSTRequestType"] = nameof(AddReviewInputModel);
 
+            //Check without looking into the database
             if (this.ModelState.IsValid == false)
             {
-                return this.View();
+                //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
+                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
+                return this.RedirectToAction(nameof(Add), "Products");
             }
 
             if(this.productService.ProductExistsByModel(inputModel.Model) == true || this.productService.ProductExistsByName(inputModel.Model))
             {
-                this.ModelState.AddModelError("", "Product with this model or name or both already exists");
+                this.ModelState.AddModelError("", "Product with this model or name or both already exists.");
             }
 
             if(this.productService.ProductImageExists(inputModel.MainImage) == true)
             {
+                this.ModelState.AddModelError("", "This image is already used.");
+            }
 
+            if (this.ModelState.IsValid == false)
+            {
+                //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
+                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
+                return this.RedirectToAction(nameof(Add), "Products");
             }
 
             await this.productService.AddAsync(newProduct);
@@ -100,6 +109,17 @@ namespace GymHub.Web.Controllers
             return this.RedirectToAction("All");
         }
 
+        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> LoadAddProductPreview(string inputModelJSON)
+        {
+            var inputModel = JsonSerializer.Deserialize<AddProductInputModel>(inputModelJSON);
+
+            //Set input model short description
+            inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);
+
+            return this.PartialView("Views/Products/_AddProductPreviewPartial.cshtml", inputModel);
+        }
         [Authorize]
         public async Task<IActionResult> All()
         {
