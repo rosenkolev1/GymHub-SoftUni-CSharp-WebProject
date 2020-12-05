@@ -36,16 +36,16 @@
         }
         else
         {
-            <form class="nav-bar-element" method="post" asp-area="Identity" asp-page="/Account/Logout">
-                <button style="padding: 0px; border-width: 0px; height: 50px; width: 96px; cursor: pointer" class="nav-bar-button" type="submit"><i class="fas fa-sign-out-alt"></i>Logout</button>
+            <form class="nav-bar-element nav-bar-logout-form" method="post" asp-area="Identity" asp-page="/Account/Logout">
+                <button class="nav-bar-button nav-bar-logout-button" type="submit"><i class="fas fa-sign-out-alt"></i>Logout</button>
             </form>
             <div class="nav-bar-element">
                 <a class="nav-bar-button" asp-controller="Users" asp-action="Profile">
                     <vc:profile-picture-icon></vc:profile-picture-icon>
                 </a>
             </div>
-            <div class="nav-bar-element">
-                <a class="nav-bar-button" asp-controller="Carts" asp-action="All">
+            <div class="nav-bar-element nav-bar-cart-container">
+                <a class="nav-bar-button nav-bar-cart" asp-controller="Carts" asp-action="All">
                     <vc:cart-items-number></vc:cart-items-number>
                 </a>
             </div>
@@ -63,9 +63,17 @@
     <main class="main-container">
         @RenderBody()
     </main>
-    @*<footer>
+    <footer>
         <p class="footer-paragraph">@@Copyright 2020 GymHub</p>
-    </footer>*@
+        @*<div class="container footer-contacts-container">
+            <p class="footer-contacts">Contacts: </p>
+            <div class="container footer-contacts-phoneNumbers-container">
+                <p class="footer-contacts-phoneNumber">012345678</p>
+                <p class="footer-contacts-phoneNumber">012345678</p>
+                <p class="footer-contacts-phoneNumber">012345678</p>
+            </div>
+        </div>*@
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

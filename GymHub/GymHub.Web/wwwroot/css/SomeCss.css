@@ -1,6 +1,17 @@
 ﻿body {
     background-color: skyblue;
     margin: 0px;
+    height: 100%;
+    z-index: -20;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
 }
 
 .body-container {
@@ -49,9 +60,30 @@ p, label, a, h1, input, button, select, th, tr, table, thead, tbody, td {
     padding: 10px;
 }
 
+.nav-bar-cart {
+    padding-right: 0px;
+}
+
+.nav-bar-cart-container {
+    width: 5vw;
+}
+
 .nav-bar-home {
     float: left;
     margin-left:7px;
+}
+
+.nav-bar-logout-form {
+    height: 44px;
+}
+
+.nav-bar-logout-button {
+    padding: 0px;
+    border-width: 0px;
+    height: 50px;
+    width: 96px;
+    cursor: pointer;
+    height: 44px;
 }
 
 main {
@@ -60,6 +92,7 @@ main {
 
 .main-container {
     margin-top: 80px;
+    flex: 1 0 auto;
 }
 
 .main-home-title {
@@ -103,31 +136,53 @@ main {
     top: 40px;
     height: 60vh;
     width: 100vw;
-    z-index: -100;
+    z-index: -10;
 }
 
 footer {
     text-align: center;
-    position: fixed;
+    position: relative;
     padding: 0px;
     bottom: 0px;
     left: 0px;
     width: 100%;
-    height: 40px;
     background: #0B8E4C;
     z-index: 100;
-    opacity: 0;
+    flex-shrink: 0;
+    margin-top: 10px;
 }
 
 footer p{
     position: relative;
-    bottom: 5px;
     background: #0B8E4C;
     padding-top: 10px;
 }
 
-.form-container{
-    padding-top:10px;
+.footer-contacts {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.footer-contacts-phoneNumbers-container {
+    display: inline-block;
+    width: 10vw;
+}
+
+.footer-contacts-container {
+    text-align: left;
+}
+
+.footer-contacts-phoneNumber {
+    display:inline-block;
+}
+
+.form-container {
+    padding-top: 10px;
+}
+
+.login-row-container {
+    margin-right: 0px;
+    padding-left: 10px;
 }
 
 .input-container {

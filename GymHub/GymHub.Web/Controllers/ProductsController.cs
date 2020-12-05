@@ -47,6 +47,7 @@ namespace GymHub.Web.Controllers
         public async Task<IActionResult> Add()
         {
             AddProductInputModel inputModel = null;
+
             //Add each model state error from the last action to this one
             if (TempData["ErrorsFromPOSTRequest"] != null)
             {
