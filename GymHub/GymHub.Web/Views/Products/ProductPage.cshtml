@@ -51,7 +51,20 @@
 
                     <div class="container service1-items col-sm-2 col-md-2 pull-left">
                         <center>
-                            <a id="item-1" class="service1-item">
+                            @for (int i = 0; i < 3; i++)
+                            {
+                                @if (viewModel.AdditionalImages.Count > i)
+                                {
+                                    <a id="item-1" class="service1-item">
+                                        <img src="@viewModel.AdditionalImages[i].Image" class="product-additionalImage" alt="">
+                                    </a>
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            @*<a id="item-1" class="service1-item">
                                 <img src="https://previews.123rf.com/images/oskanov/oskanov1809/oskanov180900136/107721371-new-fitness-machines-in-modern-gym-interior.jpg" class="product-additionalImage" alt="">
                             </a>
                             <a id="item-2" class="service1-item">
@@ -59,7 +72,7 @@
                             </a>
                             <a id="item-3" class="service1-item">
                                 <img src="http://www.corsair.com/Media/catalog/product/g/s/gs600_psu_sideview_blue_2.png" class="product-additionalImage" alt="">
-                            </a>
+                            </a>*@
                         </center>
                     </div>
                 </div>

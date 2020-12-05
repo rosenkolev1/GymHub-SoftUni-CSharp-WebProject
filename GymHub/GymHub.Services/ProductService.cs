@@ -70,6 +70,7 @@ namespace GymHub.Services
                 .ThenInclude(pc => pc.User)
                 .Include(x => x.ProductRatings)
                 .ThenInclude(x => x.User)
+                .Include(x => x.AdditionalImages)
                 .FirstOrDefault(x => x.Id == productId);
         }
 
@@ -171,13 +172,20 @@ namespace GymHub.Services
 
         public async Task AddRatingAsync(ProductRating productRating)
         {
-            this.context.ProductsRatings.Add(productRating);
+            await this.context.ProductsRatings.AddAsync(productRating);
             await this.context.SaveChangesAsync();
         }
 
-        public bool ProductImageExists(string imageUrl)
+        public bool ProductImageExists(string imageUrl, bool hardCheck = false)
         {
-            return this.context.Products.Any(x => x.MainImage == imageUrl) || this.context.ProductsImages.Any(x => x.Image == imageUrl);
+            return this.context.Products.IgnoreAllQueryFilter(hardCheck).Any(x => x.MainImage == imageUrl) || 
+                this.context.ProductsImages.IgnoreAllQueryFilter(hardCheck).Any(x => x.Image == imageUrl);
+        }
+
+        public async Task AddProductImageAsync(ProductImage image)
+        {
+            await this.context.ProductsImages.AddAsync(image);
+            await this.context.SaveChangesAsync();
         }
     }
 }

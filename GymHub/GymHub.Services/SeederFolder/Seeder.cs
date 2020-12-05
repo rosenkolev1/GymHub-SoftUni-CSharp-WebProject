@@ -61,6 +61,7 @@ namespace GymHub.Services.SeederFolder
             await SeedUsersAsync();
             await SeedProductsAsync();
             await SeedProductsCommentsAndRatingsAsync();
+            await SeedProductsImagesAsync();
 
         }
 
@@ -196,6 +197,26 @@ namespace GymHub.Services.SeederFolder
                 await this.context.SaveChangesAsync();
             }
 
+            return true;
+        }
+
+        public async Task<bool> SeedProductsImagesAsync()
+        {
+            var productsImagesDTOs = JsonSerializer.Deserialize<List<ProductImageDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/ProductsImages.json"));
+            var productsImages = productsImagesDTOs
+                .Select(x => new ProductImage
+                {
+                    Image = x.Image,
+                    ProductId = this.productService.GetProductId(x.ProductModel, true)
+                }).ToList();
+
+            foreach (var productImage in productsImages)
+            {
+                if (this.productService.ProductImageExists(productImage.Image, true) == false)
+                {
+                    await this.productService.AddProductImageAsync(productImage);
+                }
+            }
             return true;
         }
     }
