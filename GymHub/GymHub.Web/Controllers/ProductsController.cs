@@ -86,14 +86,24 @@ namespace GymHub.Web.Controllers
                 return this.RedirectToAction(nameof(Add), "Products");
             }
 
-            if(this.productService.ProductExistsByModel(inputModel.Model) == true || this.productService.ProductExistsByName(inputModel.Model))
+            if(this.productService.ProductExistsByModel(inputModel.Model) == true || this.productService.ProductExistsByName(inputModel.Name))
             {
                 this.ModelState.AddModelError("", "Product with this model or name or both already exists.");
             }
 
-            if(this.productService.ProductImageExists(inputModel.MainImage) == true)
+            //Check if main image is already used
+            if (this.productService.ProductImageExists(inputModel.MainImage) == true)
             {
                 this.ModelState.AddModelError("", "This image is already used.");
+            }
+
+            //Check if any of the additional images are used
+            foreach (var additionalImage in inputModel.AdditionalImages)
+            {
+                if (this.productService.ProductImageExists(additionalImage) == true)
+                {
+                    this.ModelState.AddModelError("", "This image is already used.");
+                }
             }
 
             if (this.ModelState.IsValid == false)

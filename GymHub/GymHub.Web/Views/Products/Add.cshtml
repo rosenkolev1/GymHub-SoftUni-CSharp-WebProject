@@ -13,22 +13,22 @@
     <div asp-validation-summary="All" class="alert-danger"></div>
     <div class="input-container">
         <label asp-for="MainImage" class="input-label">Main image</label>
-        <input asp-for="MainImage" type="url" placeholder="Type url here">
+        <input asp-for="MainImage" type="url" placeholder="Type url here" class="input-link">
         <span asp-validation-for="MainImage" class="validation-span"></span>
     </div>
     <div class="input-container">
         <label asp-for="AdditionalImages[0]" class="input-label">Additional image 1</label>
-        <input asp-for="AdditionalImages[0]" class="product-addProduct-additionalImage" type="url" placeholder="Type url here">
+        <input asp-for="AdditionalImages[0]" class="product-addProduct-additionalImage input-link" type="url" placeholder="Type url here">
         <span asp-validation-for="AdditionalImages[0]" class="validation-span"></span>
     </div>
     <div class="input-container">
         <label asp-for="AdditionalImages[1]" class="input-label">Additional image 2</label>
-        <input asp-for="AdditionalImages[1]" class="product-addProduct-additionalImage" type="url" placeholder="Type url here">
+        <input asp-for="AdditionalImages[1]" class="product-addProduct-additionalImage input-link" type="url" placeholder="Type url here">
         <span asp-validation-for="AdditionalImages[1]" class="validation-span"></span>
     </div>
     <div class="input-container">
         <label asp-for="AdditionalImages[2]" class="input-label">Additional image 3</label>
-        <input asp-for="AdditionalImages[2]" class="product-addProduct-additionalImage" type="url" placeholder="Type url here">
+        <input asp-for="AdditionalImages[2]" class="product-addProduct-additionalImage input-link" type="url" placeholder="Type url here">
         <span asp-validation-for="AdditionalImages[2]" class="validation-span"></span>
     </div>
     <div class="input-container">
@@ -42,7 +42,7 @@
         <span asp-validation-for="Model" class="validation-span"></span>
     </div>
     <div class="input-container">
-        <label asp-for="Price" class="input-label"></label>
+        <label asp-for="Price" class="input-label">Price($) </label>
         <input type="number" asp-for="Price" class="input-label" placeholder="Type price here" />
         <span asp-validation-for="Price" class="validation-span"></span>
     </div>
@@ -58,7 +58,7 @@
     </div>
     <div class="input-container">
         <label asp-for="QuantityInStock" class="input-label"></label>
-        <input asp-for="QuantityInStock" type="text" placeholder="Type quantity in stock here">
+        <input asp-for="QuantityInStock" type="number" placeholder="Type quantity in stock here">
         <span asp-validation-for="QuantityInStock" class="validation-span"></span>
     </div>
     <div class="button-container">
