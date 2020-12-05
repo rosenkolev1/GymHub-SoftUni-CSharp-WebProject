@@ -53,7 +53,7 @@ namespace GymHub.Services
         {
             return this.context.Products.Any(x => x.Name == name);
         }
-        public bool ProductExistsByModel(string model, bool hardCheck)
+        public bool ProductExistsByModel(string model, bool hardCheck = false)
         {
             return this.context.Products.IgnoreAllQueryFilter(hardCheck).Any(x => x.Model == model);
         }
@@ -173,6 +173,11 @@ namespace GymHub.Services
         {
             this.context.ProductsRatings.Add(productRating);
             await this.context.SaveChangesAsync();
+        }
+
+        public bool ProductImageExists(string imageUrl)
+        {
+            return this.context.Products.Any(x => x.MainImage == imageUrl) || this.context.ProductsImages.Any(x => x.Image == imageUrl);
         }
     }
 }

@@ -1,4 +1,7 @@
 ﻿using GymHub.Common;
+using GymHub.Data.Models;
+using GymHub.Web.Models.ViewModels;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace GymHub.Web.Models.InputModels
@@ -32,5 +35,14 @@ namespace GymHub.Web.Models.InputModels
 
         [Required]
         public int QuantityInStock { get; set; }
+
+        public string ShortDescription { get; set; }
+
+        public string Id { get; set; }
+        public string CurrentUserId { get; set; }
+        public List<ProductRating> ProductRatings { get; set; }
+        public ProductRatingViewModel ProductRating { get; set; }
+        public Dictionary<User, ProductRatingViewModel> UsersProductRatings { get; set; } = new Dictionary<User, ProductRatingViewModel>();
+        public AddToCartInputModel AddToCartInputModel { get; set; }
     }
 }

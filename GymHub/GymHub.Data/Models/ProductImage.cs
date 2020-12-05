@@ -21,8 +21,8 @@ namespace GymHub.Data.Models
         public virtual Product Product { get; set; }
 
         //Simple Properties
-        //Path to picture
+        //Path to image
         [Required]
-        public string Picture { get; set; }
+        public string Image { get; set; }
     }
 }

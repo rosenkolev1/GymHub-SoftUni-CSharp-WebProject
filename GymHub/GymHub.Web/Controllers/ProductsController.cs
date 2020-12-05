@@ -50,7 +50,18 @@ namespace GymHub.Web.Controllers
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
         public async Task<IActionResult> Add()
         {
-            return this.View();
+            AddProductInputModel inputModel = null;
+            //Add each model state error from the last action to this one
+            if (TempData["ErrorsFromPOSTRequest"] != null)
+            {
+                var postRequestModelState = ModelStateHelper.DeserialiseModelState(TempData["ErrorsFromPOSTRequest"].ToString());
+                this.ModelState.Merge(postRequestModelState);
+
+                var inputModelJSON = TempData["InputModelFromPOSTRequest"]?.ToString();
+                inputModel = JsonSerializer.Deserialize<AddProductInputModel>(inputModelJSON);
+            }
+
+            return this.View(inputModel);
         }
 
         [HttpPost]
@@ -59,9 +70,29 @@ namespace GymHub.Web.Controllers
         {
             var newProduct = this.mapper.Map<Product>(inputModel);
 
-            if(this.ModelState.IsValid == false)
+            //Set input model short description
+            inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);
+
+            //Overall product rating
+            inputModel.ProductRating = new ProductRatingViewModel(this.productService.GetAverageRating(inputModel.ProductRatings));
+
+            //Store input model for passing in get action
+            TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
+            TempData["InputModelFromPOSTRequestType"] = nameof(AddReviewInputModel);
+
+            if (this.ModelState.IsValid == false)
             {
                 return this.View();
+            }
+
+            if(this.productService.ProductExistsByModel(inputModel.Model) == true || this.productService.ProductExistsByName(inputModel.Model))
+            {
+                this.ModelState.AddModelError("", "Product with this model or name or both already exists");
+            }
+
+            if(this.productService.ProductImageExists(inputModel.MainImage) == true)
+            {
+
             }
 
             await this.productService.AddAsync(newProduct);
