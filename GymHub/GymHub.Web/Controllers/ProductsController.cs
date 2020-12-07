@@ -136,12 +136,12 @@ namespace GymHub.Web.Controllers
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
         public async Task<IActionResult> Edit(string productId, string errorReturnUrl)
-        {
-            //TODO add the errorReturnURL
+        {           
             //Check if product with this id exists. MAYBE I WILL REPLACE THIS LATER WILL HAVE TO SWITCH TO DEVELOPMENT AND SEED
             if (this.productService.ProductExistsById(productId) == false)
             {
-                return this.View("/Views/Shared/Error.cshtml");
+                return this.NotFound();
+                //return this.View("/Views/Shared/Error.cshtml");
             }
 
             AddProductInputModel inputModel = null;
@@ -172,6 +172,9 @@ namespace GymHub.Web.Controllers
 
             //Set the input model mode to edit
             inputModel.IsAdding = false;
+
+            //Set input model short description
+            inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);
 
             return this.View("/Views/Products/Add.cshtml", inputModel);
         }
@@ -307,6 +310,12 @@ namespace GymHub.Web.Controllers
         [Authorize]
         public async Task<IActionResult> ProductPage(string productId, string toReplyComment, int commentsPage, int commentsOrderingOption)
         {
+            //Check if the product in question exists
+            if(this.productService.ProductExistsById(productId) == false)
+            {
+                return this.NotFound();
+            }
+
             var product = this.productService.GetProductById(productId);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
 

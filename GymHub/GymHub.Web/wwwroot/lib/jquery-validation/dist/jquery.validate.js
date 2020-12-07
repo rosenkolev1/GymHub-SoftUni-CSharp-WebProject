@@ -15,6 +15,7 @@
 		factory( jQuery );
 	}
 }(function( $ ) {
+
 $.extend( $.fn, {
 
 	// https://jqueryvalidation.org/validate/
@@ -290,7 +291,7 @@ $.extend( $.validator, {
 		errorContainer: $( [] ),
 		errorLabelContainer: $( [] ),
 		onsubmit: true,
-		ignore: "",
+		ignore: ":hidden",
 		ignoreTitle: false,
 		onfocusin: function( element ) {
 			this.lastActive = element;

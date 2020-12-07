@@ -1,14 +1,28 @@
+-Add remove product button to cart view
+
+-Add default Identity management to user profile
+
+-Add Appsettings.Development.json for Development environment and Appsettings.Production.json for Production environment
+
+-Seperate controllers and views into areas
+
 -Add product buying
+
+-Add double click prevention
 
 -Add product categories to database and add category based searching.
 
--Add email confirmation on register
+-Add image upload to product adding.
+
+-Add notifications for most things.
 
 -Add user profile pages and functionality
 
 -Add functionality for reinstating a comment if you are an admin
 
--Add notifications for most things.
+-Add column (Deleted by whom) or somethings similar to indicate which admin deleted a comment, product etc...
+
+-Add email confirmation on register
 
 -Add registered user welcome page.
 
@@ -23,12 +37,18 @@
 **Things to keep in mind
 
 -Secret Manager Tool
--HTML sanitizer for validating html
 -HTML encoder for validating html
 -Javascript encoder for validating javascript code
 -Url encoder for validating url values
 -ImageSharp for validating images
 -ASP.Net is weird and a null string bypasses [MinLength] for some reason during validation
+-Minify and bundle js scripts and css stylesheets bundleconfig.js from Niki Template and installing a bundle-ing nuget package
+-File compression for less internet traffic.
+-View Title and View Description for higher SEO rating. Slugging for higher SEO rating.
+-Online payments with Stripe or Paypal SDK or etc...
+-Libman.json for installing client side libraries. ManageClientSideLibraries button on right click on web project. Enable restore on clien side libraries on build
+-Cascading Dropdown
+-RSS, RSS reader
 
 -WebHostEnvironment in the controller for accessing wwwroot folder
 -IFormFile

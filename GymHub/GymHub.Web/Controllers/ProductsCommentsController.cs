@@ -57,6 +57,9 @@ namespace GymHub.Web.Controllers
             //Check if data is valid without looking into the database
             if (this.ModelState.IsValid == false)
             {
+                //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
+                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
                 //Store needed info for get request in TempData
                 return this.RedirectToAction("ProductPage", "Products", new { productId, commentsOrderingOption, commentsPage }, pageFragment);
             }
@@ -353,7 +356,7 @@ namespace GymHub.Web.Controllers
             {
                 //Send email with justification for removal of comment
                 await this.sendGridEmailSender.SendEmailAsync(
-                    "GymHub@support.com",
+                    this.userService.GetEmail(currentUser.Id),
                     currentUser.UserName,
                     removedCommentUserEmail,
                     "Your comment has been removed",

@@ -11,7 +11,7 @@
     <meta name="author" content="">
 
     <title>GymHub</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
     @RenderSection("AdditionalLinks", required: false)
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -24,6 +24,9 @@
     <nav class="nav-bar">
         <div class="nav-bar-element nav-bar-home" style="float:left;">
             <a class="nav-bar-button" href="/">GymHub</a>
+        </div>
+        <div class="nav-bar-element nav-bar-home" style="float:left;">
+            <a class="nav-bar-button" href="/Home/Privacy">Privacy</a>
         </div>
         @if (this.User.Identity.IsAuthenticated == false)
         {
@@ -51,9 +54,9 @@
             </div>
             @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
             {
-            <div class="nav-bar-element">
-                <a class="nav-bar-button" asp-controller="Products" asp-action="Add">Add Product</a>
-            </div>
+                <div class="nav-bar-element">
+                    <a class="nav-bar-button" asp-controller="Products" asp-action="Add">Add Product</a>
+                </div>
             }
             <div class="nav-bar-element shop-button">
                 <a class="nav-bar-button" asp-controller="Products" asp-action="All">Shop</a>
@@ -61,6 +64,7 @@
         }
     </nav>
     <main class="main-container">
+        <partial name="_CookieConsentPartial.cshtml"/>
         @RenderBody()
     </main>
     <footer>

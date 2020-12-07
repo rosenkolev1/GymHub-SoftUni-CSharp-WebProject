@@ -5,6 +5,9 @@
         /*IMPORTANT:
          * WHEN CHANGING VALIDATION CONSTANTS CHANGE ERROR MESSAGES IN MODELS
         */
+
+        public const string SystemName = "GymHub.com";
+
         //Role constants
         public const string AdminRoleName = "Admin";
         public const string NormalUserRoleName = "Normal User";
