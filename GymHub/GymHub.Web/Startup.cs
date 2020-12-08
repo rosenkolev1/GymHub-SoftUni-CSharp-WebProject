@@ -82,6 +82,7 @@ namespace GymHub.Web
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICartService, CartService>();
             services.AddTransient<IProductCommentService, ProductCommentService>();
+            services.AddTransient<ICategoryService, CategoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,7 +95,7 @@ namespace GymHub.Web
             MigrateDatabase(app, true);
 
             //Seed database at startup        
-            SeedDatabaseAsync(app, false).GetAwaiter().GetResult();
+            SeedDatabaseAsync(app, true).GetAwaiter().GetResult();
 
             if (env.IsDevelopment())
             {

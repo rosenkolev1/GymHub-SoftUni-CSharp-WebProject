@@ -1,10 +1,10 @@
-Add default Identity management to user profile
-
 -Seperate controllers and views into areas
+
+-Add functionality for adding a category 
 
 -Add product buying
 
--Add product categories to database and add category based searching.
+-Add category based searching.
 
 -Add image upload to product adding.
 

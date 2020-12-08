@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymHub.Web.Models.InputModels
+namespace GymHub.DTOs
 {
-    public class AddCategoryInputModel
+    public class CategoryDTO
     {
-        [Required]
+        public string Id { get; set; }
         public string Name { get; set; }
     }
 }

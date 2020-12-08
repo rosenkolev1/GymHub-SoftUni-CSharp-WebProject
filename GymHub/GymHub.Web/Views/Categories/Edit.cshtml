@@ -1,0 +1,18 @@
+﻿@model EditCategoryInputModel
+
+<div class="input-container">
+    <form asp-controller="Categories" asp-action="Edit">
+        <input hidden asp-for="Id" />
+        <span asp-validation-for="Id" class="validation-span"></span>
+        <label asp-for="Name" class="input-label">Category Name</label>
+        <input asp-for="Name" type="text" placeholder="Type name here" class="input-label category-add-name">
+        <span asp-validation-for="Name" class="validation-span"></span>
+        <div class="button-container">
+            <button type="submit">Edit Category</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial.cshtml">
+}

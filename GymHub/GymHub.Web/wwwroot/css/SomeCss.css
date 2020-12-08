@@ -678,7 +678,7 @@ th {
     width: 40vw;
 }
 
-.product-add-name, .product-add-model{
+.product-add-name, .product-add-model, category-add-name {
     width: 30vw;
 }
 

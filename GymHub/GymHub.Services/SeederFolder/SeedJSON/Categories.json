@@ -1,0 +1,34 @@
+﻿[
+  {
+    "Name": "Machines",
+    "Id": "Machines"
+  },
+  {
+    "Name": "Dumbbells",
+    "Id": "Dumbbells"
+  },
+  {
+    "Name": "Barbells",
+    "Id": "Barbells"
+  },
+  {
+    "Name": "Resistance bands",
+    "Id": "Resistance bands"
+  },
+  {
+    "Name": "Lifting Straps",
+    "Id": "Lifting Straps"
+  },
+  {
+    "Name": "Belts",
+    "Id": "Belts"
+  },
+  {
+    "Name": "Squat Rack",
+    "Id": "Squat Rack"
+  },
+  {
+    "Name": "Liquid Chalk",
+    "Id": "Liquid Chalk"
+  }
+]

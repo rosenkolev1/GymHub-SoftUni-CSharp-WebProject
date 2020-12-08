@@ -24,6 +24,7 @@ namespace GymHub.Services.SeederFolder
         private readonly IMapper mapper;
         private readonly IProductCommentService productCommentService;
         private readonly ApplicationDbContext context;
+        private readonly ICategoryService categoryService;
 
         public Seeder(IServiceProvider serviceProvider)
         {
@@ -51,6 +52,9 @@ namespace GymHub.Services.SeederFolder
 
             //Set up productCommentService
             this.productCommentService = new ProductCommentService(context);
+
+            //Set up categoryService
+            this.categoryService = new CategoryService(context);
         }
 
         public async Task SeedAsync()
@@ -62,7 +66,7 @@ namespace GymHub.Services.SeederFolder
             await SeedProductsAsync();
             await SeedProductsCommentsAndRatingsAsync();
             await SeedProductsImagesAsync();
-
+            await SeedCategories();
         }
 
         private async Task<bool> SeedRolesAsync()
@@ -217,6 +221,27 @@ namespace GymHub.Services.SeederFolder
                     await this.productService.AddProductImageAsync(productImage);
                 }
             }
+            return true;
+        }
+
+        public async Task<bool> SeedCategories()
+        {
+            var categoriesDTOs = JsonSerializer.Deserialize<List<CategoryDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Categories.json"));
+            var categories = categoriesDTOs
+                .Select(x => new Category
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList();
+
+            foreach (var category in categories)
+            {
+                if (this.categoryService.CategoryExists(category.Id, true) == false)
+                {
+                    await this.categoryService.AddAsync(category);
+                }
+            }
+
             return true;
         }
     }

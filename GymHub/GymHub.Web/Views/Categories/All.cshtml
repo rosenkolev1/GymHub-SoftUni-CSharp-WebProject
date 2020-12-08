@@ -1,0 +1,63 @@
+﻿@model List<CategoryViewModel>
+@{ var firstCategory = Model.FirstOrDefault();
+    if (firstCategory == null)
+    {
+        firstCategory = new CategoryViewModel();
+    } }
+
+@section AdditionalLinks{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.22/datatables.min.css" />
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+<table id="DataTable">
+    <thead>
+        <tr>
+            <th>
+                Category Name
+            </th>
+            <th>
+                @Html.DisplayName(nameof(firstCategory.IsDeleted))
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.IsDeleted)
+        @Html.DisplayFor(modelItem => item.DeletedOn)
+    </td>
+    <td>
+        @if (item.IsDeleted == false)
+        {
+            <a asp-action="Edit" asp-route-categoryId="@item.Id">Edit</a>
+            <form style="display: inline;" asp-action="Delete" asp-controller="Categories" asp-route-categoryId="@item.Id"><button class="alert-danger" type="submit">Delete</button></form>
+        }
+        else
+        {
+            <form style="display: inline;" asp-action="Restore" asp-controller="Categories" asp-route-categoryId="@item.Id"><button type="submit">Restore</button></form>
+        }
+    </td>
+</tr>
+}
+    </tbody>
+</table>
+
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/v/bs4/dt-1.10.22/datatables.min.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $('#DataTable').DataTable();
+        });</script>
+}
