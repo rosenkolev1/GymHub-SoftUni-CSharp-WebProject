@@ -3,6 +3,7 @@ using GymHub.Common;
 using GymHub.Data.Models;
 using GymHub.Services;
 using GymHub.Services.Messaging;
+using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
@@ -323,14 +324,19 @@ namespace GymHub.Web.Controllers
                 TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(removeCommentInputModel);
                 TempData["InputModelFromPOSTRequestType"] = nameof(ReplyCommentInputModel);
 
-                //TODO: maybe add a remove comment failed notification
+                NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "An error occured while trying to remove the comment. Comment wasn't removed.");
+
                 this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption }, pageFragment);
             }
 
             var userId = this.userService.GetUserId(this.User.Identity.Name);
+           
+            if(this.productCommentService.CommentExists(commentId) == false)
+            {
+                this.ModelState.AddModelError(nameof(removeCommentInputModel.RemoveCommentId), "Comment doesn't exist");
+            }
 
-            //Check if comment belongs to user and/or exists
-            if (this.productCommentService.CommentMatchesUserAndProduct(commentId, userId, productId) == false && this.User.IsInRole(GlobalConstants.AdminRoleName) == false)
+            if(this.productCommentService.CommentBelongsToUser(commentId, userId) == false && this.User.IsInRole(GlobalConstants.AdminRoleName) == false)
             {
                 this.ModelState.AddModelError(nameof(removeCommentInputModel.RemoveCommentId), "Comment doesn't exist");
             }
@@ -341,7 +347,8 @@ namespace GymHub.Web.Controllers
                 TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(removeCommentInputModel);
                 TempData["InputModelFromPOSTRequestType"] = nameof(ReplyCommentInputModel);
 
-                //TODO: maybe add a remove comment failed notification
+                NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "An error occured while trying to remove the comment. Comment wasn't removed.");
+
                 return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption }, pageFragment);
             }
 
@@ -363,6 +370,9 @@ namespace GymHub.Web.Controllers
                     justificationText
                     );
             }
+
+            //Set notification
+            NotificationHelper.SetNotification(this.TempData, NotificationType.Success, "Comment successfully removed");
 
             return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption }, pageFragment);
         }

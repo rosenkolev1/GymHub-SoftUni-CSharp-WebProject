@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GymHub.Data.Models;
 using GymHub.Web.Models.InputModels;
+using GymHub.Web.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace GymHub.Automapper.AutomapperProfiles
         public CategoryProfile()
         {
             CreateMap<Category, EditCategoryInputModel>();
+
+            CreateMap<Category, CategoryViewModel>();
         }
     }
 }

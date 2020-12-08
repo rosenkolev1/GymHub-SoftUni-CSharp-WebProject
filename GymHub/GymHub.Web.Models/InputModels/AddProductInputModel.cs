@@ -43,7 +43,7 @@ namespace GymHub.Web.Models.InputModels
 
         public bool IsAdding { get; set; } = true;
 
-        [Required]
-        public ICollection<string> Categories { get; set; }
+        //[Required]
+        //public ICollection<string> Categories { get; set; }
     }
 }

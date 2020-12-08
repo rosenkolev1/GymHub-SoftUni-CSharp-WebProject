@@ -685,3 +685,11 @@ th {
 .product-add-actionMessage-title, .product-edit-actionMessage-title {
     text-align: center;
 }
+
+#notificationMessage {
+    position: fixed;
+    top: 60px;
+    z-index: 100000000;
+    width: 100vw;
+    height: 6vh;
+}

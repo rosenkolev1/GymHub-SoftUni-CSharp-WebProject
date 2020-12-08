@@ -1,7 +1,5 @@
 -Seperate controllers and views into areas
 
--Add functionality for adding a category 
-
 -Add product buying
 
 -Add category based searching.

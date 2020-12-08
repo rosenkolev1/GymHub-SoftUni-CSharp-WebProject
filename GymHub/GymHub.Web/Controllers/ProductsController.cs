@@ -5,6 +5,7 @@ using GymHub.Data.Models.Enums;
 using GymHub.Services;
 using GymHub.Services.Messaging;
 using GymHub.Web.AuthorizationPolicies;
+using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
@@ -130,6 +131,9 @@ namespace GymHub.Web.Controllers
 
             await this.productService.AddAsync(newProduct);
 
+            //Set notification
+            NotificationHelper.SetNotification(this.TempData, NotificationType.Success, "Product was successfully added");
+
             return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = newProduct.Id });
         }
 
@@ -250,6 +254,9 @@ namespace GymHub.Web.Controllers
 
             await this.productService.EditAsync(inputModel);
 
+            //Set notification
+            NotificationHelper.SetNotification(this.TempData, NotificationType.Success, "Product was successfully edited");
+
             return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = inputModel.Id});
         }
 
@@ -276,7 +283,8 @@ namespace GymHub.Web.Controllers
 
             if (this.ModelState.IsValid == false)
             {
-                //TODO: add notification for failed removal of product
+                //Add notification
+                NotificationHelper.SetNotification(TempData, NotificationType.Error, "An error occured while removing product. Product wasn't removed");
 
                 //Store needed info for get request in TempData
                 TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
@@ -284,8 +292,9 @@ namespace GymHub.Web.Controllers
                 return this.Redirect(errorReturnUrl);
             }
 
-            //TODO: Add notification for successful removal of product 
             await this.productService.RemoveProductAsync(productId);
+
+            NotificationHelper.SetNotification(TempData, NotificationType.Success, "Successfully remove product.");
 
             return this.RedirectToAction(nameof(All));
         }
@@ -300,7 +309,13 @@ namespace GymHub.Web.Controllers
             }
 
             //This is for debugging purposes for now
-            this.TempData.Clear();
+            foreach (var key in TempData.Keys)
+            {
+                if(key == GlobalConstants.InputModelFromPOSTRequest || key == GlobalConstants.InputModelFromPOSTRequestType)
+                {
+                    TempData.Remove(key);
+                }
+            }
 
             return this.View(products);
         }

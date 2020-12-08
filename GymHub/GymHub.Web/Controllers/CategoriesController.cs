@@ -28,17 +28,9 @@ namespace GymHub.Web.Controllers
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
         public async Task<IActionResult> All()
         {
-            //TODO User automapper
             var allCategories = this.categoryService.GetAllCategories(true);
 
-            var allCategoriesViewModel = allCategories
-                .Select(x => new CategoryViewModel
-                {
-                    Id = x.Id,
-                    IsDeleted = x.IsDeleted,
-                    DeletedOn = x.DeletedOn,
-                    Name = x.Name
-                }).ToList();
+            var allCategoriesViewModel = this.mapper.Map<List<CategoryViewModel>>(allCategories);
 
             //THIS IS FOR DEBUGGING PURPOSES CURRENTLY. MAYBE REMOVE THIS LATER
             TempData.Clear();

@@ -69,6 +69,15 @@
         }
     </nav>
     <main class="main-container">
+        @if(TempData[GlobalConstants.NotificationType] != null)
+        {
+            var notificationPartialViewModel = new NotificationPartialViewModel
+            {
+                NotificationType = TempData[GlobalConstants.NotificationType].ToString(),
+                NotificationText = TempData[GlobalConstants.NotificationText].ToString()
+            };
+            <partial name="_NotificationPartial.cshtml" model="notificationPartialViewModel" />
+        }
         <partial name="_CookieConsentPartial.cshtml" />
         @RenderBody()
     </main>
@@ -86,6 +95,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/Shared/Notifications.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 

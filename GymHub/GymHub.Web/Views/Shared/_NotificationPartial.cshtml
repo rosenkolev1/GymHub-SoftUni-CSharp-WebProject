@@ -1,0 +1,26 @@
+﻿@using GymHub.Common
+@using GymHub.Web.Helpers.NotificationHelpers
+@model NotificationPartialViewModel
+@{ 
+    Enum.TryParse(Model.NotificationType, out NotificationType notificationType);
+}
+@if (notificationType == NotificationType.Error)
+{
+<div id="notificationMessage" class="alert alert-danger alert-dismissible" role="alert">
+    <p>@Model.NotificationText</p>
+    <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">Close</span>
+    </button>
+</div>
+}
+@if (notificationType == NotificationType.Success)
+{
+<div id="notificationMessage"  class="alert alert-success alert-dismissible" role="alert">
+    <p>@Model.NotificationText</p>
+    <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">
+            <i class="fas fa-times" style="margin-right:2vw; font-size:32px;"></i>
+        </span>
+    </button>
+</div>
+}

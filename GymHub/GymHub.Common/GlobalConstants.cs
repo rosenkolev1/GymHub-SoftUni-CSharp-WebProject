@@ -13,6 +13,10 @@
         public const string InputModelFromPOSTRequest = "InputModelFromPOSTRequest";
         public const string InputModelFromPOSTRequestType = "InputModelFromPOSTRequestType";
 
+        //Notification temp data
+        public const string NotificationText = "NotificationText";
+        public const string NotificationType = "NotificationType";
+
         public const string SystemName = "GymHub.com";
 
         //Role constants
