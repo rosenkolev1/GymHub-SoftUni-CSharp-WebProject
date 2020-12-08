@@ -88,10 +88,10 @@ namespace GymHub.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //Delete database at startup
-            DeleteDatabase(app, false);
+            DeleteDatabase(app, true);
 
             //Migrate Database at startup
-            MigrateDatabase(app, false);
+            MigrateDatabase(app, true);
 
             //Seed database at startup        
             SeedDatabaseAsync(app, false).GetAwaiter().GetResult();

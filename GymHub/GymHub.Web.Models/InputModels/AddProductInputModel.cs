@@ -42,5 +42,8 @@ namespace GymHub.Web.Models.InputModels
         public string ShortDescription { get; set; }
 
         public bool IsAdding { get; set; } = true;
+
+        [Required]
+        public ICollection<string> Categories { get; set; }
     }
 }

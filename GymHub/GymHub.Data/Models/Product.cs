@@ -20,6 +20,7 @@ namespace GymHub.Data.Models
         public virtual ICollection<ProductSale> ProductSales { get; set; }
         public virtual ICollection<ProductComment> ProductComments { get; set; }
         public virtual ICollection<ProductRating> ProductRatings { get; set; }
+        public ICollection<ProductCategory> ProductCategories { get; set; }
 
         //Simple properties
         [Required]
