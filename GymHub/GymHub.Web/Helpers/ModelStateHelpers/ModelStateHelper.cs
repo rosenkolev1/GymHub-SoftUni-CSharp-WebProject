@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using GymHub.Common;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,5 +35,11 @@ public static class ModelStateHelper
             }
         }
         return modelState;
+    }
+
+    public static void MergeModelStates(ITempDataDictionary tempData, ModelStateDictionary currentModelState)
+    {
+        var postRequestModelState = ModelStateHelper.DeserialiseModelState(tempData[GlobalConstants.ErrorsFromPOSTRequest].ToString());
+        currentModelState.Merge(postRequestModelState);
     }
 }

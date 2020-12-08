@@ -18,10 +18,11 @@ namespace GymHub.Web.ViewComponents
             this.userService = userService;
         }
 
-        public IViewComponentResult Invoke()
+
+        public async Task<IViewComponentResult> InvokeAsync()
         {
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
-            int numberOfItemsInCartForCurrentUser = this.cartService.GetNumberOfProductsInCart(currentUserId);
+            int numberOfItemsInCartForCurrentUser = await this.cartService.GetNumberOfProductsInCart(currentUserId);
 
             return this.View(numberOfItemsInCartForCurrentUser);
         }

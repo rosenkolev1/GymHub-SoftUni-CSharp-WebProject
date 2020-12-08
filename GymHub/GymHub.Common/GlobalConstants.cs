@@ -6,6 +6,13 @@
          * WHEN CHANGING VALIDATION CONSTANTS CHANGE ERROR MESSAGES IN MODELS
         */
 
+        //Errors from POST request temp data
+        public const string ErrorsFromPOSTRequest = "ErrorsFromPOSTRequest";
+
+        //Input Model from POST request temp data
+        public const string InputModelFromPOSTRequest = "InputModelFromPOSTRequest";
+        public const string InputModelFromPOSTRequestType = "InputModelFromPOSTRequestType";
+
         public const string SystemName = "GymHub.com";
 
         //Role constants

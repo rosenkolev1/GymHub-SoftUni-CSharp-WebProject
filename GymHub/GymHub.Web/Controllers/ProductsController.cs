@@ -50,12 +50,11 @@ namespace GymHub.Web.Controllers
             AddProductInputModel inputModel = null;
 
             //Add each model state error from the last action to this one
-            if (TempData["ErrorsFromPOSTRequest"] != null)
+            if (TempData[GlobalConstants.ErrorsFromPOSTRequest] != null)
             {
-                var postRequestModelState = ModelStateHelper.DeserialiseModelState(TempData["ErrorsFromPOSTRequest"].ToString());
-                this.ModelState.Merge(postRequestModelState);
+                ModelStateHelper.MergeModelStates(TempData, ModelState);
 
-                var inputModelJSON = TempData["InputModelFromPOSTRequest"]?.ToString();
+                var inputModelJSON = TempData[GlobalConstants.InputModelFromPOSTRequest]?.ToString();
                 inputModel = JsonSerializer.Deserialize<AddProductInputModel>(inputModelJSON);
             }
 
@@ -77,14 +76,14 @@ namespace GymHub.Web.Controllers
             inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);
 
             //Store input model for passing in get action
-            TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
-            TempData["InputModelFromPOSTRequestType"] = nameof(AddProductInputModel);
+            TempData[GlobalConstants.InputModelFromPOSTRequest] = JsonSerializer.Serialize(inputModel);
+            TempData[GlobalConstants.InputModelFromPOSTRequestType] = nameof(AddProductInputModel);
 
             //Check without looking into the database
             if (this.ModelState.IsValid == false)
             {
                 //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
-                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+                TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
                 return this.RedirectToAction(nameof(Add), "Products");
             }
@@ -124,7 +123,7 @@ namespace GymHub.Web.Controllers
             if (this.ModelState.IsValid == false)
             {
                 //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
-                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+                TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
                 return this.RedirectToAction(nameof(Add), "Products");
             }
@@ -147,12 +146,11 @@ namespace GymHub.Web.Controllers
             AddProductInputModel inputModel = null;
 
             //Add each model state error from the last action to this one. Fill the input model with he values from the last post action
-            if (TempData["ErrorsFromPOSTRequest"] != null && TempData["InputModelFromPOSTRequestType"]?.ToString() == nameof(AddProductInputModel))
+            if (TempData[GlobalConstants.ErrorsFromPOSTRequest] != null && TempData[GlobalConstants.InputModelFromPOSTRequestType]?.ToString() == nameof(AddProductInputModel))
             {
-                var postRequestModelState = ModelStateHelper.DeserialiseModelState(TempData["ErrorsFromPOSTRequest"].ToString());
-                this.ModelState.Merge(postRequestModelState);
+                ModelStateHelper.MergeModelStates(TempData, this.ModelState);
 
-                var inputModelJSON = TempData["InputModelFromPOSTRequest"]?.ToString();
+                var inputModelJSON = TempData[GlobalConstants.InputModelFromPOSTRequest]?.ToString();
                 inputModel = JsonSerializer.Deserialize<AddProductInputModel>(inputModelJSON);
 
             }
@@ -187,8 +185,8 @@ namespace GymHub.Web.Controllers
             inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);
 
             //Store input model for passing in get action
-            TempData["InputModelFromPOSTRequest"] = JsonSerializer.Serialize(inputModel);
-            TempData["InputModelFromPOSTRequestType"] = nameof(AddProductInputModel);
+            TempData[GlobalConstants.InputModelFromPOSTRequest] = JsonSerializer.Serialize(inputModel);
+            TempData[GlobalConstants.InputModelFromPOSTRequestType] = nameof(AddProductInputModel);
 
             //Set input model mode to edit
             inputModel.IsAdding = false;
@@ -197,7 +195,7 @@ namespace GymHub.Web.Controllers
             if (this.ModelState.IsValid == false)
             {
                 //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
-                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+                TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
                 return this.RedirectToAction(nameof(Edit), "Products", new { productId = inputModel.Id });
             }
@@ -245,7 +243,7 @@ namespace GymHub.Web.Controllers
             if (this.ModelState.IsValid == false)
             {
                 //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
-                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+                TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
                 return this.RedirectToAction(nameof(Edit), "Products", new { productId = inputModel.Id});
             }
@@ -281,7 +279,7 @@ namespace GymHub.Web.Controllers
                 //TODO: add notification for failed removal of product
 
                 //Store needed info for get request in TempData
-                TempData["ErrorsFromPOSTRequest"] = ModelStateHelper.SerialiseModelState(this.ModelState);
+                TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
                 return this.Redirect(errorReturnUrl);
             }
@@ -334,14 +332,13 @@ namespace GymHub.Web.Controllers
             await FillProductInfoViewModel(viewModel, productId, commentsPage, toReplyComment, commentsOrderingOption);
 
             //Add each model state error from the last action to this one
-            if (TempData["ErrorsFromPOSTRequest"] != null)
+            if (TempData[GlobalConstants.ErrorsFromPOSTRequest] != null)
             {
-                var postRequestModelState = ModelStateHelper.DeserialiseModelState(TempData["ErrorsFromPOSTRequest"].ToString());
-                this.ModelState.Merge(postRequestModelState);
+                ModelStateHelper.MergeModelStates(TempData, this.ModelState);
             }
 
             object complexModel = null;
-            var typeOfInputModel = TempData["InputModelFromPOSTRequestType"];
+            var typeOfInputModel = TempData[GlobalConstants.InputModelFromPOSTRequestType];
 
             //If input model is for adding review
             if (typeOfInputModel?.ToString() == nameof(AddReviewInputModel))
@@ -351,7 +348,7 @@ namespace GymHub.Web.Controllers
             //If input model is for replying to a comment
             else if (typeOfInputModel?.ToString() == nameof(ReplyCommentInputModel))
             {
-                var replyCommentInputModelsJSON = TempData["InputModelFromPOSTRequest"]?.ToString();
+                var replyCommentInputModelsJSON = TempData[GlobalConstants.InputModelFromPOSTRequest]?.ToString();
                 var replyCommentInputModel = JsonSerializer.Deserialize<ReplyCommentInputModel>(replyCommentInputModelsJSON);
                 viewModel.ReplyCommentInputModel = replyCommentInputModel;
 
@@ -376,7 +373,7 @@ namespace GymHub.Web.Controllers
             if (onlyViewModel) return complexModel;
 
             //Get inputModel from TempDate
-            var inputModelJSON = TempData["InputModelFromPOSTRequest"]?.ToString();
+            var inputModelJSON = TempData[GlobalConstants.InputModelFromPOSTRequest]?.ToString();
 
             //Add input model the last post action to this one
             if (inputModelJSON != null)

@@ -191,6 +191,10 @@ namespace GymHub.Services
         public async Task RemoveProductAsync(string productId)
         {
             var productToDelete = this.GetProductById(productId);
+            await this.context.Entry(productToDelete).Collection(x => x.ProductCarts).LoadAsync();
+
+            this.context.RemoveRange(productToDelete.ProductCarts);
+
             await this.DeleteEntityAsync(productToDelete);
         }
 
