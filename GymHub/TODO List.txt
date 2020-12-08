@@ -2,13 +2,9 @@
 
 -Add default Identity management to user profile
 
--Add Appsettings.Development.json for Development environment and Appsettings.Production.json for Production environment
-
 -Seperate controllers and views into areas
 
 -Add product buying
-
--Add double click prevention
 
 -Add product categories to database and add category based searching.
 
@@ -25,6 +21,8 @@
 -Add email confirmation on register
 
 -Add registered user welcome page.
+
+-Add double click prevention
 
 -Make imageUrl for products support online urls for images instead of only local files system images. Using cloudinary or something similar
 
@@ -46,7 +44,6 @@
 -File compression for less internet traffic.
 -View Title and View Description for higher SEO rating. Slugging for higher SEO rating.
 -Online payments with Stripe or Paypal SDK or etc...
--Libman.json for installing client side libraries. ManageClientSideLibraries button on right click on web project. Enable restore on clien side libraries on build
 -Cascading Dropdown
 -RSS, RSS reader
 

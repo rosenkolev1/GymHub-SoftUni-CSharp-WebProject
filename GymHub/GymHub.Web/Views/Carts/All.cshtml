@@ -6,6 +6,7 @@
 <div>
     <h1 class="main-cart-title">My Cart:</h1>
 </div>
+<div asp-validation-summary="All"></div>
 <form asp-controller="Carts" asp-action="Buy" class="cart-form-products">
     <table class="cart-table-container">
         <thead class="cart-thead-container">
@@ -37,6 +38,7 @@
                 </td>
                 <td class="cart-td-element" id="quantity">
                     <input class="cart-input-quantity" type="number" asp-for="InputModel[i].Quantity" value="@product.Quantity" />
+                    <input class="cart-input-remove alert-danger" type="button" asp-controller="Carts" asp-action="Remove" asp-route-productId="@product.Id"/>
                 </td>
                 <td class="cart-td-element">
                     <p class="totalPrice">@((product.Price*product.Quantity).ToString($"${0:f2}"))</p>

@@ -27,6 +27,17 @@ namespace GymHub.Web.Controllers
             this.userService = userService;
         }
 
+        public async Task<IActionResult> Remove(string productId)
+        {
+            //Check if this product exists
+            if(this.productService.ProductExistsById(productId) == false)
+            {
+                this.ModelState.AddModelError("", "This product doesn't exist");
+            }
+
+            return this.RedirectToAction(nameof(All));
+        }
+
         [Authorize]
         public async Task<IActionResult> All()
         {

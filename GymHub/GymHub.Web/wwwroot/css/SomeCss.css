@@ -400,7 +400,7 @@ th {
     text-align: center;
 }
 
-.cart-input-quantity {
+.cart-input-quantity, .cart-input-remove {
     width: 8vw;
     text-align: center;
     padding-left: 15px;
