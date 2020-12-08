@@ -1,6 +1,4 @@
--Add remove product button to cart view
-
--Add default Identity management to user profile
+Add default Identity management to user profile
 
 -Seperate controllers and views into areas
 

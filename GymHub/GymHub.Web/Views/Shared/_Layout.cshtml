@@ -43,7 +43,7 @@
                 <button class="nav-bar-button nav-bar-logout-button" type="submit"><i class="fas fa-sign-out-alt"></i>Logout</button>
             </form>
             <div class="nav-bar-element">
-                <a class="nav-bar-button" asp-controller="Users" asp-action="Profile">
+                <a class="nav-bar-button" asp-area="Identity" asp-page="/Account/Manage/Index">
                     <vc:profile-picture-icon></vc:profile-picture-icon>
                 </a>
             </div>
