@@ -63,15 +63,22 @@ namespace GymHub.Services
             return this.context.Products.Select(product => mapper.Map<ProductViewModel>(product)).ToList();
         }
 
-        public Product GetProductById(string productId)
+        public Product GetProductById(string productId, bool withNavigationalProperties)
         {
-            return this.context.Products
+            if (withNavigationalProperties)
+            {
+                return this.context.Products
                 .Include(x => x.ProductComments)
                 .ThenInclude(pc => pc.User)
                 .Include(x => x.ProductRatings)
                 .ThenInclude(x => x.User)
                 .Include(x => x.AdditionalImages)
                 .FirstOrDefault(x => x.Id == productId);
+            }
+            else
+            {
+                return this.context.Products.FirstOrDefault(x => x.Id == productId);
+            }
         }
 
         public async Task AddAsync(Product product)
@@ -190,7 +197,7 @@ namespace GymHub.Services
 
         public async Task RemoveProductAsync(string productId)
         {
-            var productToDelete = this.GetProductById(productId);
+            var productToDelete = this.GetProductById(productId, false);
             await this.context.Entry(productToDelete).Collection(x => x.ProductCarts).LoadAsync();
 
             this.context.RemoveRange(productToDelete.ProductCarts);
@@ -200,7 +207,7 @@ namespace GymHub.Services
 
         public async Task EditAsync(AddProductInputModel inputModel)
         {
-            var productToEdit = this.GetProductById(inputModel.Id);
+            var productToEdit = this.GetProductById(inputModel.Id, true);
             var newAdditionalImages = inputModel.AdditionalImages.Where(x => x != null).ToList();
 
             //Edit all of the images for the product

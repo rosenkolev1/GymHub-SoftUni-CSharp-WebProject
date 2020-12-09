@@ -686,6 +686,39 @@ th {
     text-align: center;
 }
 
+#addCategoryToProduct {
+    font-size: 20px;
+    margin-left: 6px;
+    color: #3c763d
+}
+
+#addCategoryToProduct:hover {
+    cursor: pointer;
+}
+
+.removeCategoryButton {
+    color: #a94442;
+    font-size: 20px;
+    margin-left: 6px;
+}
+
+.removeCategoryButton:hover {
+    cursor: pointer;
+}
+
+.input-label-inline{
+    display: inline;
+}
+
+#product-addCategory-span {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#addCategoryToProduct-container {
+    margin-top: 15px;
+}
+
 #notificationMessage {
     position: fixed;
     top: 60px;

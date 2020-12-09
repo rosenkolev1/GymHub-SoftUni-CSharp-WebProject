@@ -1,0 +1,15 @@
+﻿@model AddCategoryToProductViewModel
+
+<div class="input-container product-addCategory-container">
+    <label for="CategoriesIds[@(Model.Counter-1)]" class="input-label input-label-inline">Category</label>
+    <input hidden class="addCategory-input-counter" value="@Model.Counter" />
+    <select class="category-select" name="CategoriesIds[@(Model.Counter-1)]">
+        <option selected="@(Model.SelectedCategory == null)" value="null">Select category</option>
+        @foreach (var category in Model.Categories)
+        {
+            <option selected="@(Model.SelectedCategory == category.Id)" value="@category.Id">@category.Name</option>
+        }
+    </select>
+    <i class="fas fa-minus removeCategoryButton"></i>
+    @Html.ValidationMessage($"CategoriesIds[{@Model.Counter-1}]", new { @class = "something" })
+</div>

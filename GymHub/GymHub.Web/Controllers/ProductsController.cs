@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -30,10 +31,11 @@ namespace GymHub.Web.Controllers
         private readonly HtmlEncoder htmlEncoder;
         private readonly UserManager<User> userManager;
         private readonly SendGridEmailSender sendGridEmailSender;
+        private readonly ICategoryService categoryService;
         public ProductsController
             (IProductService productService, IMapper mapper, IProductCommentService productCommentService, IUserService userService,
             JavaScriptEncoder javaScriptEncoder, UserManager<User> userManager, SendGridEmailSender sendGridEmailSender,
-            HtmlEncoder htmlEncoder)
+            HtmlEncoder htmlEncoder, ICategoryService categoryService)
         {
             this.productService = productService;
             this.mapper = mapper;
@@ -43,6 +45,7 @@ namespace GymHub.Web.Controllers
             this.userManager = userManager;
             this.sendGridEmailSender = sendGridEmailSender;
             this.htmlEncoder = htmlEncoder;
+            this.categoryService = categoryService;
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
@@ -68,11 +71,6 @@ namespace GymHub.Web.Controllers
         {
             var newProduct = this.mapper.Map<Product>(inputModel);
 
-            //Set additional images
-            newProduct.AdditionalImages = inputModel.AdditionalImages
-                .Where(x => x != null)
-                .Select(x => new ProductImage { Image = x, Product = newProduct }).ToList();
-
             //Set input model short description
             inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);
 
@@ -88,6 +86,8 @@ namespace GymHub.Web.Controllers
 
                 return this.RedirectToAction(nameof(Add), "Products");
             }
+
+            await this.TryUpdateModelAsync(inputModel, typeof(AddProductInputModel), "");
 
             //Check if product with this model or name
             if (this.productService.ProductExistsByModel(inputModel.Model) == true)
@@ -121,6 +121,26 @@ namespace GymHub.Web.Controllers
                 }
             }
 
+            //Check if categories exist in the database or if there are even any categories for this product
+            for (int i = 0; i < inputModel.CategoriesIds.Count; i++)
+            {
+                var categoryId = inputModel.CategoriesIds[i];
+                if (this.categoryService.CategoryExists(categoryId) == false)
+                {
+                    this.ModelState.AddModelError($"CategoriesIds{i}", "This category doesn't exist");
+                }
+            }
+            if (inputModel.CategoriesIds.Count == 0)
+            {
+                this.ModelState.AddModelError("", "You need to add at least one category for this product");
+            }
+
+            //Check if categories are unique
+            if (inputModel.CategoriesIds.Where(x => string.IsNullOrWhiteSpace(x) == false).Distinct().Count() != inputModel.CategoriesIds.Where(x => string.IsNullOrWhiteSpace(x) == false).Count())
+            {
+                this.ModelState.AddModelError($"", "One category cannot be used multiple times.");
+            }
+
             if (this.ModelState.IsValid == false)
             {
                 //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
@@ -129,12 +149,29 @@ namespace GymHub.Web.Controllers
                 return this.RedirectToAction(nameof(Add), "Products");
             }
 
+            //Set additional images
+            newProduct.AdditionalImages = inputModel.AdditionalImages
+                .Where(x => x != null)
+                .Select(x => new ProductImage { Image = x, Product = newProduct }).ToList();
+
+            //Add product
             await this.productService.AddAsync(newProduct);
+
+            //Add categories
+            await this.categoryService.AddCategoriesToProductAsync(newProduct, inputModel.CategoriesIds);/**/
 
             //Set notification
             NotificationHelper.SetNotification(this.TempData, NotificationType.Success, "Product was successfully added");
 
             return this.RedirectToAction(nameof(ProductPage), "Products", new { productId = newProduct.Id });
+        }
+
+        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
+        public async Task<IActionResult> LoadCategoryInput(AddCategoryToProductViewModel viewModel)
+        {
+            viewModel.Categories = this.mapper.Map<List<CategoryViewModel>>(this.categoryService.GetAllCategories());
+
+            return this.PartialView("/Views/Products/_AddCategoryToProductPartial.cshtml", viewModel);
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
@@ -157,12 +194,19 @@ namespace GymHub.Web.Controllers
                 var inputModelJSON = TempData[GlobalConstants.InputModelFromPOSTRequest]?.ToString();
                 inputModel = JsonSerializer.Deserialize<AddProductInputModel>(inputModelJSON);
 
+                var product = this.productService.GetProductById(productId, true);
+
+                //Get the categories for the product
+                inputModel.CategoriesIds = this.categoryService.GetCategoriesForProduct(product.Id).Select(x => x.Id).ToList();
             }
             //If there wasn't an error with the edit form prior to this, just fill the inputModel like normal
             else
             {
-                var product = this.productService.GetProductById(productId);
+                var product = this.productService.GetProductById(productId, true);
                 inputModel = this.mapper.Map<AddProductInputModel>(product);
+
+                //Get the categories for the product
+                inputModel.CategoriesIds = this.categoryService.GetCategoriesForProduct(product.Id).Select(x => x.Id).ToList();
 
                 //Set the correct additional images paths
                 for (int i = 0; i < product.AdditionalImages.Count; i++)
@@ -234,15 +278,36 @@ namespace GymHub.Web.Controllers
                 this.ModelState.AddModelError("MainImage", "This image is already used.");
             }
 
-            //Check if any of the additional images are used
-            for (int i = 0; i < inputModel.AdditionalImages.Count; i++)
+            //Check if categories exist in the database or if there are even any categories for this product
+            for (int i = 0; i < inputModel.CategoriesIds.Count; i++)
             {
-                var additionalImage = inputModel.AdditionalImages[i];
-                if (this.productService.ProductImageExists(additionalImage, productId) == true)
+                var categoryId = inputModel.CategoriesIds[i];
+                if (this.categoryService.CategoryExists(categoryId) == false)
                 {
-                    this.ModelState.AddModelError($"AdditionalImages[{i}]", "This image is already used.");
+                    this.ModelState.AddModelError($"CategoriesIds{i}", "This category doesn't exist");
                 }
             }
+            if (inputModel.CategoriesIds.Count == 0)
+            {
+                this.ModelState.AddModelError("", "You need to add at least one category for this product");
+            }
+
+            //Check if categories exist in the database
+            for (int i = 0; i < inputModel.CategoriesIds.Count; i++)
+            {
+                var categoryId = inputModel.CategoriesIds[i];
+                if (this.categoryService.CategoryExists(categoryId) == false)
+                {
+                    this.ModelState.AddModelError($"CategoriesIds{i}", "This category doesn't exist");
+                }
+            }
+
+            //Check if categories are unique
+            if(inputModel.CategoriesIds.Where(x => string.IsNullOrWhiteSpace(x) == false).Distinct().Count() != inputModel.CategoriesIds.Where(x => string.IsNullOrWhiteSpace(x) == false).Count())
+            {
+                this.ModelState.AddModelError($"", "One category cannot be used multiple times.");
+            }
+
 
             if (this.ModelState.IsValid == false)
             {
@@ -253,6 +318,10 @@ namespace GymHub.Web.Controllers
             }
 
             await this.productService.EditAsync(inputModel);
+
+            var product = this.productService.GetProductById(inputModel.Id, false);
+
+            await this.categoryService.EditCategoriesToProductAsync(product, inputModel.CategoriesIds);
 
             //Set notification
             NotificationHelper.SetNotification(this.TempData, NotificationType.Success, "Product was successfully edited");
@@ -329,7 +398,7 @@ namespace GymHub.Web.Controllers
                 return this.NotFound();
             }
 
-            var product = this.productService.GetProductById(productId);
+            var product = this.productService.GetProductById(productId, true);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
 
             //Sanitize commentsPage

@@ -81,7 +81,7 @@ namespace GymHub.Web.Controllers
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
             var productId = inputModel.ProductId;
             var quantity = inputModel.Quantity;
-            var product = this.productService.GetProductById(productId);
+            var product = this.productService.GetProductById(productId, false);
 
             if(product.QuantityInStock < quantity)
             {

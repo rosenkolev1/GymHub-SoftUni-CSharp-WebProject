@@ -29,6 +29,20 @@ namespace GymHub.Services
             await this.context.SaveChangesAsync();
         }
 
+        public async Task AddCategoriesToProductAsync(Product product, List<string> productCategoriesIds)
+        {
+            if(product.ProductCategories == null) product.ProductCategories = new List<ProductCategory>();
+            foreach (var categoryId in productCategoriesIds)
+            {
+                if(product.ProductCategories.Any(x => x.CategoryId == categoryId) == false)
+                {
+                    product.ProductCategories.Add(new ProductCategory { CategoryId = categoryId, ProductId = product.Id });
+                }
+            }
+
+            await this.context.SaveChangesAsync();
+        }
+
         public bool CategoryExists(string Id, bool hardCheck = false)
         {
             return this.context.Categories.IgnoreAllQueryFilter(hardCheck).Any(x => x.Id == Id);
@@ -51,9 +65,45 @@ namespace GymHub.Services
             await this.context.SaveChangesAsync();
         }
 
+        public async Task EditCategoriesToProductAsync(Product product, List<string> productCategoriesId)
+        {
+            var productCategories = this.context.ProductsCategories
+                .IgnoreAllQueryFilter(true).Where(x => x.Product == product).ToList();
+
+            //Delete the old categories
+            foreach (var category in productCategories.Where(x => productCategoriesId.Contains(x.Id) == false))
+            {
+                category.IsDeleted = true;
+                category.DeletedOn = DateTime.UtcNow;
+            }
+
+            //Add the new categories
+            foreach (var categoryId in productCategoriesId)
+            {
+                var productCategory = productCategories.FirstOrDefault(x => x.CategoryId == categoryId);
+                if (productCategory == null)
+                {
+                    product.ProductCategories.Add(new ProductCategory { CategoryId = categoryId, ProductId = product.Id });
+                }
+                else
+                {
+                    productCategory.IsDeleted = false;
+                    productCategory.DeletedOn = null;
+                }
+            }
+
+            await this.context.SaveChangesAsync();
+        }
+
         public List<Category> GetAllCategories(bool hardCheck = false)
         {
             return this.context.Categories.IgnoreAllQueryFilter(hardCheck).ToList();
+        }
+
+        public List<Category> GetCategoriesForProduct(string productId)
+        {
+            return this.context.ProductsCategories.Where(x => x.ProductId == productId)
+                .Select(x => x.Category).ToList();
         }
 
         public Category GetCategoryById(string id)

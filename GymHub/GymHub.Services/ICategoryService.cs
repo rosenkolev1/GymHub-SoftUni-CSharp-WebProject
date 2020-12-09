@@ -19,5 +19,8 @@ namespace GymHub.Services
         public Category GetCategoryById(string id);
         public Task RemoveAsync(string id);
         public Task RestoreAsync(string id);
+        public Task AddCategoriesToProductAsync(Product product, List<string> productCategoriesIds);
+        public List<Category> GetCategoriesForProduct(string productId);
+        public Task EditCategoriesToProductAsync(Product product, List<string> productCategoriesIds);
     }
 }

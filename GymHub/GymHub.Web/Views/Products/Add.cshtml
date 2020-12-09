@@ -1,4 +1,5 @@
 ﻿@model AddProductInputModel
+@inject GymHub.Services.ICategoryService categoryService
 
 @section AdditionalLinks{
 
@@ -73,6 +74,24 @@
         <input asp-for="QuantityInStock" type="number" placeholder="Type quantity in stock here">
         <span asp-validation-for="QuantityInStock" class="validation-span"></span>
     </div>
+    <div class="input-container" id="product-categories-container">
+        @if(Model?.CategoriesIds?.Count > 0)
+        {
+            @for (int i = 0; i < Model.CategoriesIds.Count; i++)
+            {
+                var addCategoryToProductViewModel = new AddCategoryToProductViewModel
+                {
+                    Counter = i + 1,
+                    SelectedCategory = Model.CategoriesIds[i],
+                    Categories = categoryService.GetAllCategories().Select(x => new CategoryViewModel { Name = x.Name, Id = x.Id }).ToList()
+                };
+                <partial name="_AddCategoryToProductPartial.cshtml" model="addCategoryToProductViewModel"/>
+            }
+        }
+        <div class="container" id="addCategoryToProduct-container">
+            <span id="product-addCategory-span">Add category</span><i class="fas fa-plus" id="addCategoryToProduct"></i>
+        </div>
+    </div>
     <div class="button-container">
         @if (Model?.IsAdding != false)
         {
@@ -98,6 +117,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js" asp-append-version="true"></script>
     <script src="~/js/AddProductPage/PreviewPage.js" asp-append-version="true"></script>
     <script src="~/js/Shared/ChangeProductImage.js" asp-append-version="true"></script>
+    <script src="~/js/AddProductPage/AddCategoryToProduct.js" asp-append-version="true"></script>
 
     <partial name="_ValidationScriptsPartial.cshtml">
 }

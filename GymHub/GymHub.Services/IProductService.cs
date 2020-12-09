@@ -17,7 +17,7 @@ namespace GymHub.Services
         public bool ProductExistsByName(string name, string excludedProductId);
         public bool ProductExistsByModel(string model, bool hardCheck = false);
         public bool ProductExistsByModel(string model, string excludedProductId, bool hardCheck = false);
-        public Product GetProductById(string productId);
+        public Product GetProductById(string productId, bool withNavigationalProperties);
         public double GetAverageRating(List<ProductRating> productRatings);
         public string GetShordDescription(string description, int stringLength);
         public string GetProductId(string model, bool hardCheck = false);

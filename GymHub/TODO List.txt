@@ -1,4 +1,6 @@
--Seperate controllers and views into areas
+-Update deleting a category functionality to accomodate for product which do not have any more categories. Maybe restrict deletion of such a category and make it deleteable only if no product uses it.
+
+-Update functionality for removing a product to accomodate for categories
 
 -Add product buying
 
@@ -11,6 +13,8 @@
 -Add user profile pages and functionality
 
 -Add functionality for reinstating a comment if you are an admin
+
+-Seperate controllers and views into areas
 
 -Add column (Deleted by whom) or somethings similar to indicate which admin deleted a comment, product etc...
 
