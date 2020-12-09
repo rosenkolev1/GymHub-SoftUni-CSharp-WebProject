@@ -54,7 +54,7 @@
                     <div class="product col-md-3 service-image-left">
 
                         <center>
-                            <img id="item-display"  class="product-mainImage"  src="@viewModel.MainImage" alt="">
+                            <img id="item-display" class="product-mainImage" src="@viewModel.MainImage" alt="">
                         </center>
                     </div>
 
@@ -114,6 +114,14 @@
                         <span> @productRating.AverageRating/10</span>
                     </div>
                     <hr>
+                    <div class="container productPage-categories-container">
+                        @foreach (var category in viewModel.ProductCategories)
+                        {
+                            <div class="productPage-category-container">
+                                @category.Name
+                            </div>
+                        }
+                    </div>
                     <div class="product-price">$ @viewModel.Price</div>
                     @if (viewModel.QuantityInStock > 0)
                     {

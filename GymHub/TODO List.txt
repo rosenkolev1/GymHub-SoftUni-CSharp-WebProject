@@ -1,7 +1,3 @@
--Update deleting a category functionality to accomodate for product which do not have any more categories. Maybe restrict deletion of such a category and make it deleteable only if no product uses it.
-
--Update functionality for removing a product to accomodate for categories
-
 -Add product buying
 
 -Add category based searching.

@@ -10,7 +10,7 @@
 
         function fadeOutNotification() {
             $(button)
-                .fadeOut(2000);
+                .fadeOut(1000);
         }
     }
 };

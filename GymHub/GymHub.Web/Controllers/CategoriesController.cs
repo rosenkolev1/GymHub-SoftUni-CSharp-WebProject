@@ -2,6 +2,7 @@
 using GymHub.Common;
 using GymHub.Services;
 using GymHub.Web.AuthorizationPolicies;
+using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -33,7 +34,9 @@ namespace GymHub.Web.Controllers
             var allCategoriesViewModel = this.mapper.Map<List<CategoryViewModel>>(allCategories);
 
             //THIS IS FOR DEBUGGING PURPOSES CURRENTLY. MAYBE REMOVE THIS LATER
-            TempData.Clear();
+            TempData.Remove(GlobalConstants.InputModelFromPOSTRequest);
+            TempData.Remove(GlobalConstants.InputModelFromPOSTRequestType);
+            TempData.Remove(GlobalConstants.ErrorsFromPOSTRequest);
 
             return this.View(allCategoriesViewModel);
         }
@@ -130,8 +133,21 @@ namespace GymHub.Web.Controllers
         {
             if (this.categoryService.CategoryExists(categoryId) == false)
             {
-                return this.View("/Views/Shared/Error.cshtml");
-            }          
+                //Set notification
+                NotificationHelper.SetNotification(TempData, NotificationType.Error, "Category doesn't exist");
+
+                return this.RedirectToAction(nameof(All));
+            }
+
+            var products = this.categoryService.GetProductsForCategory(categoryId);
+
+            if (products.Count > 0)
+            {
+                //Set notification
+                NotificationHelper.SetNotification(TempData, NotificationType.Error, "This category could not be deleted because it is assigned to one or more products. Either remove all the products which use it or edit the category instead.");
+
+                return this.RedirectToAction(nameof(All));
+            }
 
             await this.categoryService.RemoveAsync(categoryId);
 

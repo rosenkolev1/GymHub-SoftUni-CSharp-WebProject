@@ -1,6 +1,7 @@
 ﻿using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.Common;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,11 @@ namespace GymHub.Services
 {
     public class CategoryService : DeleteableEntityService, ICategoryService
     {
+
         public CategoryService(ApplicationDbContext context)
             : base(context)
         {
-            
+
         }
 
         public async Task AddAsync(string name)
@@ -67,8 +69,12 @@ namespace GymHub.Services
 
         public async Task EditCategoriesToProductAsync(Product product, List<string> productCategoriesId)
         {
-            var productCategories = this.context.ProductsCategories
-                .IgnoreAllQueryFilter(true).Where(x => x.Product == product).ToList();
+            var productCategories = this.context.Products
+                .Where(x => x == product)
+                .Select(x => x.ProductCategories)
+                .FirstOrDefault()
+                .ToList();
+                
 
             //Delete the old categories
             foreach (var category in productCategories.Where(x => productCategoriesId.Contains(x.Id) == false))
@@ -83,6 +89,11 @@ namespace GymHub.Services
                 var productCategory = productCategories.FirstOrDefault(x => x.CategoryId == categoryId);
                 if (productCategory == null)
                 {
+                    if (this.context.Entry(product).Collection(x => x.ProductCategories).IsLoaded == false)
+                    {
+                        await this.context.Entry(product).Collection(x => x.ProductCategories).LoadAsync();
+                    }
+
                     product.ProductCategories.Add(new ProductCategory { CategoryId = categoryId, ProductId = product.Id });
                 }
                 else
@@ -102,13 +113,29 @@ namespace GymHub.Services
 
         public List<Category> GetCategoriesForProduct(string productId)
         {
-            return this.context.ProductsCategories.Where(x => x.ProductId == productId)
-                .Select(x => x.Category).ToList();
+            var productCategories = this.context.Products
+                .Where(x => x.Id == productId)
+                .SelectMany(x => x.ProductCategories)
+                .Select(x => x.Category)
+                .ToList();
+
+            return productCategories;
         }
 
         public Category GetCategoryById(string id)
         {
             return this.context.Categories.First(x => x.Id == id);
+        }
+
+        public List<Product> GetProductsForCategory(string categoryId)
+        {
+            var products = this.context.Products
+                .Select(x => new { Product = x, ProductCategories = x.ProductCategories})
+                .Where(pc => pc.ProductCategories.Any(x => x.CategoryId == categoryId))
+                .Select(x => x.Product)
+                .ToList();
+
+            return products;
         }
 
         public async Task RemoveAsync(string id)

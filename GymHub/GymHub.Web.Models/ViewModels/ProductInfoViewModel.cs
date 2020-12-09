@@ -21,6 +21,7 @@ namespace GymHub.Web.Models.ViewModels
         public string CurrentUserId { get; set; }
         public List<ProductComment> ProductComments { get; set; }
         public List<ProductRating> ProductRatings { get; set; }
+        public List<Category> ProductCategories { get; set; }
         public List<ProductImage> AdditionalImages { get; set; }
         public ProductRatingViewModel ProductRating { get; set; }
         public Dictionary<User, ProductRatingViewModel> UsersProductRatings { get; set; } = new Dictionary<User, ProductRatingViewModel>();

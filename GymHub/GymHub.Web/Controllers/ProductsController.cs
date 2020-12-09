@@ -401,6 +401,8 @@ namespace GymHub.Web.Controllers
             var product = this.productService.GetProductById(productId, true);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
 
+            viewModel.ProductCategories = this.categoryService.GetCategoriesForProduct(productId);
+
             //Sanitize commentsPage
             commentsPage = int.Parse(this.htmlEncoder.Encode(commentsPage.ToString()));
 

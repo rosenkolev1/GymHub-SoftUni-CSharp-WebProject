@@ -726,3 +726,17 @@ th {
     width: 100vw;
     height: 6vh;
 }
+
+.productPage-category-container {
+    display: inline;
+    margin: 6px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: darkblue;
+    background-color: #d9edf7;
+    padding: 8px;
+}
+
+.productPage-categories-container{
+    text-align:center;
+}
