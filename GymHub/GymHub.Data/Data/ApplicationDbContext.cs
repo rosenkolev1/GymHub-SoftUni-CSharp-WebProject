@@ -36,6 +36,8 @@ namespace GymHub.Data.Data
         public virtual DbSet<ProductCommentLike> ProductCommentLikes { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<ProductCategory> ProductsCategories { get; set; }
+        public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public virtual DbSet<Country> Countries { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -1,10 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GymHub.Data.Models
 {
     public class ProductSale
     {
+        public ProductSale()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
+
+        [Key]
+        public string Id { get; set; }
+        
         //Foreign Keys
         [Required]
         [ForeignKey("Sale")]

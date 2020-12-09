@@ -4,6 +4,7 @@ using GymHub.Common;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.DTOs;
+using GymHub.Services.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -60,8 +61,13 @@ namespace GymHub.Services.SeederFolder
         public async Task SeedAsync()
         {
             //Seeder methods
+            //Seed mostly static stuff
             await SeedGendersAsync();
             await SeedRolesAsync();
+            await SeedCountriesAsync();
+            await SeedPaymentMethodsAsync();
+
+            //Seed the more active stuff
             await SeedUsersAsync();
             await SeedProductsAsync();
             await SeedProductsCommentsAndRatingsAsync();
@@ -100,6 +106,39 @@ namespace GymHub.Services.SeederFolder
                 if (this.genderService.GenderExists(genderName, true) == false)
                 {
                     await this.genderService.AddAsync(genderName);
+                }
+            }
+
+            return true;
+        }
+
+        private async Task<bool> SeedCountriesAsync()
+        {
+            var jsonOptions = new JsonSerializerOptions();
+            jsonOptions.PropertyNameCaseInsensitive = true;
+
+            var countries = JsonSerializer.Deserialize<List<CountryDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Countries.json"), jsonOptions);
+
+            foreach (var country in countries)
+            {
+                if (this.context.Countries.IgnoreAllQueryFilter(true).Any(x => x.Code == country.Code) == false)
+                {
+                    await this.context.Countries.AddAsync(new Country { Name = country.Name, Code = country.Code });
+                }
+            }
+
+            return true;
+        }
+
+        private async Task<bool> SeedPaymentMethodsAsync()
+        {
+            var paymentMethods = JsonSerializer.Deserialize<List<string>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/PaymentMethods.json"));
+
+            foreach (var paymentMethod in paymentMethods)
+            {
+                if (this.context.PaymentMethods.IgnoreAllQueryFilter(true).Any(x => x.Name == paymentMethod) == false)
+                {
+                    await this.context.PaymentMethods.AddAsync(new PaymentMethod { Name = paymentMethod});
                 }
             }
 

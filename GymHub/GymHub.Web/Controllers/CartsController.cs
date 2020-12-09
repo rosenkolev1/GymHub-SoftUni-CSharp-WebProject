@@ -72,7 +72,7 @@ namespace GymHub.Web.Controllers
         {
             var inputModel = complexModel.InputModel;
             var totalPriceOfAllProducts = inputModel.Sum(x => x.Quantity * x.SinglePrice);
-            return this.Redirect("/");
+            return this.RedirectToAction("Checkout", "Sales", inputModel);
         }
 
         [HttpPost]
