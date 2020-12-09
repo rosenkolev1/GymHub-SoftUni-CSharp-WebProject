@@ -5,6 +5,13 @@ using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.DTOs;
 using GymHub.Services.Common;
+using GymHub.Services.ServicesFolder.CategoryService;
+using GymHub.Services.ServicesFolder.CountryService;
+using GymHub.Services.ServicesFolder.GenderService;
+using GymHub.Services.ServicesFolder.PaymentMethodService;
+using GymHub.Services.ServicesFolder.ProductCommentService;
+using GymHub.Services.ServicesFolder.ProductService;
+using GymHub.Services.ServicesFolder.RoleService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -26,6 +33,8 @@ namespace GymHub.Services.SeederFolder
         private readonly IProductCommentService productCommentService;
         private readonly ApplicationDbContext context;
         private readonly ICategoryService categoryService;
+        private readonly ICountryService countryService;
+        private readonly IPaymentMethodService paymentMethodService;
 
         public Seeder(IServiceProvider serviceProvider)
         {
@@ -56,6 +65,12 @@ namespace GymHub.Services.SeederFolder
 
             //Set up categoryService
             this.categoryService = new CategoryService(context);
+
+            //Set up countryService
+            this.countryService = new CountryService(context);
+
+            //Set up countryService
+            this.paymentMethodService = new PaymentMethodService(context);
         }
 
         public async Task SeedAsync()
@@ -121,9 +136,9 @@ namespace GymHub.Services.SeederFolder
 
             foreach (var country in countries)
             {
-                if (this.context.Countries.IgnoreAllQueryFilter(true).Any(x => x.Code == country.Code) == false)
+                if (this.countryService.CountryExists(country.Code, true) == false)
                 {
-                    await this.context.Countries.AddAsync(new Country { Name = country.Name, Code = country.Code });
+                    await this.countryService.AddAsync(country.Name, country.Code);
                 }
             }
 
@@ -136,9 +151,9 @@ namespace GymHub.Services.SeederFolder
 
             foreach (var paymentMethod in paymentMethods)
             {
-                if (this.context.PaymentMethods.IgnoreAllQueryFilter(true).Any(x => x.Name == paymentMethod) == false)
+                if (this.paymentMethodService.PaymentMethodExists(paymentMethod) == false)
                 {
-                    await this.context.PaymentMethods.AddAsync(new PaymentMethod { Name = paymentMethod});
+                    await this.paymentMethodService.AddAsync(paymentMethod);
                 }
             }
 
@@ -243,7 +258,7 @@ namespace GymHub.Services.SeederFolder
             return true;
         }
 
-        public async Task<bool> SeedProductsImagesAsync()
+        private async Task<bool> SeedProductsImagesAsync()
         {
             var productsImagesDTOs = JsonSerializer.Deserialize<List<ProductImageDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/ProductsImages.json"));
             var productsImages = productsImagesDTOs
@@ -263,7 +278,7 @@ namespace GymHub.Services.SeederFolder
             return true;
         }
 
-        public async Task<bool> SeedCategories()
+        private async Task<bool> SeedCategories()
         {
             var categoriesDTOs = JsonSerializer.Deserialize<List<CategoryDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Categories.json"));
             var categories = categoriesDTOs

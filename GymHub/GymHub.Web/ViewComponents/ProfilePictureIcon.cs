@@ -1,4 +1,5 @@
 ﻿using GymHub.Services;
+using GymHub.Services.ServicesFolder.GenderService;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

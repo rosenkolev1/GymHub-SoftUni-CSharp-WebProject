@@ -3,6 +3,8 @@ using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.DTOs;
 using GymHub.Services.Common;
+using GymHub.Services.ServicesFolder.GenderService;
+using GymHub.Services.ServicesFolder.RoleService;
 using GymHub.Web.Models.InputModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -120,12 +122,12 @@ namespace GymHub.Services
         public bool UserIsTaken(string username, string password, string email, string phoneNumber = null, bool hardCheck = false)
         {
             var passwordHash = this.userManager.PasswordHasher.HashPassword(null, password);
-            return this.context.Users.IgnoreAllQueryFilter(hardCheck).Where(x => x.PhoneNumber != null).Any(x => x.UserName == username || x.PasswordHash == password || x.Email == email || x.PhoneNumber == phoneNumber);
+            return this.context.Users.IgnoreAllQueryFilters(hardCheck).Where(x => x.PhoneNumber != null).Any(x => x.UserName == username || x.PasswordHash == password || x.Email == email || x.PhoneNumber == phoneNumber);
         }
 
         public string GetUserId(string username, bool hardCheck = false)
         {
-            return this.context.Users.IgnoreAllQueryFilter(hardCheck).FirstOrDefault(x => x.UserName == username).Id;
+            return this.context.Users.IgnoreAllQueryFilters(hardCheck).FirstOrDefault(x => x.UserName == username).Id;
         }
 
         public string GetEmail(string userId)

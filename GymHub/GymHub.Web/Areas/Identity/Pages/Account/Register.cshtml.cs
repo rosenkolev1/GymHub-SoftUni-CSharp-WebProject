@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using GymHub.Common;
 using GymHub.Data.Models;
-using GymHub.Services;
+using GymHub.Services.ServicesFolder.GenderService;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using Microsoft.AspNetCore.Authentication;

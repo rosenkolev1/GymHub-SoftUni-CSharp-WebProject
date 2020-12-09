@@ -4,7 +4,7 @@ using GymHub.Web.Models.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GymHub.Services
+namespace GymHub.Services.ServicesFolder.ProductService
 {
     public interface IProductService
     {
@@ -33,5 +33,6 @@ namespace GymHub.Services
         public Task RemoveProductAsync(string productId);
         public Task EditAsync(AddProductInputModel inputModel);
         public bool ImagesAreRepeated(string mainImage, List<string> additionalImages);
+        public string GetProductName(string productId);
     }
 }

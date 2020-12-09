@@ -6,20 +6,20 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GymHub.Services
+namespace GymHub.Services.ServicesFolder.RoleService
 {
     public class RoleService : DeleteableEntityService, IRoleService
     {
         private readonly RoleManager<Role> roleManager;
         public RoleService(ApplicationDbContext context, RoleManager<Role> roleManager)
-            :base(context)
+            : base(context)
         {
             this.roleManager = roleManager;
         }
 
         public async Task AddAsync(string name)
         {
-            var result = await this.roleManager.CreateAsync(new Role(name));
+            var result = await roleManager.CreateAsync(new Role(name));
             if (!result.Succeeded)
             {
                 throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
@@ -28,12 +28,12 @@ namespace GymHub.Services
 
         public Role GetRole(string name)
         {
-            return this.context.Roles.FirstOrDefault(x => x.Name == name);
+            return context.Roles.FirstOrDefault(x => x.Name == name);
         }
 
         public bool RoleExists(string name, bool hardCheck = false)
         {
-            return this.context.Roles.IgnoreAllQueryFilter(hardCheck).Any(x => x.Name == name);
+            return context.Roles.IgnoreAllQueryFilters(hardCheck).Any(x => x.Name == name);
         }
     }
 }

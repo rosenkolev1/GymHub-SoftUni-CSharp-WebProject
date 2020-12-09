@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymHub.Services
+namespace GymHub.Services.ServicesFolder.CategoryService
 {
     public interface ICategoryService
     {

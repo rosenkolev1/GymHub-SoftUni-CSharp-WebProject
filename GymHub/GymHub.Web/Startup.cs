@@ -6,6 +6,15 @@ using GymHub.Data.Models;
 using GymHub.Services;
 using GymHub.Services.Messaging;
 using GymHub.Services.SeederFolder;
+using GymHub.Services.ServicesFolder.CartService;
+using GymHub.Services.ServicesFolder.CategoryService;
+using GymHub.Services.ServicesFolder.CountryService;
+using GymHub.Services.ServicesFolder.GenderService;
+using GymHub.Services.ServicesFolder.PaymentMethodService;
+using GymHub.Services.ServicesFolder.ProductCommentService;
+using GymHub.Services.ServicesFolder.ProductService;
+using GymHub.Services.ServicesFolder.RoleService;
+using GymHub.Services.ServicesFolder.SaleService;
 using GymHub.Web.AuthorizationPolicies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -83,6 +92,9 @@ namespace GymHub.Web
             services.AddTransient<ICartService, CartService>();
             services.AddTransient<IProductCommentService, ProductCommentService>();
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<ISaleService, SaleService>();
+            services.AddTransient<IPaymentMethodService, PaymentMethodService>();
+            services.AddTransient<ICountryService, CountryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

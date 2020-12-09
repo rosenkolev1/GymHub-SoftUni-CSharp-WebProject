@@ -3,6 +3,8 @@ using GymHub.Common;
 using GymHub.Data.Models;
 using GymHub.Services;
 using GymHub.Services.Messaging;
+using GymHub.Services.ServicesFolder.ProductCommentService;
+using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;

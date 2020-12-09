@@ -54,9 +54,10 @@
             </tr>
         </tbody>
     </table>
-    <button class="cart-form-buyButton">Buy</button>
+    <button class="@(Model.ViewModel.Count > 0 ? "cart-form-buyButton" : "cart-form-buyButton-inactive")">Buy</button>
 </form>
 
 @section Scripts{ 
     <script src="/js/CartAll/CartProductDynamicTotalPrice.js" asp-append-version="true"></script>
+    <script src="~/js/CartAll/CartDynamicAddButton.js" asp-append-version="true"></script>
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GymHub.Services
+namespace GymHub.Services.ServicesFolder.GenderService
 {
     public interface IGenderService
     {

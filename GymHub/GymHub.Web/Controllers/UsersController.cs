@@ -1,5 +1,7 @@
 ﻿using GymHub.Data.Models;
 using GymHub.Services;
+using GymHub.Services.ServicesFolder.GenderService;
+using GymHub.Services.ServicesFolder.RoleService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

@@ -55,5 +55,8 @@
 
         //Default comment removal email text
         public const string CommentRemovalJustificationText = "Hello, {username}, your comment for this product: {productName:model} has been deleted because it was deemed against our TOS policy.";
+
+        //CheckoutViewModelInfo for checkout
+        public const string CheckoutViewModelInfo = "CheckoutViewModelInfo";
     }
 }

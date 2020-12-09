@@ -395,6 +395,20 @@ th {
     margin-right: 8.5vw;
 }
 
+.cart-form-buyButton-inactive {
+    background-color: gray;
+    border-color: darkgray;
+    outline:none;
+}
+
+.cart-form-buyButton-inactive:hover {
+    cursor: default;
+}
+
+.cart-form-buyButton-inactive:click {
+    outline: none;
+}
+
 .cart-td-totalPriceRow {
     background-color: lightblue;
     text-align: center;

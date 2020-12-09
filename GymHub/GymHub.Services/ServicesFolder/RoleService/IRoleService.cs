@@ -1,7 +1,7 @@
 ﻿using GymHub.Data.Models;
 using System.Threading.Tasks;
 
-namespace GymHub.Services
+namespace GymHub.Services.ServicesFolder.RoleService
 {
     public interface IRoleService
     {

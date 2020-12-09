@@ -1,6 +1,8 @@
 ﻿using GymHub.Common;
 using GymHub.Data.Models;
 using GymHub.Services;
+using GymHub.Services.ServicesFolder.CartService;
+using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
@@ -70,9 +72,17 @@ namespace GymHub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Buy(ComplexModel<List<BuyProductInputModel>, List<ProductCartViewModel>> complexModel)
         {
+            //TODO: ADD validations
             var inputModel = complexModel.InputModel;
-            var totalPriceOfAllProducts = inputModel.Sum(x => x.Quantity * x.SinglePrice);
-            return this.RedirectToAction("Checkout", "Sales", inputModel);
+
+            var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
+
+            foreach (var item in inputModel)
+            {
+                await this.cartService.SetCheckoutCartAsync(currentUserId, inputModel);
+            }
+
+            return this.RedirectToAction("Checkout", "Sales");
         }
 
         [HttpPost]

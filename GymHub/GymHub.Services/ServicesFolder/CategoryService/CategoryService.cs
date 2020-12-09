@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymHub.Services
+namespace GymHub.Services.ServicesFolder.CategoryService
 {
     public class CategoryService : DeleteableEntityService, ICategoryService
     {
@@ -21,60 +21,60 @@ namespace GymHub.Services
 
         public async Task AddAsync(string name)
         {
-            await this.context.Categories.AddAsync(new Category { Name = name });
-            await this.context.SaveChangesAsync();
+            await context.Categories.AddAsync(new Category { Name = name });
+            await context.SaveChangesAsync();
         }
 
         public async Task AddAsync(Category category)
         {
-            await this.context.Categories.AddAsync(category);
-            await this.context.SaveChangesAsync();
+            await context.Categories.AddAsync(category);
+            await context.SaveChangesAsync();
         }
 
         public async Task AddCategoriesToProductAsync(Product product, List<string> productCategoriesIds)
         {
-            if(product.ProductCategories == null) product.ProductCategories = new List<ProductCategory>();
+            if (product.ProductCategories == null) product.ProductCategories = new List<ProductCategory>();
             foreach (var categoryId in productCategoriesIds)
             {
-                if(product.ProductCategories.Any(x => x.CategoryId == categoryId) == false)
+                if (product.ProductCategories.Any(x => x.CategoryId == categoryId) == false)
                 {
                     product.ProductCategories.Add(new ProductCategory { CategoryId = categoryId, ProductId = product.Id });
                 }
             }
 
-            await this.context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public bool CategoryExists(string Id, bool hardCheck = false)
         {
-            return this.context.Categories.IgnoreAllQueryFilter(hardCheck).Any(x => x.Id == Id);
+            return context.Categories.IgnoreAllQueryFilters(hardCheck).Any(x => x.Id == Id);
         }
 
         public bool CategoryNameExists(string name, bool hardCheck = false)
         {
-            return this.context.Categories.IgnoreAllQueryFilter(hardCheck).Any(x => x.Name == name);
+            return context.Categories.IgnoreAllQueryFilters(hardCheck).Any(x => x.Name == name);
         }
 
         public bool CategoryNameExists(string name, string excludedCategoryId, bool hardCheck = false)
         {
-            return this.context.Categories.IgnoreAllQueryFilter(hardCheck).Any(x => x.Name == name && x.Id != excludedCategoryId);
+            return context.Categories.IgnoreAllQueryFilters(hardCheck).Any(x => x.Name == name && x.Id != excludedCategoryId);
         }
 
         public async Task EditAsync(string id, string name)
         {
-            var category = this.context.Categories.First(x => x.Id == id);
+            var category = context.Categories.First(x => x.Id == id);
             category.Name = name;
-            await this.context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task EditCategoriesToProductAsync(Product product, List<string> productCategoriesId)
         {
-            var productCategories = this.context.Products
+            var productCategories = context.Products
                 .Where(x => x == product)
                 .Select(x => x.ProductCategories)
                 .FirstOrDefault()
                 .ToList();
-                
+
 
             //Delete the old categories
             foreach (var category in productCategories.Where(x => productCategoriesId.Contains(x.Id) == false))
@@ -89,9 +89,9 @@ namespace GymHub.Services
                 var productCategory = productCategories.FirstOrDefault(x => x.CategoryId == categoryId);
                 if (productCategory == null)
                 {
-                    if (this.context.Entry(product).Collection(x => x.ProductCategories).IsLoaded == false)
+                    if (context.Entry(product).Collection(x => x.ProductCategories).IsLoaded == false)
                     {
-                        await this.context.Entry(product).Collection(x => x.ProductCategories).LoadAsync();
+                        await context.Entry(product).Collection(x => x.ProductCategories).LoadAsync();
                     }
 
                     product.ProductCategories.Add(new ProductCategory { CategoryId = categoryId, ProductId = product.Id });
@@ -103,17 +103,17 @@ namespace GymHub.Services
                 }
             }
 
-            await this.context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public List<Category> GetAllCategories(bool hardCheck = false)
         {
-            return this.context.Categories.IgnoreAllQueryFilter(hardCheck).ToList();
+            return context.Categories.IgnoreAllQueryFilters(hardCheck).ToList();
         }
 
         public List<Category> GetCategoriesForProduct(string productId)
         {
-            var productCategories = this.context.Products
+            var productCategories = context.Products
                 .Where(x => x.Id == productId)
                 .SelectMany(x => x.ProductCategories)
                 .Select(x => x.Category)
@@ -124,13 +124,13 @@ namespace GymHub.Services
 
         public Category GetCategoryById(string id)
         {
-            return this.context.Categories.First(x => x.Id == id);
+            return context.Categories.First(x => x.Id == id);
         }
 
         public List<Product> GetProductsForCategory(string categoryId)
         {
-            var products = this.context.Products
-                .Select(x => new { Product = x, ProductCategories = x.ProductCategories})
+            var products = context.Products
+                .Select(x => new { Product = x, x.ProductCategories })
                 .Where(pc => pc.ProductCategories.Any(x => x.CategoryId == categoryId))
                 .Select(x => x.Product)
                 .ToList();
@@ -140,15 +140,15 @@ namespace GymHub.Services
 
         public async Task RemoveAsync(string id)
         {
-            await this.DeleteEntityAsync(this.GetCategoryById(id));
+            await DeleteEntityAsync(GetCategoryById(id));
         }
 
         public async Task RestoreAsync(string id)
         {
-            var category = this.context.Categories.IgnoreAllQueryFilter(true).First(x => x.Id == id);
+            var category = context.Categories.IgnoreAllQueryFilters(true).First(x => x.Id == id);
             category.IsDeleted = false;
             category.DeletedOn = null;
-            await this.context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
     }
 }

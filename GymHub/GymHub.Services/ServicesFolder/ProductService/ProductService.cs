@@ -11,20 +11,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymHub.Services
+namespace GymHub.Services.ServicesFolder.ProductService
 {
     public class ProductService : DeleteableEntityService, IProductService
     {
         private readonly IMapper mapper;
 
         public ProductService(ApplicationDbContext context, IMapper mapper)
-            :base(context)
+            : base(context)
         {
             this.mapper = mapper;
         }
         public async Task AddAsync(string name, string mainImage, decimal price, string description, int warranty, int quantityInStock)
         {
-            this.context.Add(new Product
+            context.Add(new Product
             {
                 Name = name,
                 MainImage = mainImage,
@@ -35,39 +35,39 @@ namespace GymHub.Services
                 IsDeleted = false,
                 DeletedOn = null
             });
-            await this.context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task AddAsync(AddProductInputModel inputModel)
         {
-            await this.context.AddAsync(mapper.Map<Product>(inputModel));
-            await this.context.SaveChangesAsync();
+            await context.AddAsync(mapper.Map<Product>(inputModel));
+            await context.SaveChangesAsync();
         }
 
         public bool ProductExistsById(string id)
         {
-            return this.context.Products.Any(x => x.Id == id);
+            return context.Products.Any(x => x.Id == id);
         }
 
         public bool ProductExistsByName(string name)
         {
-            return this.context.Products.Any(x => x.Name == name);
+            return context.Products.Any(x => x.Name == name);
         }
         public bool ProductExistsByModel(string model, bool hardCheck = false)
         {
-            return this.context.Products.IgnoreAllQueryFilter(hardCheck).Any(x => x.Model == model);
+            return context.Products.IgnoreAllQueryFilters(hardCheck).Any(x => x.Model == model);
         }
 
         public List<ProductViewModel> GetAllProducts()
         {
-            return this.context.Products.Select(product => mapper.Map<ProductViewModel>(product)).ToList();
+            return context.Products.Select(product => mapper.Map<ProductViewModel>(product)).ToList();
         }
 
         public Product GetProductById(string productId, bool withNavigationalProperties)
         {
             if (withNavigationalProperties)
             {
-                return this.context.Products
+                return context.Products
                 .Include(x => x.ProductComments)
                 .ThenInclude(pc => pc.User)
                 .Include(x => x.ProductRatings)
@@ -77,14 +77,14 @@ namespace GymHub.Services
             }
             else
             {
-                return this.context.Products.FirstOrDefault(x => x.Id == productId);
+                return context.Products.FirstOrDefault(x => x.Id == productId);
             }
         }
 
         public async Task AddAsync(Product product)
         {
-            await this.context.AddAsync(product);
-            await this.context.SaveChangesAsync();
+            await context.AddAsync(product);
+            await context.SaveChangesAsync();
         }
 
         public double GetAverageRating(List<ProductRating> productRatings)
@@ -140,7 +140,7 @@ namespace GymHub.Services
 
         public string GetProductId(string model, bool hardCheck = false)
         {
-            return this.context.Products.IgnoreAllQueryFilter(hardCheck).FirstOrDefault(x => x.Model == model).Id;
+            return context.Products.IgnoreAllQueryFilters(hardCheck).FirstOrDefault(x => x.Model == model).Id;
         }
 
         public async Task AddRatingAsync(string commentId, string productId, string userId, double rating)
@@ -152,71 +152,71 @@ namespace GymHub.Services
                 UserId = userId,
                 Rating = rating
             };
-            await this.context.AddAsync(newRating);
-            await this.context.SaveChangesAsync();
+            await context.AddAsync(newRating);
+            await context.SaveChangesAsync();
         }
 
         public bool ProductRatingExists(ProductRating productRating, bool hardCheck = false)
         {
-            return this.context.ProductsRatings.IgnoreAllQueryFilter(hardCheck).Any(x => x.ProductId == productRating.ProductId && x.UserId == productRating.UserId);
+            return context.ProductsRatings.IgnoreAllQueryFilters(hardCheck).Any(x => x.ProductId == productRating.ProductId && x.UserId == productRating.UserId);
         }
 
         public ProductRating GetProductRating(string userId, string productId)
         {
-            return this.context.ProductsRatings.FirstOrDefault(x => x.UserId == userId && x.ProductId == productId);
+            return context.ProductsRatings.FirstOrDefault(x => x.UserId == userId && x.ProductId == productId);
         }
 
         public bool ProductRatingExists(string userId, string productId)
         {
-            return this.context.ProductsRatings.Any(x => x.ProductId == productId && x.UserId == userId);
+            return context.ProductsRatings.Any(x => x.ProductId == productId && x.UserId == userId);
         }
 
         public async Task EditProductRating(ProductRating productRating, double rating)
         {
             if (productRating != null) productRating.Rating = rating;
-            await this.context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public async Task AddRatingAsync(ProductRating productRating)
         {
-            await this.context.ProductsRatings.AddAsync(productRating);
-            await this.context.SaveChangesAsync();
+            await context.ProductsRatings.AddAsync(productRating);
+            await context.SaveChangesAsync();
         }
 
         public bool ProductImageExists(string imageUrl, bool hardCheck = false)
         {
-            return this.context.Products.IgnoreAllQueryFilter(hardCheck).Any(x => x.MainImage == imageUrl) || 
-                this.context.ProductsImages.IgnoreAllQueryFilter(hardCheck).Any(x => x.Image == imageUrl);
+            return context.Products.IgnoreAllQueryFilters(hardCheck).Any(x => x.MainImage == imageUrl) ||
+                context.ProductsImages.IgnoreAllQueryFilters(hardCheck).Any(x => x.Image == imageUrl);
         }
 
         public async Task AddProductImageAsync(ProductImage image)
         {
-            await this.context.ProductsImages.AddAsync(image);
-            await this.context.SaveChangesAsync();
+            await context.ProductsImages.AddAsync(image);
+            await context.SaveChangesAsync();
         }
 
         public async Task RemoveProductAsync(string productId)
         {
-            var productToDelete = this.GetProductById(productId, false);
-            await this.context.Entry(productToDelete).Collection(x => x.ProductCarts).LoadAsync();
+            var productToDelete = GetProductById(productId, false);
+            await context.Entry(productToDelete).Collection(x => x.ProductCarts).LoadAsync();
 
-            this.context.RemoveRange(productToDelete.ProductCarts);
+            context.RemoveRange(productToDelete.ProductCarts);
 
-            await this.DeleteEntityAsync(productToDelete);
+            await DeleteEntityAsync(productToDelete);
         }
 
         public async Task EditAsync(AddProductInputModel inputModel)
         {
-            var productToEdit = this.GetProductById(inputModel.Id, true);
+            var productToEdit = GetProductById(inputModel.Id, true);
             var newAdditionalImages = inputModel.AdditionalImages.Where(x => x != null).ToList();
 
             //Edit all of the images for the product
-            this.context.ProductsImages.RemoveRange(productToEdit.AdditionalImages);
+            context.ProductsImages.RemoveRange(productToEdit.AdditionalImages);
 
             for (int i = 0; i < newAdditionalImages.Count; i++)
             {
                 var newImage = newAdditionalImages[i];
-                productToEdit.AdditionalImages.Add(new ProductImage { Image = newImage, ProductId = productToEdit.Id});
+                productToEdit.AdditionalImages.Add(new ProductImage { Image = newImage, ProductId = productToEdit.Id });
             }
 
             //Edit all of the simple properties
@@ -228,34 +228,39 @@ namespace GymHub.Services
             productToEdit.Price = inputModel.Price;
             productToEdit.QuantityInStock = inputModel.QuantityInStock;
 
-            await this.context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
 
         public bool ProductExistsByName(string name, string excludedProductId)
         {
-            return this.context.Products
+            return context.Products
                 .Where(x => x.Id != excludedProductId)
-                .Any(x =>x.Name == name);
+                .Any(x => x.Name == name);
         }
 
         public bool ProductExistsByModel(string model, string excludedProductId, bool hardCheck = false)
         {
-            return this.context.Products
-                .IgnoreAllQueryFilter(hardCheck)
+            return context.Products
+                .IgnoreAllQueryFilters(hardCheck)
                 .Where(x => x.Id != excludedProductId)
                 .Any(x => x.Model == model);
         }
 
         public bool ProductImageExists(string imageUrl, string excludedProductId, bool hardCheck = false)
         {
-            return this.context.Products.IgnoreAllQueryFilter(hardCheck).Where(x => x.Id != excludedProductId).Any(x => x.MainImage == imageUrl) ||
-                this.context.ProductsImages.IgnoreAllQueryFilter(hardCheck).Where(x => x.ProductId != excludedProductId).Any(x => x.Image == imageUrl);
+            return context.Products.IgnoreAllQueryFilters(hardCheck).Where(x => x.Id != excludedProductId).Any(x => x.MainImage == imageUrl) ||
+                context.ProductsImages.IgnoreAllQueryFilters(hardCheck).Where(x => x.ProductId != excludedProductId).Any(x => x.Image == imageUrl);
         }
 
         public bool ImagesAreRepeated(string mainImage, List<string> additionalImages)
         {
             var additionalImagesAreSame = additionalImages.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().Count() != additionalImages.Where(x => !string.IsNullOrWhiteSpace(x)).Count();
             return additionalImagesAreSame || additionalImages.Contains(mainImage);
+        }
+
+        public string GetProductName(string productId)
+        {
+            return this.context.Products.First(x => x.Id == productId).Name;
         }
     }
 }
