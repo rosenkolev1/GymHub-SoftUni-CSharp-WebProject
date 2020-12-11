@@ -3,6 +3,7 @@ using GymHub.Data.Models;
 using GymHub.Services;
 using GymHub.Services.ServicesFolder.CartService;
 using GymHub.Services.ServicesFolder.ProductService;
+using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
@@ -42,6 +43,9 @@ namespace GymHub.Web.Controllers
                 //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
                 TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
+                //Set notification
+                NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "This product doesn't exist");
+
                 return this.RedirectToAction(nameof(All));
             }
 
@@ -66,16 +70,53 @@ namespace GymHub.Web.Controllers
                 ModelStateHelper.MergeModelStates(TempData, this.ModelState);
             }
 
+            if(this.TempData[GlobalConstants.InputModelFromPOSTRequestType]?.ToString() == $"List<{nameof(BuyProductInputModel)}>")
+            {
+                complexModel.InputModel = JsonSerializer.Deserialize<List<BuyProductInputModel>>(this.TempData[GlobalConstants.InputModelFromPOSTRequest].ToString());
+            }
+
             return this.View(complexModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Buy(ComplexModel<List<BuyProductInputModel>, List<ProductCartViewModel>> complexModel)
         {
-            //TODO: ADD validations
-            var inputModel = complexModel.InputModel;
+            this.TempData[GlobalConstants.InputModelFromPOSTRequestType] = $"List<{nameof(BuyProductInputModel)}>";
+            this.TempData[GlobalConstants.InputModelFromPOSTRequest] = JsonSerializer.Serialize(complexModel.InputModel);
+
+            //Inital model validation without checking the database
+            if (this.ModelState.IsValid == false)
+            {
+                this.TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
+                //Set notification
+                NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "An error occured while processing your request");
+
+                return this.RedirectToAction(nameof(All));
+            }
 
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
+
+            foreach (var productInputModel in complexModel.InputModel)
+            {
+                if (this.cartService.ProductIsInCart(productInputModel.Id, currentUserId) == false)
+                {
+                    //Set notification
+                    NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "One or more of the products are not in the cart");
+
+                    this.ModelState.AddModelError("", "One or more of the products are not in the cart");
+                }
+            }
+
+            if(this.ModelState.IsValid == false)
+            {
+                //Set error model state
+                this.TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
+                return this.RedirectToAction(nameof(All));
+            }
+
+            var inputModel = complexModel.InputModel;
 
             foreach (var item in inputModel)
             {

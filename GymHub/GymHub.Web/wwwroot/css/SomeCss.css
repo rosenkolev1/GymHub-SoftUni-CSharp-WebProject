@@ -388,7 +388,7 @@ th {
     vertical-align: middle;
 }
 
-.cart-form-buyButton {
+.cart-form-buyButton, .cart-form-buyButton-inactive {
     width: 8vw;
     height: 7.5vh;
     margin-top: 5px;
@@ -405,7 +405,7 @@ th {
     cursor: default;
 }
 
-.cart-form-buyButton-inactive:click {
+.cart-form-buyButton-inactive:active {
     outline: none;
 }
 

@@ -1,4 +1,10 @@
--Add product buying
+-Fix buy button in Cart view inactive
+
+-Add validation to Buy action in Carts controller
+
+-Add the inputs to the checkout menu.
+
+-Integrate google maps into the checkout menu. Add delivery by courier option
 
 -Add category based searching.
 
