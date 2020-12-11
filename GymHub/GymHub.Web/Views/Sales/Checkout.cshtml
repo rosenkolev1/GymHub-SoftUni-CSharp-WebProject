@@ -1,64 +1,86 @@
-﻿@model CheckoutViewModel
+﻿@model ComplexModel<CheckoutInputModel, CheckoutViewModel>;
 
-@section ImportantLinks{ 
+@section AdditionalLinks{
+}
+
+@section ImportantLinks{
     <link rel="stylesheet" href="/css/Checkout.css" />
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css' rel='stylesheet' />
+}
+
+@{
+    var viewModel = Model.ViewModel;
+    var inputModel = Model.InputModel;
 }
 
 <div class="container checkout-container">
     <div class="title">
         <h2>Product Order Form</h2>
     </div>
+    <div asp-validation-summary="All"></div>
     <div class="d-flex">
-        <form asp-controller="Sales" asp-action="Checkout">
-            <label>
-                <span class="fname">First Name <span class="required">*</span></span>
-                <input type="text" name="fname">
+        <form id="checkout-form" method="post" asp-controller="Sales" asp-action="Checkout">
+            <label asp-for="InputModel.FirstName">
+                <span class="fname">First Name<span class="required">*</span></span>
+                <input type="text" asp-for="InputModel.FirstName" placeholder="First name" required>
+                <span asp-validation-for="InputModel.FirstName" class="validation-span"></span>
             </label>
-            <label>
+            <label asp-for="InputModel.LastName">
                 <span class="lname">Last Name <span class="required">*</span></span>
-                <input type="text" name="lname">
+                <input type="text" asp-for="InputModel.LastName" placeholder="Last name" required>
+                <span asp-validation-for="InputModel.LastName" class="validation-span"></span>
             </label>
-            <label>
+            <label asp-for="InputModel.CompanyName">
                 <span>Company Name (Optional)</span>
-                <input type="text" name="cn">
+                <input type="text" asp-for="InputModel.CompanyName" placeholder="Company name">
+                <span asp-validation-for="InputModel.CompanyName" class="validation-span"></span>
             </label>
-            <label>
+            <label asp-for="InputModel.CountryCode">
                 <span>Country <span class="required">*</span></span>
-                <select name="selection">
+                <select asp-for="InputModel.CountryCode" required>
                     <option value="" selected>Select a country...</option>
-                    @foreach (var country in Model.Countries.OrderBy(x => x.Name))
+                    @foreach (var country in viewModel.Countries.OrderBy(x => x.Name))
                     {
-                    <option value="@country.Code">@country.Name</option>
-                    }            
+                        <option value="@country.Code">@country.Name</option>
+                    }
                 </select>
+                <span asp-validation-for="InputModel.CountryCode" class="validation-span"></span>
             </label>
-            <label>
-                <span>Street Address <span class="required">*</span></span>
-                <input type="text" name="houseadd" placeholder="House number and street name" required>
+            <label asp-for="InputModel.Address">
+                <span>Address: <span class="required">*</span></span>
+                <input type="text" asp-for="InputModel.Address" placeholder="House number and street name" required>
+                <span asp-validation-for="InputModel.Address" class="validation-span"></span>
             </label>
-            <label>
-                <span>&nbsp;</span>
-                <input type="text" name="apartment" placeholder="Apartment, suite, unit etc. (optional)">
-            </label>
-            <label>
+            <div id="map" class="map"></div>
+            <label asp-for="InputModel.City">
                 <span>Town / City <span class="required">*</span></span>
-                <input type="text" name="city">
+                <input type="text" asp-for="InputModel.City" placeholder="Town / City name" required>
+                <span asp-validation-for="InputModel.City" class="validation-span"></span>
             </label>
-            <label>
-                <span>State / County <span class="required">*</span></span>
-                <input type="text" name="city">
+            <label asp-for="InputModel.Municipality">
+                <span>State / County / Municipality<span class="required">*</span></span>
+                <input type="text" asp-for="InputModel.Municipality" placeholder="State / County / Municipality" required>
+                <span asp-validation-for="InputModel.Municipality" class="validation-span"></span>
             </label>
-            <label>
+            <label asp-for="InputModel.Postcode">
                 <span>Postcode / ZIP <span class="required">*</span></span>
-                <input type="text" name="city">
+                <input type="text" asp-for="InputModel.Postcode" placeholder="Postcode" required>
+                <span asp-validation-for="InputModel.Postcode" class="validation-span"></span>
             </label>
-            <label>
+            <label asp-for="InputModel.PhoneNumber">
                 <span>Phone <span class="required">*</span></span>
-                <input type="tel" name="city">
+                <input type="tel" asp-for="InputModel.PhoneNumber" placeholder="Phone number" required>
+                <span asp-validation-for="InputModel.PhoneNumber" class="validation-span"></span>
             </label>
-            <label>
+            <label asp-for="InputModel.Email">
                 <span>Email Address <span class="required">*</span></span>
-                <input type="email" name="city">
+                <input type="text" asp-for="InputModel.Email" placeholder="Email address" required>
+                <span asp-validation-for="InputModel.Email" class="validation-span"></span>
+            </label>
+            <label asp-for="InputModel.AdditionalInformation">
+                <span>Additional Information</span>
+                <textarea class="checkout-textarea" asp-for="InputModel.AdditionalInformation" placeholder="Any additional information about address, time of delivery etc..."></textarea>
+                <span asp-validation-for="InputModel.AdditionalInformation" class="validation-span"></span>
             </label>
         </form>
         <div class="Yorder">
@@ -66,18 +88,18 @@
                 <tr>
                     <th colspan="2">Your order</th>
                 </tr>
-                @foreach (var product in Model.ProductsInfo)
+                @foreach (var product in viewModel.ProductsInfo)
                 {
                     <tr>
-                        <td>@product.Name x @(product.Quantity)(Qty)</td>
-                        <td>$@product.SinglePrice</td>
+                        <td>@product.Name:@product.Model</td>
+                        <td>$@product.SinglePrice.ToString("f2") x @(product.Quantity)(Qty) | $@((product.SinglePrice*product.Quantity).ToString("f2"))</td>
                     </tr>
                 }
                 <tr>
                     <td>Shipping</td>
-                    @if (Model.ShippingPrice > 0)
+                    @if (viewModel.ShippingPrice > 0)
                     {
-                        <td>$@Model.ShippingPrice.ToString("f2")</td>
+                        <td>$@viewModel.ShippingPrice.ToString("f2")</td>
                     }
                     else
                     {
@@ -86,14 +108,14 @@
                 </tr>
                 <tr>
                     <td>Total Price</td>
-                    <td>$@((Model.TotalPrice + Model.ShippingPrice).ToString("f2"))</td>
+                    <td>$@((viewModel.TotalPrice + viewModel.ShippingPrice).ToString("f2"))</td>
                 </tr>
             </table><br>
-            @foreach (var paymentMethod in Model.PaymentMethods)
+            @foreach (var paymentMethod in viewModel.PaymentMethods)
             {
                 <div>
-                    <input type="radio" name="dbt" value="dbt" checked> @paymentMethod.Name
-                    @if(paymentMethod.Name == "Paypal")
+                    <input form="checkout-form" type="radio" asp-for="InputModel.PaymentMethodId" value="@paymentMethod.Id" checked> @paymentMethod.Name
+                    @if (paymentMethod.Name == "Paypal")
                     {
                         <span>
                             <img src="https://www.logolynx.com/images/logolynx/c3/c36093ca9fb6c250f74d319550acac4d.jpeg" alt="" width="50">
@@ -106,8 +128,15 @@
                         Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
                     </p>
                 }
-            }            
-            <button type="button">Place Order</button>
+            }
+            <button form="checkout-form" type="submit">Place Order</button>
         </div><!-- Yorder -->
     </div>
 </div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial.cshtml" />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
+
+    <script src="~/js/Checkout/CheckoutMapbox.js"></script>
+}

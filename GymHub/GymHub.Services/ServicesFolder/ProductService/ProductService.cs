@@ -262,5 +262,10 @@ namespace GymHub.Services.ServicesFolder.ProductService
         {
             return this.context.Products.First(x => x.Id == productId).Name;
         }
+
+        public string GetProductModel(string productId)
+        {
+            return this.context.Products.First(x => x.Id == productId).Model;
+        }
     }
 }

@@ -16,10 +16,14 @@ namespace GymHub.Web.Models.ViewModels
         public string Name { get; set; }
 
         [Required]
-        [Range(1, 2147483647, ErrorMessage = "Cannot buy this many products.")]
+        public string Model { get; set; }
+
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Cannot buy this many products.")]
         public int Quantity{ get; set; }
 
         [Required]
+        [Range(typeof(decimal), "0.01", "79228162514264337593543950335", ErrorMessage = "Price of product is invalid")]
         public decimal SinglePrice { get; set; }
     }
 }

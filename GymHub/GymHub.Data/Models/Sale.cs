@@ -60,6 +60,9 @@ namespace GymHub.Data.Models
         [Required]
         public string EmailAddress { get; set; }
 
+        [Required]
+        public string AdditionalInformation { get; set; }
+
         public bool IsDeleted { get; set; }
         public DateTime? DeletedOn { get; set; }
     }

@@ -29,7 +29,12 @@ namespace GymHub.Services.ServicesFolder.PaymentMethodService
             return this.context.PaymentMethods.ToList();
         }
 
-        public bool PaymentMethodExists(string paymentMethodName, bool hardCheck = false)
+        public bool PaymentMethodExistsById(string paymentMethodId)
+        {
+            return this.context.PaymentMethods.Any(x => x.Id == paymentMethodId);
+        }
+
+        public bool PaymentMethodExistsByName(string paymentMethodName, bool hardCheck = false)
         {
             return this.context.PaymentMethods.IgnoreAllQueryFilters(hardCheck).Any(x => x.Name == paymentMethodName);
         }

@@ -10,7 +10,7 @@ namespace GymHub.Web.Models.InputModels
         [Range(0, int.MaxValue)]
         public int Quantity { get; set; }
         [Required]
-        [Range(typeof(decimal), "0", "79228162514264337593543950335")]
+        [Range(typeof(decimal), "0.01", "79228162514264337593543950335", ErrorMessage = "Price of product is invalid")]
         public decimal SinglePrice { get; set; }
     }
 }

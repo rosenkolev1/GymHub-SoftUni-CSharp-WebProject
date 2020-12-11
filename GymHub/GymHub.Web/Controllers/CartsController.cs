@@ -49,7 +49,7 @@ namespace GymHub.Web.Controllers
                 return this.RedirectToAction(nameof(All));
             }
 
-            await this.cartService.RemoveProductById(this.userService.GetUserId(this.User.Identity.Name), productId);
+            await this.cartService.RemoveProductByIdAsync(this.userService.GetUserId(this.User.Identity.Name), productId);
 
             return this.RedirectToAction(nameof(All));
         }
@@ -72,7 +72,7 @@ namespace GymHub.Web.Controllers
 
             if(this.TempData[GlobalConstants.InputModelFromPOSTRequestType]?.ToString() == $"List<{nameof(BuyProductInputModel)}>")
             {
-                complexModel.InputModel = JsonSerializer.Deserialize<List<BuyProductInputModel>>(this.TempData[GlobalConstants.InputModelFromPOSTRequest].ToString());
+                complexModel.InputModel = JsonSerializer.Deserialize<List<BuyProductInputModel>>(this.TempData[GlobalConstants.InputModelFromPOSTRequest]?.ToString());
             }
 
             return this.View(complexModel);

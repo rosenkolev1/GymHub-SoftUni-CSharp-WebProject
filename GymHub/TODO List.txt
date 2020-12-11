@@ -1,6 +1,4 @@
--Fix buy button in Cart view inactive
 
--Add validation to Buy action in Carts controller
 
 -Add the inputs to the checkout menu.
 
@@ -11,6 +9,7 @@
 -Add image upload to product adding.
 
 -Add notifications for most things.
+-Add functionality for ordering products(without mock payment system like Stripe).
 
 -Add user profile pages and functionality
 
@@ -31,6 +30,8 @@
 -Add vaptcha validation
 
 -Add email sender for when there is availability for a sold out product.
+
+-Make better Mapbox. Do that by setting markers and a search box.
 
 -Deploy to Azure and include Cloudinary as well
 
@@ -55,3 +56,7 @@
 -Lazy Kit
 -Cloudinary
 -Make website be hosted on secure(HTTPS) connection
+
+
+-Technologies used
++Mapbox

@@ -75,7 +75,7 @@
     padding: 5px 10px;
     margin-bottom: 10px;
     border: 1px solid #dadada;
-    color: #888;
+    color: black;
 }
 
 .checkout-container select {
@@ -86,8 +86,6 @@
 }
 
 .checkout-container .Yorder {
-    margin-top: 15px;
-    height: 600px;
     padding: 20px;
     border: 1px solid #dadada;
 }
@@ -143,4 +141,23 @@
 .checkout-container button:hover {
     cursor: pointer;
     background: #428a7d;
+}
+
+.map {
+    height: 400px;
+    width: 100%;
+    padding-right: 25px;
+}
+
+.mapboxgl-canvas {
+    padding-right: 25px;
+}
+
+.mapboxgl-ctrl-top-right {
+    margin-right: 25px;
+}
+
+.checkout-textarea {
+    width: 70%;
+    height: 20vh;
 }

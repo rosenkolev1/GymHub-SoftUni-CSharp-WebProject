@@ -151,7 +151,7 @@ namespace GymHub.Services.SeederFolder
 
             foreach (var paymentMethod in paymentMethods)
             {
-                if (this.paymentMethodService.PaymentMethodExists(paymentMethod) == false)
+                if (this.paymentMethodService.PaymentMethodExistsByName(paymentMethod) == false)
                 {
                     await this.paymentMethodService.AddAsync(paymentMethod);
                 }

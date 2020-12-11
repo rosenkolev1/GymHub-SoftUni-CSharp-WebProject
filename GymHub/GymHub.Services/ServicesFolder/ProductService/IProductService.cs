@@ -34,5 +34,6 @@ namespace GymHub.Services.ServicesFolder.ProductService
         public Task EditAsync(AddProductInputModel inputModel);
         public bool ImagesAreRepeated(string mainImage, List<string> additionalImages);
         public string GetProductName(string productId);
+        public string GetProductModel(string productId);
     }
 }

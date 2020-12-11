@@ -33,5 +33,10 @@ namespace GymHub.Services.ServicesFolder.CountryService
         {
             return this.context.Countries.ToList();
         }
+
+        public Country GetCountryByCode(string countryCode)
+        {
+            return this.context.Countries.First(x => x.Code == countryCode);
+        }
     }
 }

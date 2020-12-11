@@ -72,7 +72,7 @@ namespace GymHub.Services.ServicesFolder.CartService
             return countOfProducts;
         }
 
-        public async Task RemoveProductById(string userId, string productId)
+        public async Task RemoveProductByIdAsync(string userId, string productId)
         {
             context.Carts.Remove(GetProductFromCart(productId, userId));
             await context.SaveChangesAsync();
@@ -90,6 +90,13 @@ namespace GymHub.Services.ServicesFolder.CartService
                 user.ProductsCart.Add(new ProductCart { UserId = userId, ProductId = productItem.Id, Quantity = productItem.Quantity });
             }
 
+            await this.context.SaveChangesAsync();
+        }
+
+        public async Task ClearCartAsync(string userId)
+        {
+            var cartProducts = this.context.Carts.Where(x => x.UserId == userId);
+            this.context.Carts.RemoveRange(cartProducts);
             await this.context.SaveChangesAsync();
         }
     }
