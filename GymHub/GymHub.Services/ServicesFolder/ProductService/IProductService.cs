@@ -2,6 +2,7 @@
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GymHub.Services.ServicesFolder.ProductService
@@ -35,5 +36,6 @@ namespace GymHub.Services.ServicesFolder.ProductService
         public bool ImagesAreRepeated(string mainImage, List<string> additionalImages);
         public string GetProductName(string productId);
         public string GetProductModel(string productId);
+        public List<string> GetImageUrlsForProduct(string productId);
     }
 }

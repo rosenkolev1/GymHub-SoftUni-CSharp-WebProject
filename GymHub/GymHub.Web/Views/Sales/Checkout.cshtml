@@ -1,11 +1,14 @@
 ﻿@model ComplexModel<CheckoutInputModel, CheckoutViewModel>;
 
+@using GymHub.Common
+
 @section AdditionalLinks{
 }
 
 @section ImportantLinks{
     <link rel="stylesheet" href="/css/Checkout.css" />
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css' rel='stylesheet' />
+    <link href="/css/CheckoutMapboxCss.css" rel="stylesheet" />
 }
 
 @{
@@ -82,6 +85,7 @@
                 <textarea class="checkout-textarea" asp-for="InputModel.AdditionalInformation" placeholder="Any additional information about address, time of delivery etc..."></textarea>
                 <span asp-validation-for="InputModel.AdditionalInformation" class="validation-span"></span>
             </label>
+            <input hidden type="text" name="InputModel.ClientSecret" value="@this.ViewData[GlobalConstants.StripePaymentIntentId]" />
         </form>
         <div class="Yorder">
             <table>
@@ -115,28 +119,31 @@
             {
                 <div>
                     <input form="checkout-form" type="radio" asp-for="InputModel.PaymentMethodId" value="@paymentMethod.Id" checked> @paymentMethod.Name
-                    @if (paymentMethod.Name == "Paypal")
+                    @if (paymentMethod.Name == GlobalConstants.Paypal || paymentMethod.Name == GlobalConstants.DebitOrCreditCard)
                     {
                         <span>
                             <img src="https://www.logolynx.com/images/logolynx/c3/c36093ca9fb6c250f74d319550acac4d.jpeg" alt="" width="50">
                         </span>
                     }
                 </div>
-                @if (paymentMethod.Name == "Direct Bank Transfer")
+                @if (paymentMethod.Name == GlobalConstants.DirectBankTransfer)
                 {
                     <p>
                         Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
                     </p>
                 }
             }
-            <button form="checkout-form" type="submit">Place Order</button>
+            <button id="checkout-button" form="checkout-form" type="submit">Place Order</button>
         </div><!-- Yorder -->
     </div>
 </div>
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial.cshtml" />
-    <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js'></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js' asp-append-version="true"></script>
 
-    <script src="~/js/Checkout/CheckoutMapbox.js"></script>
+    <script src="~/js/Checkout/CheckoutMapbox.js" asp-append-version="true"></script>
+
+    <script src="https://js.stripe.com/v3/" asp-append-version="true"></script>
+    <script src="~/js/Checkout/StripeCheckout.js" asp-append-version="true"></script>
 }

@@ -1,6 +1,4 @@
 ﻿using GymHub.Common;
-using GymHub.Data.Models;
-using GymHub.Web.Models.ViewModels;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

@@ -1,8 +1,5 @@
 ﻿using GymHub.Data.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GymHub.Services.ServicesFolder.PaymentMethodService
@@ -13,5 +10,6 @@ namespace GymHub.Services.ServicesFolder.PaymentMethodService
         public bool PaymentMethodExistsByName(string paymentMethodName, bool hardCheck = false);
         public bool PaymentMethodExistsById(string paymentMethodId);
         public Task AddAsync(string paymentMethodName);
+        public string GetPaymentMethod(string paymentMethodId);
     }
 }

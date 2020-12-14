@@ -36,12 +36,12 @@
         "dist/jquery.validate.min.js"
       ]
     },
-    //{
-    //  "library": "ol@6.4.4-dev.1607698135423",
-    //  "destination": "wwwroot/lib/ol/",
-    //  "files": [
-    //    "layer/Image.js"
-    //  ]
-    //}
+    {
+      "library": "stripe@8.128.0",
+      "destination": "wwwroot/lib/stripe/",
+      "files": [
+        "lib/stripe.js"
+      ]
+    }
   ]
 }

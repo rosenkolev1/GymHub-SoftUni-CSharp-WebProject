@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace GymHub.Data.Models
 {
@@ -60,7 +59,6 @@ namespace GymHub.Data.Models
         [Required]
         public string EmailAddress { get; set; }
 
-        [Required]
         public string AdditionalInformation { get; set; }
 
         public bool IsDeleted { get; set; }

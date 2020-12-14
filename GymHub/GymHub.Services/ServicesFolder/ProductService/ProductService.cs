@@ -267,5 +267,21 @@ namespace GymHub.Services.ServicesFolder.ProductService
         {
             return this.context.Products.First(x => x.Id == productId).Model;
         }
+
+        public List<string> GetImageUrlsForProduct(string productId)
+        {
+            var something = this.context.Products.Where(x => x.Id == productId)
+                .Select(x => new
+                {
+                    MainImage = x.MainImage,
+                    AdditionalImages = x.AdditionalImages.Select(x => x.Image)
+                })
+                .First();
+            var imageUrls = new List<string>();
+            imageUrls.Add(something.MainImage);
+            imageUrls.AddRange(something.AdditionalImages);
+
+            return imageUrls;
+        }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using GymHub.Web.Models.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace GymHub.Web.Models.InputModels

@@ -1,7 +1,5 @@
 ﻿using GymHub.Data.Models;
 using GymHub.Web.Models.InputModels;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace GymHub.Web.Models.ViewModels
 {

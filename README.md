@@ -23,10 +23,11 @@
 - SendGrid
 - Javascript
 - AJAX real-time Requests
-- JQuery and any kind of jQuery plugins sucsh as DataTables and jquery animations
+- JQuery and any kind of jQuery plugins such as DataTables and jquery animations
 - Lots of boostrap themes and templates
-### :hammer: And in the future hopefully also with
-- Google maps API                
+- Stripe Checkout API
+- Mapbox for maps
+### :hammer: And in the future hopefully also with                
 - Facebook for developers API
 - Twitter for developers API
 - etc...

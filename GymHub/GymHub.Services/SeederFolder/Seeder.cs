@@ -4,7 +4,6 @@ using GymHub.Common;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.DTOs;
-using GymHub.Services.Common;
 using GymHub.Services.ServicesFolder.CategoryService;
 using GymHub.Services.ServicesFolder.CountryService;
 using GymHub.Services.ServicesFolder.GenderService;
@@ -13,6 +12,8 @@ using GymHub.Services.ServicesFolder.ProductCommentService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Services.ServicesFolder.RoleService;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -36,9 +37,11 @@ namespace GymHub.Services.SeederFolder
         private readonly ICountryService countryService;
         private readonly IPaymentMethodService paymentMethodService;
 
-        public Seeder(IServiceProvider serviceProvider)
+        public Seeder(IServiceProvider serviceProvider, IConfiguration configuration)
         {
-            this.context = new ApplicationDbContext();
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            this.context = new ApplicationDbContext(connectionString);
             this.genderService = new GenderService(context);
 
 

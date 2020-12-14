@@ -26,6 +26,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Stripe;
+using Stripe.Checkout;
+using System;
 using System.Threading.Tasks;
 
 namespace GymHub.Web
@@ -45,7 +48,8 @@ namespace GymHub.Web
             //Add Database
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection")
+                    ));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -60,6 +64,14 @@ namespace GymHub.Web
             services.AddDefaultIdentity<User>(IdentityOptionsProvider.GetIdentityOptions)
                     .AddRoles<Role>().AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultTokenProviders();
+
+            //Add sessions
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             //Add Razor and views
             services.AddControllersWithViews(option =>
@@ -81,6 +93,10 @@ namespace GymHub.Web
             var sendGrid = new SendGridEmailSender(this.Configuration["SendGrid:ApiKey"]);
             services.AddSingleton(sendGrid);
 
+            //Add Stripe
+            StripeConfiguration.ApiKey = this.Configuration["Stripe:ApiKey"];
+            services.AddTransient<SessionService>();
+
             //Add Automapper
             services.AddAutoMapper(typeof(UserProfile));
 
@@ -88,13 +104,14 @@ namespace GymHub.Web
             services.AddTransient<IGenderService, GenderService>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IProductService, Services.ServicesFolder.ProductService.ProductService>();
             services.AddTransient<ICartService, CartService>();
             services.AddTransient<IProductCommentService, ProductCommentService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<ISaleService, SaleService>();
-            services.AddTransient<IPaymentMethodService, PaymentMethodService>();
+            services.AddTransient<IPaymentMethodService, Services.ServicesFolder.PaymentMethodService.PaymentMethodService>();
             services.AddTransient<ICountryService, CountryService>();
+            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -126,10 +143,14 @@ namespace GymHub.Web
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
@@ -146,7 +167,7 @@ namespace GymHub.Web
             {
                 using (var serviceScope = app.ApplicationServices.CreateScope())
                 {
-                    var seeder = new Seeder(serviceScope.ServiceProvider);
+                    var seeder = new Seeder(serviceScope.ServiceProvider, this.Configuration);
                     await seeder.SeedAsync();
                 }
             }

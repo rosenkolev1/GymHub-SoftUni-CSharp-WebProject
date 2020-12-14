@@ -1,10 +1,8 @@
 ﻿using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.Common;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GymHub.Services.ServicesFolder.PaymentMethodService
@@ -27,6 +25,12 @@ namespace GymHub.Services.ServicesFolder.PaymentMethodService
         public List<PaymentMethod> GetAllPaymentMethods()
         {
             return this.context.PaymentMethods.ToList();
+        }
+
+        public string GetPaymentMethod(string paymentMethodId)
+        {
+            return this.context.PaymentMethods.Where(x => x.Id == paymentMethodId)
+                .Select(x => x.Name).First();
         }
 
         public bool PaymentMethodExistsById(string paymentMethodId)

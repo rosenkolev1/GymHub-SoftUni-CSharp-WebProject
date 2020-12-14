@@ -1,10 +1,9 @@
-﻿using System;
+﻿using SendGrid;
+using SendGrid.Helpers.Mail;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using SendGrid;
-using SendGrid.Helpers.Mail;
 
 namespace GymHub.Services.Messaging
 {

@@ -7,7 +7,6 @@ using GymHub.Services.ServicesFolder.GenderService;
 using GymHub.Services.ServicesFolder.RoleService;
 using GymHub.Web.Models.InputModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

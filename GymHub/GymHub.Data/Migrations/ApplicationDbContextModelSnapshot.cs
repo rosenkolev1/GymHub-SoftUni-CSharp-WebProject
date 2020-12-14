@@ -17,7 +17,7 @@ namespace GymHub.Data.Migrations
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.0");
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("GymHub.Data.Models.Category", b =>
                 {
@@ -367,7 +367,6 @@ namespace GymHub.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AdditionalInformation")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Address")
@@ -418,7 +417,7 @@ namespace GymHub.Data.Migrations
                     b.Property<DateTime>("PurchasedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2020, 12, 11, 17, 53, 34, 937, DateTimeKind.Utc).AddTicks(797));
+                        .HasDefaultValue(new DateTime(2020, 12, 14, 20, 44, 2, 370, DateTimeKind.Utc).AddTicks(118));
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -514,7 +513,7 @@ namespace GymHub.Data.Migrations
                     b.Property<DateTime?>("RegisteredOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2020, 12, 11, 17, 53, 34, 938, DateTimeKind.Utc).AddTicks(1928));
+                        .HasDefaultValue(new DateTime(2020, 12, 14, 20, 44, 2, 371, DateTimeKind.Utc).AddTicks(1070));
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

@@ -13,9 +13,16 @@ namespace GymHub.Data.Data
                 nameof(SetIsDeletedQueryFilter),
                 BindingFlags.NonPublic | BindingFlags.Static);
 
+        private string connectionString = "Server=.;Database=GymHub;Integrated Security=true";
+
         public ApplicationDbContext()
         {
 
+        }
+
+        public ApplicationDbContext(string connectionString)
+        {
+            this.connectionString = connectionString;
         }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -41,9 +48,9 @@ namespace GymHub.Data.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (optionsBuilder.IsConfigured == false)
+            if(optionsBuilder.IsConfigured == false)
             {
-                optionsBuilder.UseSqlServer("Server=.;Database=GymHub;Integrated Security=true");
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 

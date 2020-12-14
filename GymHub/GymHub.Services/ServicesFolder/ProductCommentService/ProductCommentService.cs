@@ -1,6 +1,4 @@
-﻿using GymHub.Common;
-using GymHub.Data;
-using GymHub.Data.Data;
+﻿using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Data.Models.Enums;
 using GymHub.Services.Common;

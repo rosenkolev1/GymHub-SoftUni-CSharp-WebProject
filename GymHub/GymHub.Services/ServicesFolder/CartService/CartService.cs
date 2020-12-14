@@ -2,6 +2,7 @@
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.Common;
+using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using System.Collections.Generic;
@@ -14,12 +15,14 @@ namespace GymHub.Services.ServicesFolder.CartService
     {
         private readonly IMapper mapper;
         private readonly IUserService userService;
+        private readonly IProductService productService;
 
-        public CartService(ApplicationDbContext context, IMapper mapper, IUserService userService)
+        public CartService(ApplicationDbContext context, IMapper mapper, IUserService userService, IProductService productService)
             : base(context)
         {
             this.mapper = mapper;
             this.userService = userService;
+            this.productService = productService;
         }
         public async Task AddToCartAsync(string productId, string userId, int quantity = 1)
         {
@@ -45,7 +48,7 @@ namespace GymHub.Services.ServicesFolder.CartService
             return context.Carts.FirstOrDefault(x => x.ProductId == productId && x.UserId == userId);
         }
 
-        public List<ProductCartViewModel> GetAllProductsFromCart(string userId)
+        public List<ProductCartViewModel> GetAllProductsForCartViewModel(string userId)
         {
             return context.Carts.Where(x => x.UserId == userId).Select(x => new ProductCartViewModel
             {
@@ -98,6 +101,22 @@ namespace GymHub.Services.ServicesFolder.CartService
             var cartProducts = this.context.Carts.Where(x => x.UserId == userId);
             this.context.Carts.RemoveRange(cartProducts);
             await this.context.SaveChangesAsync();
+        }
+
+        public List<CheckoutProductViewModel> GetAllProductsForCheckoutViewModel(string userId)
+        {
+            return this.context.Carts.Where(x => x.UserId == userId)
+                .Select(x => new CheckoutProductViewModel
+                {
+                    Quantity = x.Quantity,
+                    SinglePrice = x.Product.Price,
+                    Description = x.Product.Description,
+                    Id = x.ProductId,
+                    ImagesUrls = this.productService.GetImageUrlsForProduct(x.Product.Id),
+                    Model = x.Product.Model,
+                    Name = x.Product.Name,
+                    QuantityInStock = x.Product.QuantityInStock
+                }).ToList();
         }
     }
 }

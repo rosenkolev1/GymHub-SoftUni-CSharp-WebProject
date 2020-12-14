@@ -634,9 +634,13 @@ th {
     height: 15vh;
 }
 
-.product-page-addToCart-quantity{
+.page-link:hover{
+    cursor: pointer;
+}
+
+.product-page-addToCart-quantity {
     width: 5vw;
-    text-align:center;
+    text-align: center;
     font-size: 14px;
     height: 3vh;
 }

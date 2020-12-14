@@ -58,5 +58,25 @@
 
         //CheckoutViewModelInfo for checkout
         public const string CheckoutViewModelInfo = "CheckoutViewModelInfo";
+
+        //Stripe payment intent id
+        public const string StripePaymentIntentId = "StripePaymentIntentId";
+
+        //Stripe payment intent client secret
+        public const string StripePaymentIntentClientSecret = "StripePaymentIntentClientSecret";
+
+        //Stripe session id
+        public const string StripeSessionId = "StripeSessionId";
+
+        //PaymentMethods
+        public const string DebitOrCreditCard = "Debit or credit card";
+        public const string Paypal = "Paypal";
+        public const string DirectBankTransfer = "Direct Bank Transfer";
+        public const string CashOnDelivery = "Cash on Delivery";
+
+        //Sale temp data
+        public const string SaleInfo = "SaleInfo";
+        public const string SaleProductsInfo = "SaleProductsInfo";
+        public const string ConfirmSaleToken = "ConfirmSaleToken";
     }
 }

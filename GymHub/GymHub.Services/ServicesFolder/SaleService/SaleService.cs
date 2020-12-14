@@ -9,8 +9,6 @@ using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GymHub.Services.ServicesFolder.SaleService
@@ -29,7 +27,7 @@ namespace GymHub.Services.ServicesFolder.SaleService
             this.cartService = cartService;
         }
 
-        private async Task AddProductsToSaleAsync(Sale sale, List<ProductCartViewModel> purchasedProducts)
+        private async Task AddProductsToSaleAsync(Sale sale, List<CheckoutProductViewModel> purchasedProducts)
         {
             //Add the products to the sale
             await this.context.Entry(sale).Collection(x => x.Products).LoadAsync();
@@ -71,7 +69,7 @@ namespace GymHub.Services.ServicesFolder.SaleService
             throw new NotImplementedException();
         }
 
-        public async Task CheckoutAsync(CheckoutInputModel inputModel, string userId, List<ProductCartViewModel> purchasedProducts)
+        public async Task CheckoutAsync(CheckoutInputModel inputModel, string userId, List<CheckoutProductViewModel> purchasedProducts)
         {
             var newSale = await this.CreateNewSaleAsync(inputModel, userId);
             await this.AddProductsToSaleAsync(newSale, purchasedProducts);

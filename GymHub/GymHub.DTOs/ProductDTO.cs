@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace GymHub.DTOs
+﻿namespace GymHub.DTOs
 {
     public class ProductDTO
     {
