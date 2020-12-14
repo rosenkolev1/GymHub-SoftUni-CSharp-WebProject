@@ -276,5 +276,10 @@ namespace GymHub.Web.Controllers
                 return this.NotFound();
             }
         }
+
+        public async Task<IActionResult> All()
+        {
+            return this.View();
+        }
     }
 }

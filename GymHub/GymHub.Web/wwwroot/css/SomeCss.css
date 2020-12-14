@@ -758,3 +758,18 @@ th {
 .productPage-categories-container{
     text-align:center;
 }
+
+#profile-purchases-button{
+    margin-bottom: 10px;
+    border: 2px solid;
+    border-color: turquoise;
+    background-color:turquoise;
+    color: white;
+    border-radius: 5px;
+}
+
+    #profile-purchases-button:hover {
+        border-color: seagreen;
+        background-color: seagreen;
+        color: #D2FFF7;
+    }

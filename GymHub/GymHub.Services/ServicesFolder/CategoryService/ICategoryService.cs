@@ -20,6 +20,5 @@ namespace GymHub.Services.ServicesFolder.CategoryService
         public List<Category> GetCategoriesForProduct(string productId);
         public Task EditCategoriesToProductAsync(Product product, List<string> productCategoriesIds);
         public List<Product> GetProductsForCategory(string categoryId);
-        public List<ProductCategory> GetAllCategoriesByIds(List<string> ids);
     }
 }

@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<table id="DataTable">
+    <thead>
+        <tr>
+            <th>
+                Category Name
+            </th>
+            <th>
+                @*@Html.DisplayName(nameof(firstCategory.IsDeleted))*@
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.Name)*@
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.IsDeleted)
+                    @Html.DisplayFor(modelItem => item.DeletedOn)*@
+                </td>
+                <td>
+                    <form style="display: inline;" asp-action="sds" asp-controller="sd" asp-route-saleId="sd"><button class="alert-info" type="submit">Details</button></form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
