@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="SeederFolder\SeedJSON\Categories.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="SendGrid" Version="9.21.2" />
@@ -20,12 +16,6 @@
     <ProjectReference Include="..\GymHub.Common\GymHub.Common.csproj" />
     <ProjectReference Include="..\GymHub.Data\GymHub.Data.csproj" />
     <ProjectReference Include="..\GymHub.Web.Models\GymHub.Web.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="SeederFolder\SeedJSON\Categories.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
   </ItemGroup>
 
   <ItemGroup>

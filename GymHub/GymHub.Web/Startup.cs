@@ -118,13 +118,13 @@ namespace GymHub.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //Delete database at startup
-            DeleteDatabase(app, false);
+            DeleteDatabase(app, true);
 
             //Migrate Database at startup
-            MigrateDatabase(app, false);
+            MigrateDatabase(app, true);
 
             //Seed database at startup        
-            SeedDatabaseAsync(app, false).GetAwaiter().GetResult();
+            SeedDatabaseAsync(app, true).GetAwaiter().GetResult();
 
             if (env.IsDevelopment())
             {
@@ -132,7 +132,7 @@ namespace GymHub.Web
                 app.UseMigrationsEndPoint();
             }
 
-            else
+            else if(env.IsProduction())
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.

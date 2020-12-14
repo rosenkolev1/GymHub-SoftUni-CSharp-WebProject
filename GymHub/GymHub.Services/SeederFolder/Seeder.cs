@@ -85,12 +85,16 @@ namespace GymHub.Services.SeederFolder
             await SeedCountriesAsync();
             await SeedPaymentMethodsAsync();
 
-            //Seed the more active stuff
+            //Seed the users
             await SeedUsersAsync();
+
+            //Seed categories
+            await SeedCategories();
+
+            //Seed anything directly product related
             await SeedProductsAsync();
             await SeedProductsCommentsAndRatingsAsync();
             await SeedProductsImagesAsync();
-            await SeedCategories();
         }
 
         private async Task<bool> SeedRolesAsync()
@@ -178,6 +182,27 @@ namespace GymHub.Services.SeederFolder
             return true;
         }
 
+        private async Task<bool> SeedCategories()
+        {
+            var categoriesDTOs = JsonSerializer.Deserialize<List<CategoryDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Categories.json"));
+            var categories = categoriesDTOs
+                .Select(x => new Category
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList();
+
+            foreach (var category in categories)
+            {
+                if (this.categoryService.CategoryExists(category.Id, true) == false)
+                {
+                    await this.categoryService.AddAsync(category);
+                }
+            }
+
+            return true;
+        }
+
         private async Task<bool> SeedProductsAsync()
         {
             var productsDTOs = JsonSerializer.Deserialize<List<ProductDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Products.json"));
@@ -190,7 +215,12 @@ namespace GymHub.Services.SeederFolder
                     QuantityInStock = x.QuantityInStock,
                     MainImage = x.MainImage,
                     Description = x.Description,
-                    Price = x.Price
+                    Price = x.Price,
+                    ProductCategories = x.Categories
+                        .Select(categoryId => new ProductCategory
+                        {
+                            CategoryId = categoryId
+                        }).ToList()
                 }).ToList();
 
             foreach (var product in products)
@@ -278,27 +308,6 @@ namespace GymHub.Services.SeederFolder
                     await this.productService.AddProductImageAsync(productImage);
                 }
             }
-            return true;
-        }
-
-        private async Task<bool> SeedCategories()
-        {
-            var categoriesDTOs = JsonSerializer.Deserialize<List<CategoryDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/Categories.json"));
-            var categories = categoriesDTOs
-                .Select(x => new Category
-                {
-                    Id = x.Id,
-                    Name = x.Name
-                }).ToList();
-
-            foreach (var category in categories)
-            {
-                if (this.categoryService.CategoryExists(category.Id, true) == false)
-                {
-                    await this.categoryService.AddAsync(category);
-                }
-            }
-
             return true;
         }
     }

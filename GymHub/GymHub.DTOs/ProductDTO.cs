@@ -1,4 +1,6 @@
-﻿namespace GymHub.DTOs
+﻿using System.Collections.Generic;
+
+namespace GymHub.DTOs
 {
     public class ProductDTO
     {
@@ -15,6 +17,8 @@
         public int Warranty { get; set; }
 
         public int QuantityInStock { get; set; }
+
+        public List<string> Categories { get; set; }
 
     }
 }

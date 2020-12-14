@@ -6,7 +6,12 @@
     "Price": 60.59,
     "Description": "Leg Extension Machine for personal and home use. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eu metus id mi pretium porta eu non turpis. Suspendisse rhoncus purus placerat, feugiat lacus vitae, euismod velit. Nullam vitae erat urna. Suspendisse sit amet neque eu leo dapibus fermentum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed venenatis ullamcorper ullamcorper. Mauris fringilla ipsum et quam elementum, id tincidunt arcu rutrum. Morbi ullamcorper vehicula porttitor.",
     "Warranty": 12,
-    "QuantityInStock": 1000
+    "QuantityInStock": 1000,
+    "Categories": [
+      "Machines",
+      "Dumbbells",
+      "Barbells"
+    ]
   },
   {
     "Name": "Leg Curl Machine",
@@ -15,6 +20,10 @@
     "Price": 80.76,
     "Description": "Leg Curl Machine for personal and home use. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eu metus id mi pretium porta eu non turpis. Suspendisse rhoncus purus placerat, feugiat lacus vitae, euismod velit. Nullam vitae erat urna. Suspendisse sit amet neque eu leo dapibus fermentum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed venenatis ullamcorper ullamcorper. Mauris fringilla ipsum et quam elementum, id tincidunt arcu rutrum. Morbi ullamcorper vehicula porttitor.",
     "Warranty": 24,
-    "QuantityInStock": 500
+    "QuantityInStock": 500,
+    "Categories": [
+      "Barbells",
+      "Squat Rack"
+    ]
   }
 ]

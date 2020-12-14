@@ -110,6 +110,11 @@ namespace GymHub.Services.ServicesFolder.CategoryService
             return context.Categories.IgnoreAllQueryFilters(hardCheck).ToList();
         }
 
+        public List<ProductCategory> GetAllCategoriesByIds(List<string> ids)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Category> GetCategoriesForProduct(string productId)
         {
             var productCategories = context.Products
