@@ -293,6 +293,7 @@ table.dataTable td {
   padding: 5px;
   background-color: transparent;
   padding: 4px;
+  height: 4vh;
 }
 .dataTables_wrapper .dataTables_filter {
   float: right;
@@ -304,6 +305,7 @@ table.dataTable td {
   padding: 5px;
   background-color: transparent;
   margin-left: 3px;
+      height: 4vh;
 }
 .dataTables_wrapper .dataTables_info {
   clear: both;

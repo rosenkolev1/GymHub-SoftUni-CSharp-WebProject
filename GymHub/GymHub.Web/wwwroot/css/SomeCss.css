@@ -779,3 +779,60 @@ th {
         background-color: seagreen;
         color: #D2FFF7;
     }
+
+#DataTable_length{
+    height: 5vh;
+}
+
+.datatable-container-div-custom{
+    width: 90vw;
+    margin-left: 5vw;
+}
+
+.sales-all-paymentStatus {
+    background-color: #edb832;
+    color: white;
+    font-weight: 700;
+    text-align:center;
+    border-radius: 4px;
+    padding-top: 4px;
+    padding-bottom:4px;
+}
+
+.sales-details-button, .sales-changeStatus-button {
+    display: block;
+    margin-top: 6px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 2px 6px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.sale-details-companyImage{
+    width: 20%
+}
+
+.sale-details-footer-paragraph{
+    text-align:center;
+    font-size: 18px;
+}
+
+.sale-details-additionalInformation{
+    border: 2px solid black;
+}
+
+.sale-details-additionalInformation-table {
+    display: inline;
+    width: 50vw !important;
+    box-sizing: content-box;
+}
+
+.sale-details-additionalInformation-text {
+    width: 65vw;
+}
+
+.sales-changeStatus-button{
+    background-color: yellow;
+    color: black;
+}

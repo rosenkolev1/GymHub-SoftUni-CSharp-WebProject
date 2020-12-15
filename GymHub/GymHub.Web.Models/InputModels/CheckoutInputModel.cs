@@ -39,6 +39,7 @@ namespace GymHub.Web.Models.InputModels
         [Required(ErrorMessage = "Payment method is required")]
         public string PaymentMethodId { get; set; }
 
+        [MaxLength(500)]
         public string AdditionalInformation { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using GymHub.Data.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GymHub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201215192103_Add saleStatus to Sales")]
+    partial class AddsaleStatustoSales
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -402,9 +404,6 @@ namespace GymHub.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Municipality")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PaymentMethodId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -420,7 +419,7 @@ namespace GymHub.Data.Migrations
                     b.Property<DateTime>("PurchasedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2020, 12, 15, 21, 0, 17, 391, DateTimeKind.Utc).AddTicks(166));
+                        .HasDefaultValue(new DateTime(2020, 12, 15, 19, 21, 2, 859, DateTimeKind.Utc).AddTicks(9685));
 
                     b.Property<string>("SaleStatus")
                         .IsRequired()
@@ -520,7 +519,7 @@ namespace GymHub.Data.Migrations
                     b.Property<DateTime?>("RegisteredOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2020, 12, 15, 21, 0, 17, 392, DateTimeKind.Utc).AddTicks(1566));
+                        .HasDefaultValue(new DateTime(2020, 12, 15, 19, 21, 2, 861, DateTimeKind.Utc).AddTicks(1022));
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -862,13 +861,13 @@ namespace GymHub.Data.Migrations
             modelBuilder.Entity("GymHub.Data.Models.Sale", b =>
                 {
                     b.HasOne("GymHub.Data.Models.Country", "Country")
-                        .WithMany("Sales")
+                        .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GymHub.Data.Models.PaymentMethod", "PaymentMethod")
-                        .WithMany("Sales")
+                        .WithMany()
                         .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -991,11 +990,6 @@ namespace GymHub.Data.Migrations
                     b.Navigation("CategoryProducts");
                 });
 
-            modelBuilder.Entity("GymHub.Data.Models.Country", b =>
-                {
-                    b.Navigation("Sales");
-                });
-
             modelBuilder.Entity("GymHub.Data.Models.Gender", b =>
                 {
                     b.Navigation("Users");
@@ -1004,11 +998,6 @@ namespace GymHub.Data.Migrations
             modelBuilder.Entity("GymHub.Data.Models.Occupation", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("GymHub.Data.Models.PaymentMethod", b =>
-                {
-                    b.Navigation("Sales");
                 });
 
             modelBuilder.Entity("GymHub.Data.Models.Product", b =>

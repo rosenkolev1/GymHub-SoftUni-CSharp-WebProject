@@ -23,12 +23,12 @@ namespace GymHub.Data.Models
         [Required]
         [ForeignKey(nameof(Country))]
         public string CountryId { get; set; }
-        public Country Country { get; set; }
+        public virtual Country Country { get; set; }
 
         [Required]
         [ForeignKey(nameof(PaymentMethod))]
         public string PaymentMethodId { get; set; }
-        public PaymentMethod PaymentMethod { get; set; }
+        public virtual PaymentMethod PaymentMethod { get; set; }
 
         //Collections
         public virtual ICollection<ProductSale> Products { get; set; }
@@ -47,6 +47,8 @@ namespace GymHub.Data.Models
         [Required]
         public string Address { get; set; }
 
+        public string Municipality { get; set; }
+
         [Required]
         public string City { get; set; }
 
@@ -58,6 +60,9 @@ namespace GymHub.Data.Models
 
         [Required]
         public string EmailAddress { get; set; }
+
+        [Required]
+        public string SaleStatus { get; set; }
 
         public string AdditionalInformation { get; set; }
 

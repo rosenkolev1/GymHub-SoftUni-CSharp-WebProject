@@ -6,6 +6,7 @@ using GymHub.Services.ServicesFolder.CountryService;
 using GymHub.Services.ServicesFolder.PaymentMethodService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Services.ServicesFolder.SaleService;
+using GymHub.Web.AuthorizationPolicies;
 using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
@@ -192,7 +193,7 @@ namespace GymHub.Web.Controllers
                 //Set the temp data for a successful sale
                 var confirmSaleToken = SetTempDataForSale(complexModel.InputModel, cartProducts);
 
-                return this.Json(new { PaymentMethod = GlobalConstants.CashOnDelivery, RedirectPath = $"/Sales/CheckoutSuccess?confirmSaleToken={confirmSaleToken}" });
+                return this.Json(new { PaymentMethod = GlobalConstants.CashOnDelivery, RedirectPath = $"/Sales/CheckoutSuccess?confirmSaleToken={confirmSaleToken}&paymentMethod={GlobalConstants.CashOnDelivery}" });
             }
 
 
@@ -241,7 +242,7 @@ namespace GymHub.Web.Controllers
                         Quantity = product.Quantity
                     }).ToList(),
                 Mode = "payment",
-                SuccessUrl = currentDomain + $"/Sales/CheckoutSuccess?confirmSaleToken={confirmSaleToken}",
+                SuccessUrl = currentDomain + $"/Sales/CheckoutSuccess?confirmSaleToken={confirmSaleToken}&paymentMethod={GlobalConstants.DebitOrCreditCard}",
                 CancelUrl = currentDomain + $"/Sales/CheckoutCancel",
                 PaymentIntentData = new SessionPaymentIntentDataOptions { CaptureMethod = "manual"}
             };
@@ -271,7 +272,7 @@ namespace GymHub.Web.Controllers
             return this.RedirectToAction(nameof(Checkout));
         }
 
-        public async Task<IActionResult> CheckoutSuccess(string confirmSaleToken)
+        public async Task<IActionResult> CheckoutSuccess(string confirmSaleToken, string paymentMethod)
         {
             if(this.TempData[GlobalConstants.ConfirmSaleToken]?.ToString() == confirmSaleToken)
             {
@@ -283,7 +284,7 @@ namespace GymHub.Web.Controllers
                 string paymentIntentId = this.TempData[GlobalConstants.PaymentIntentId]?.ToString();
 
                 //Check if the products wanted are in stock for when the user is buying with a credit or debit card
-                if (this.TempData[GlobalConstants.PaymentIntentId] != null && anyItemExceedsStock)
+                if (paymentIntentId != null && anyItemExceedsStock)
                 {
                     //Cancel the fund capture
                     await this.paymentIntentService.CancelAsync(paymentIntentId);
@@ -293,6 +294,7 @@ namespace GymHub.Web.Controllers
 
                     return this.RedirectToAction("All", "Carts");
                 }
+                //If you aren't buying with a debit or credit card
                 else if(anyItemExceedsStock)
                 {
                     //Set notifications
@@ -302,7 +304,10 @@ namespace GymHub.Web.Controllers
                 }
 
                 //Capture the funds
-                var paymentIntentForCapture = await this.paymentIntentService.CaptureAsync(paymentIntentId);
+                if (paymentIntentId != null && paymentMethod == GlobalConstants.DebitOrCreditCard)
+                {
+                    await this.paymentIntentService.CaptureAsync(paymentIntentId);
+                }
 
                 await this.saleService.CheckoutAsync(saleInfo, currentUserId, saleProductsInfo);
 
@@ -318,7 +323,40 @@ namespace GymHub.Web.Controllers
 
         public async Task<IActionResult> All()
         {
+            var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
+
+            var saleInfoViewModels = this.saleService.GetSalesForUser(currentUserId);
+
+            return this.View(saleInfoViewModels);
+        }
+
+
+        public async Task<IActionResult> Details(string saleId)
+        {
+            var saleDetails = this.saleService.GetSaleDetailsViewModel(saleId);
+
+            return this.View(saleDetails);
+        }
+
+        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
+        public async Task<IActionResult> Search()
+        {
+            var saleInfoViewModels = this.saleService.GetSalesForAllUsers();
+
+            return this.View("/Views/Sales/All.cshtml", saleInfoViewModels);
+        }
+
+        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
+        public async Task<IActionResult> ChangeSaleStatus(string saleId)
+        {
             return this.View();
+        }
+
+        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
+        [HttpPost]
+        public async Task<IActionResult> ChangeSaleStatus(ChangeSaleStatusInputModel inputModel)
+        {
+            return this.NotFound();
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿@model ComplexModel<List<BuyProductInputModel>, List<ProductCartViewModel>>
+@using GymHub.Common
 @{ 
     var inputModel = Model.InputModel;
     var viewModel = Model.ViewModel;
 }
 @{ 
-    var buyButtonInactiveDueToError = this.ViewData["CartBuyButtonErrorForQuantity"] as bool? == true || Model.ViewModel.Count <= 0;
+    var buyButtonInactiveDueToError = this.ViewData[GlobalConstants.CartBuyButtonErrorForQuantity] as bool? == true || Model.ViewModel.Count <= 0;
 }
 
 <div>
@@ -32,7 +33,9 @@
                     <input hidden asp-for="InputModel[i].SinglePrice" value="@product.Price" class="cart-input-product-singlePrice" />
                 </td>
                 <td class="cart-td-mainImageElement">
-                    <img class="cart-td-mainImage" src="@product.MainImage" />
+                    <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id">
+                        <img class="cart-td-mainImage" src="@product.MainImage" />
+                    </a>
                 </td>
                 <td class="cart-td-nameElement">
                     <a class="cart-td-name" asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id">@product.Name: @product.Model</a>

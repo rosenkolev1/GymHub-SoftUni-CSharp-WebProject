@@ -6,6 +6,13 @@
          * WHEN CHANGING VALIDATION CONSTANTS CHANGE ERROR MESSAGES IN MODELS
         */
 
+        //Site metadata
+        public const string SystemName = "GymHub.com";
+        public const string SiteName = "GymHub";
+        public const string CompanyAddress = "455 Foggy Heights, AZ 85004, US";
+        public const string CompanyContactNumber = "(123) 456-789";
+        public const string CompanyContactEmail = "rosenandreevkolev1@gmail.com";
+
         //Errors from POST request temp data
         public const string ErrorsFromPOSTRequest = "ErrorsFromPOSTRequest";
 
@@ -16,8 +23,6 @@
         //Notification temp data
         public const string NotificationText = "NotificationText";
         public const string NotificationType = "NotificationType";
-
-        public const string SystemName = "GymHub.com";
 
         //Role constants
         public const string AdminRoleName = "Admin";
@@ -62,6 +67,8 @@
         //Stripe paymentIntentId
         public const string PaymentIntentId = "PaymentIntentId";
 
+        //CartBuyButtonErrorForQuantity
+        public const string CartBuyButtonErrorForQuantity = "CartBuyButtonErrorForQuantity";
         //PaymentMethods
         public const string DebitOrCreditCard = "Debit or credit card";
         public const string Paypal = "Paypal";
@@ -72,5 +79,10 @@
         public const string SaleInfo = "SaleInfo";
         public const string SaleProductsInfo = "SaleProductsInfo";
         public const string ConfirmSaleToken = "ConfirmSaleToken";
+
+        //Sale statuses
+        public const string PendingSaleStatus = "Pending";
+        public const string ConfirmedSaleStatus = "Confirmed";
+        public const string DeclinedSaleStatus = "Declined";
     }
 }

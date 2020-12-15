@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace GymHub.Data.Models
@@ -15,5 +16,8 @@ namespace GymHub.Data.Models
         public string Name { get; set; }
 
         public string Code { get; set; }
+
+        //Collections
+        public virtual ICollection<Sale> Sales{ get; set; }
     }
 }

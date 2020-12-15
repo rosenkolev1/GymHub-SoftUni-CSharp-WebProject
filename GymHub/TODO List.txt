@@ -1,20 +1,18 @@
--Fix checkout so it actually reduces the quantity in stock amount. Also refund the purchase if the quantity in stock gets reduced below the purchase quantity while attempting to checkout.
+-Add option for admin to change order status for all users. Maybe add table to database for sale statuses.
 
--Add error notification for a product in the cart when user is trying to buy more than there is in stock for the product
+-Add admin control panel in the application
 
 -Add category based searching.
 
--Add image upload to product adding.
+-Add image upload to product adding. Use some kind of blob storage for images.
 
 -Add user profile pages and functionality
-
--Add admin functionality for changing a sale's state(say from „обработва се“ на „Успешно“ или „Denied“)
 
 -Add functionality for reinstating a comment if you are an admin
 
 -Seperate controllers and views into areas
 
--Add column (Deleted by whom) or somethings similar to indicate which admin deleted a comment, product etc...
+-Add column (Deleted by whom) or something similar to indicate which admin deleted a comment, product etc...
 
 -Add email confirmation on register
 
@@ -22,15 +20,11 @@
 
 -Add double click prevention
 
--Make imageUrl for products support online urls for images instead of only local files system images. Using cloudinary or something similar
-
 -Add vaptcha validation
 
 -Add email sender for when there is availability for a sold out product.
 
 -Make better Mapbox. Do that by setting markers and a search box.
-
--Deploy to Azure and include Cloudinary or some other blob storage as well
 
 **Things to keep in mind
 

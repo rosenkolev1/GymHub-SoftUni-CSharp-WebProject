@@ -1,36 +1,81 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@using GymHub.Common
+@model List<SaleInfoViewModel>
+
+@section ImportantLinks{
+    <link href="/lib/DataTablesNew/datatables.css" rel="stylesheet" />
 }
 
-<table id="DataTable">
-    <thead>
-        <tr>
-            <th>
-                Category Name
-            </th>
-            <th>
-                @*@Html.DisplayName(nameof(firstCategory.IsDeleted))*@
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="datatable-container-div-custom">
+    <h1>Sales</h1>
+    <hr />
+    <table id="DataTable">
+        <thead>
             <tr>
-                <td>
-                    @*@Html.DisplayFor(modelItem => item.Name)*@
-                </td>
-                <td>
-                    @*@Html.DisplayFor(modelItem => item.IsDeleted)
-                    @Html.DisplayFor(modelItem => item.DeletedOn)*@
-                </td>
-                <td>
-                    <form style="display: inline;" asp-action="sds" asp-controller="sd" asp-route-saleId="sd"><button class="alert-info" type="submit">Details</button></form>
-                </td>
+                <th>
+                    Order Id
+                </th>
+                <th>
+                    PurchasedOn
+                </th>
+                <th>
+                    Billing Account
+                </th>
+                <th>
+                    Receiving Account
+                </th>
+                <th>
+                    PaymentMethod
+                </th>
+                <th>
+                    Total Price
+                </th>
+                <th>
+                    PaymentStatus
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var sale in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(model => sale.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => sale.PurchasedOn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => sale.BillingAccount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => sale.ReceivingAccount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => sale.PaymentMethod.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => sale.TotalPayment)
+                    </td>
+                    <td>
+                        <div class="sales-all-paymentStatus">@sale.PaymentStatus</div>
+                        <form hidden id="saleDetailsForm@(sale.Id)" method="get"></form>
+                        <a asp-action="Details" asp-controller="Sales" asp-route-saleId="@sale.Id" class="alert-info sales-details-button">Details</a>
+                        @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
+                        {
+                            <a asp-action="ChangeSaleStatus" asp-controller="Sales" asp-route-saleId="@sale.Id" class="alert-info sales-changeStatus-button">Change Status</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/DataTablesNew/datatables.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $('#DataTable').DataTable();
+        });</script>
+}

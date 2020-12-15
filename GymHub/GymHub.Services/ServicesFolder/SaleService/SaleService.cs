@@ -7,6 +7,7 @@ using GymHub.Services.ServicesFolder.CountryService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +71,9 @@ namespace GymHub.Services.ServicesFolder.SaleService
                 Postcode = inputModel.Postcode,
                 PurchasedOn = DateTime.UtcNow,
                 UserId = userId,
-                Country = this.countryService.GetCountryByCode(inputModel.CountryCode)
+                Country = this.countryService.GetCountryByCode(inputModel.CountryCode),
+                SaleStatus = "Pending Review",
+                Municipality = inputModel.Municipality
             };
 
             await this.context.AddAsync(newSale);
@@ -96,6 +99,66 @@ namespace GymHub.Services.ServicesFolder.SaleService
             await this.cartService.ClearCartAsync(userId);
 
             await this.context.SaveChangesAsync();
+        }
+
+        public List<SaleInfoViewModel> GetSalesForUser(string userId)
+        {
+            return this.context.Sales
+                .Where(x => x.UserId == userId)
+                .Select(x => new SaleInfoViewModel
+                {
+                    BillingAccount = x.User.UserName,
+                    ReceivingAccount = x.User.UserName,
+                    PaymentStatus = x.SaleStatus,
+                    Id = x.Id,
+                    PaymentMethod = x.PaymentMethod,
+                    PurchasedOn = x.PurchasedOn,
+                    TotalPayment = x.Products.Sum(x => x.Product.Price * x.Quantity)
+                })
+                .ToList();
+        }
+
+        public SaleDetailsViewModel GetSaleDetailsViewModel(string saleId)
+        {
+            return this.context.Sales
+                .Where(x => x.Id == saleId)
+                .Include(x => x.Products)
+                .ThenInclude(x => x.Product)
+                .Select(x => new SaleDetailsViewModel
+                {
+                    SaleStatus = x.SaleStatus,
+                    Address = x.Address,
+                    EmailAddress = x.EmailAddress,
+                    CompanyName = x.CompanyName,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    AdditionalInformation = x.AdditionalInformation,
+                    Country = x.Country,
+                    ProductsSale = x.Products,
+                    Postcode = x.Postcode,
+                    City = x.City,
+                    PaymentMethod = x.PaymentMethod,
+                    PhoneNumber = x.PhoneNumber,
+                    PurchasedOn = x.PurchasedOn,
+                    Municipality = x.Municipality
+                })
+                .First();
+        }
+
+        public List<SaleInfoViewModel> GetSalesForAllUsers()
+        {
+            return this.context.Sales
+                .Select(x => new SaleInfoViewModel
+                {
+                    BillingAccount = x.User.UserName,
+                    ReceivingAccount = x.User.UserName,
+                    PaymentStatus = x.SaleStatus,
+                    Id = x.Id,
+                    PaymentMethod = x.PaymentMethod,
+                    PurchasedOn = x.PurchasedOn,
+                    TotalPayment = x.Products.Sum(x => x.Product.Price * x.Quantity)
+                })
+                .ToList();
         }
     }
 }

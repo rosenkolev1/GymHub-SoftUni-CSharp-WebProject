@@ -10,5 +10,9 @@ namespace GymHub.Services.ServicesFolder.SaleService
     {
         public List<ProductSale> CreateProductSales(List<BuyProductInputModel> inputModels);
         public Task CheckoutAsync(CheckoutInputModel inputModel, string userId, List<CheckoutProductViewModel> purchasedProducts);
+        public List<SaleInfoViewModel> GetSalesForUser(string userId);
+        public SaleDetailsViewModel GetSaleDetailsViewModel(string saleId);
+
+        public List<SaleInfoViewModel> GetSalesForAllUsers();
     }
 }

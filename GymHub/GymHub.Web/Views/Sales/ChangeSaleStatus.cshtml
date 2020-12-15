@@ -1,0 +1,23 @@
+﻿@using GymHub.Common
+
+@model ChangeSaleStatusInputModel
+
+<div class="input-container">
+    <form asp-controller="Sales" asp-action="ChangeSaleStatus" method="post">
+        <label asp-for="NewSaleStatus" class="input-label">Category Name</label>
+        <select asp-for="NewSaleStatus">
+            <option selected value="">Select new sale status</option>
+            <option selected value="@GlobalConstants.PendingSaleStatus">@GlobalConstants.PendingSaleStatus</option>
+            <option selected value="@GlobalConstants.ConfirmedSaleStatus">@GlobalConstants.ConfirmedSaleStatus</option>
+            <option selected value="@GlobalConstants.DeclinedSaleStatus">@GlobalConstants.DeclinedSaleStatus</option>
+        </select>
+        <span asp-validation-for="NewSaleStatus" class="validation-span"></span>
+        <div class="button-container">
+            <button type="submit">Change sale status</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial.cshtml">
+}

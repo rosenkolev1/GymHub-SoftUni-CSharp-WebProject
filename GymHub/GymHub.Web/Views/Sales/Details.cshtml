@@ -1,0 +1,149 @@
+﻿@using GymHub.Common
+@using GymHub.Services.ServicesFolder.ProductService
+@inject IProductService productService
+
+@model SaleDetailsViewModel
+
+@section ImportantLinks{
+    <link href="~/css/SaleDetails.css" rel="stylesheet" />
+    <style type="text/css" media="print">
+        .no-print {
+            display: none;
+        }
+    </style>
+}
+
+<div id="invoice">
+
+    <div class="toolbar hidden-print">
+        <div class="text-right">
+            <button id="printInvoice" class="btn btn-info"><i class="fa fa-print"></i> Print</button>
+        </div>
+        <hr>
+    </div>
+    <div class="invoice overflow-auto">
+        <div style="min-width: 600px">
+            <header>
+                <div class="row">
+                    <div class="col">
+                        <a target="_blank" href="https://lobianijs.com">
+                            <img class="sale-details-companyImage" src="/GymHub/GymHub logo.jpg" data-holder-rendered="true" />
+                        </a>
+                    </div>
+                    <div class="col company-details">
+                        <h2 class="name">
+                            <a target="_blank" asp-action="/" asp-controller="Home">
+                                @GlobalConstants.SiteName
+                            </a>
+                        </h2>
+                        <div>@GlobalConstants.CompanyAddress</div>
+                        <div>@GlobalConstants.CompanyContactNumber</div>
+                        <div>@GlobalConstants.CompanyContactEmail</div>
+                    </div>
+                </div>
+            </header>
+            <main>
+                <div class="row contacts">
+                    <div class="col invoice-to">
+                        <div class="text-gray-light">INVOICE TO:</div>
+                        <h2 class="to">@Model.FirstName @Model.LastName</h2>
+                        @if (string.IsNullOrWhiteSpace(Model.CompanyName) == false)
+                        {
+            <h3 class="to">@(Model.CompanyName).Inc</h3>}
+                        <div class="address">@($"Country: {Model.Country.Name} | Muncipality: {Model.Municipality} | City: {Model.City} | Postcode: {Model.Postcode}")</div>
+                        <div class="address">Address: @Model.Address</div>
+                        <div class="email"><a href="@Model.EmailAddress">@Model.EmailAddress</a></div>
+                    </div>
+                    <div class="col invoice-details">
+                        <h1 class="invoice-id">INVOICE</h1>
+                        <div class="date">Date of Transaction: @Model.PurchasedOn.ToString("dd/MM/yyyy")</div>
+                    </div>
+                </div>
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <thead>
+                        <tr>
+                            <th>#Order ID</th>
+                            <th class="text-left">NAME, MODEL, DESCRIPTION</th>
+                            <th class="text-right">UNIT PRICE</th>
+                            <th class="text-right">QUANTITY</th>
+                            <th class="text-right">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.ProductsSale.Count; i++)
+                        {
+                            var productSale = Model.ProductsSale.ToList()[i];
+            <tr>
+                <td class="no">@productSale.SaleId</td>
+                <td class="text-left">
+                    <h3>
+                        <a target="_blank" asp-action="Products" asp-controller="ProductPage" asp-route-productId="@productSale.ProductId">
+                            @($"{productSale.Product.Name}:{productSale.Product.Model}")
+                        </a>
+                    </h3>
+                    @productService.GetShordDescription(productSale.Product.Description, 80)
+                </td>
+                <td class="unit">$@productSale.Product.Price.ToString("f2")</td>
+                <td class="qty">@productSale.Quantity</td>
+                <td class="total">$@((productSale.Product.Price*productSale.Quantity).ToString("f2"))</td>
+            </tr>
+}
+                    </tbody>
+                    <tfoot>
+                        @{ var totalPrice = Model.ProductsSale.Sum(x => x.Product.Price * x.Quantity); }
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">METHOD OF PAYMENT</td>
+                            <td>@Model.PaymentMethod.Name</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">SUBTOTAL</td>
+                            <td>$@((totalPrice*4/5).ToString("f2"))</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">TAX 20%</td>
+                            <td>$@((totalPrice/4).ToString("f2"))</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">GRAND TOTAL</td>
+                            <td>$@totalPrice.ToString("f2")</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div style="text-align:left;">
+                    <table class="sale-details-additionalInformation-table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="font-weight:700;font-size:20px;">Additional Information</th>
+                                <th hidden class="text-left">&nbsp;</th>
+                                <th hidden class="text-right">&nbsp;</th>
+                                <th hidden class="text-right">&nbsp;</th>
+                                <th hidden class="text-right">&nbsp;</th>
+                            </tr>
+                            <tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" style="background: #ddd;"><p class="sale-details-additionalInformation-text">@Model.AdditionalInformation</p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top:20px;margin-bottom:0px;" class="thanks">Thank you for choosing @GlobalConstants.SiteName!</div>
+            </main>
+            <p class="sale-details-footer-paragraph">
+                Invoice was created on a computer and is valid without the signature and seal.
+            </p>
+        </div>
+        <!--DO NOT DELETE THIS div. IT is responsible for showing footer always at the bottom-->
+        <div></div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/SaleDetails/PrintInvoice.js" asp-append-version="true"></script>
+}
