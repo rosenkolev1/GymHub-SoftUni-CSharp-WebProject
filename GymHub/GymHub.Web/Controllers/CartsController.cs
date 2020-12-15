@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -74,6 +75,21 @@ namespace GymHub.Web.Controllers
                 complexModel.InputModel = JsonSerializer.Deserialize<List<BuyProductInputModel>>(this.TempData[GlobalConstants.InputModelFromPOSTRequest]?.ToString());
             }
 
+            complexModel.ViewModel
+                .OrderBy(x => x.Id)
+                .ToList();
+
+            //Validate if quantity for one of the products exceeds the quantity in stock
+            for (int i = 0; i < complexModel.ViewModel.Count; i++)
+            {
+                var productViewModel = complexModel.ViewModel[i];
+                if (productViewModel.QuantityInStock < productViewModel.Quantity)
+                {
+                    this.ModelState.AddModelError($"InputModel[{i}].Quantity", "This product's selected quantity is more than the available quantity in stock.");
+                    if (this.ViewData["CartBuyButtonErrorForQuantity"] == null) this.ViewData["CartBuyButtonErrorForQuantity"] = true;
+                }
+            }
+
             return this.View(complexModel);
         }
 
@@ -96,6 +112,7 @@ namespace GymHub.Web.Controllers
 
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
 
+            //Check if the product is in the cart
             foreach (var productInputModel in complexModel.InputModel)
             {
                 if (this.cartService.ProductIsInCart(productInputModel.Id, currentUserId) == false)
@@ -104,10 +121,22 @@ namespace GymHub.Web.Controllers
                     NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "One or more of the products are not in the cart");
 
                     this.ModelState.AddModelError("", "One or more of the products are not in the cart");
+
+                    //Set error model state
+                    this.TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
+                    return this.RedirectToAction(nameof(All));
                 }
             }
 
-            if(this.ModelState.IsValid == false)
+            //Validation for the quantity of a product and whether or not it exceed the quantity in stock for the product
+            if (this.cartService.IsQuantityOfPurchasesValid(currentUserId, complexModel.InputModel.ToList()) == false)
+            {
+                //Set notification
+                NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "Quantity of purchase of one or more products exceeds the quantity in stock");
+            }
+
+            if (this.ModelState.IsValid == false)
             {
                 //Set error model state
                 this.TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);

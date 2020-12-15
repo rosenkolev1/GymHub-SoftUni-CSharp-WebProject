@@ -34,11 +34,13 @@ namespace GymHub.Web.Controllers
         private readonly IUserService userService;
         private readonly IMapper mapper;
         private readonly SessionService sessionService;
+        private readonly PaymentIntentService paymentIntentService;
+        private readonly RefundService refundService;
 
         public SalesController
             (ISaleService saleService, IProductService productService, ICountryService countryService,
             IPaymentMethodService paymentMethodService, ICartService cartService, IUserService userService, IMapper mapper,
-            SessionService sessionService)
+            SessionService sessionService, PaymentIntentService paymentIntentService, RefundService refundService)
         {
             this.saleService = saleService;
             this.productService = productService;
@@ -48,6 +50,8 @@ namespace GymHub.Web.Controllers
             this.userService = userService;
             this.mapper = mapper;
             this.sessionService = sessionService;
+            this.refundService = refundService;
+            this.paymentIntentService = paymentIntentService;
         }
 
         public async Task<IActionResult> Checkout()
@@ -108,7 +112,7 @@ namespace GymHub.Web.Controllers
                 //Set notification
                 NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "An error occured while processing your request");
 
-                return this.RedirectToAction(nameof(Checkout));
+                return this.Json(new { RedirectPath = $"/Sales/Checkout" });
             }
 
             //Check if the payment method exists
@@ -122,7 +126,7 @@ namespace GymHub.Web.Controllers
                 //Set notification
                 NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "Selected payment method doesn't exist");
 
-                return this.RedirectToAction(nameof(Checkout));
+                return this.Json(new { RedirectPath = $"/Sales/Checkout" });
             }
 
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
@@ -137,7 +141,7 @@ namespace GymHub.Web.Controllers
                 //Set notification
                 NotificationHelper.SetNotification(TempData, NotificationType.Error, "You do not have any products in your cart");
 
-                return this.RedirectToAction("All", "Carts");
+                return this.Json(new { RedirectPath = $"/Carts/All" });
             }
 
             //Check if the products' quantities exceed the amount of units in stock
@@ -156,7 +160,7 @@ namespace GymHub.Web.Controllers
                 //Serialize errors from modelstate
                 this.TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
 
-                return this.RedirectToAction(nameof(Checkout));
+                return this.Json(new { RedirectPath = $"/Carts/All" });
             }
 
             var paymentMethod = this.paymentMethodService.GetPaymentMethod(complexModel.InputModel.PaymentMethodId);
@@ -178,7 +182,7 @@ namespace GymHub.Web.Controllers
                     //Set notification
                     NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "Something went wrong with the purchase. Purchase reverted. You have not been charged.");
 
-                    return this.RedirectToAction(nameof(Checkout));
+                    return this.Json(new { RedirectPath = $"/Carts/All" });
                 }
 
                 return this.Json(new { id = sessionId, PaymentMethod = GlobalConstants.DebitOrCreditCard });
@@ -191,16 +195,15 @@ namespace GymHub.Web.Controllers
                 return this.Json(new { PaymentMethod = GlobalConstants.CashOnDelivery, RedirectPath = $"/Sales/CheckoutSuccess?confirmSaleToken={confirmSaleToken}" });
             }
 
+
             //If we have gotten this far, then the payment method was one of the other two, which are not supported at this moment
             NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "These two payments are not currently supported.");
-
             return this.Json(new { });
         }
 
         private string SetTempDataForSale(CheckoutInputModel saleInfo, List<CheckoutProductViewModel> products)
         {
             this.TempData[GlobalConstants.SaleInfo] = JsonSerializer.Serialize(saleInfo);
-            this.TempData[GlobalConstants.SaleProductsInfo] = JsonSerializer.Serialize(products);
             var confirmSaleToken = Guid.NewGuid().ToString();
             this.TempData[GlobalConstants.ConfirmSaleToken] = confirmSaleToken;
 
@@ -240,9 +243,13 @@ namespace GymHub.Web.Controllers
                 Mode = "payment",
                 SuccessUrl = currentDomain + $"/Sales/CheckoutSuccess?confirmSaleToken={confirmSaleToken}",
                 CancelUrl = currentDomain + $"/Sales/CheckoutCancel",
+                PaymentIntentData = new SessionPaymentIntentDataOptions { CaptureMethod = "manual"}
             };
 
             var session = await this.sessionService.CreateAsync(options, new RequestOptions { IdempotencyKey = Guid.NewGuid().ToString() });
+
+            this.TempData[GlobalConstants.PaymentIntentId] = session.PaymentIntentId;
+
             return session.Id;
         }
 
@@ -250,6 +257,14 @@ namespace GymHub.Web.Controllers
         {
             //Clear sale temp data info
             this.TempData.Clear();
+
+            var paymentIntentId = this.TempData[GlobalConstants.PaymentIntentId]?.ToString();
+
+            if (paymentIntentId != null)
+            {
+                //Cancel the fund capture
+                await this.paymentIntentService.CancelAsync(paymentIntentId);
+            }
 
             NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "You have canceled your payment");
 
@@ -261,9 +276,33 @@ namespace GymHub.Web.Controllers
             if(this.TempData[GlobalConstants.ConfirmSaleToken]?.ToString() == confirmSaleToken)
             {
                 var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
-
                 var saleInfo = JsonSerializer.Deserialize<CheckoutInputModel>(this.TempData[GlobalConstants.SaleInfo]?.ToString());
-                var saleProductsInfo = JsonSerializer.Deserialize<List<CheckoutProductViewModel>>(this.TempData[GlobalConstants.SaleProductsInfo].ToString());
+                var saleProductsInfo = this.cartService.GetAllProductsForCheckoutViewModel(currentUserId);
+
+                var anyItemExceedsStock = saleProductsInfo.Any(x => x.Quantity > x.QuantityInStock);
+                string paymentIntentId = this.TempData[GlobalConstants.PaymentIntentId]?.ToString();
+
+                //Check if the products wanted are in stock for when the user is buying with a credit or debit card
+                if (this.TempData[GlobalConstants.PaymentIntentId] != null && anyItemExceedsStock)
+                {
+                    //Cancel the fund capture
+                    await this.paymentIntentService.CancelAsync(paymentIntentId);
+
+                    //Set notifications
+                    NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "One or more of your ordered items are out of stock. Could not proceed to checkout. You have not been charged.");
+
+                    return this.RedirectToAction("All", "Carts");
+                }
+                else if(anyItemExceedsStock)
+                {
+                    //Set notifications
+                    NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "One or more of your ordered items are out of stock. Could not proceed to checkout. You have not been charged.");
+
+                    return this.RedirectToAction("All", "Carts");
+                }
+
+                //Capture the funds
+                var paymentIntentForCapture = await this.paymentIntentService.CaptureAsync(paymentIntentId);
 
                 await this.saleService.CheckoutAsync(saleInfo, currentUserId, saleProductsInfo);
 

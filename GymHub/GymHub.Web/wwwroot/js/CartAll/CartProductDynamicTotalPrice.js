@@ -16,6 +16,7 @@
             else if (productQuantity > productQuantityInStock) {
                 productQuantity = productQuantityInStock;
                 input.value = productQuantityInStock;
+                input.setAttribute('value', productQuantityInStock);
             }
 
             //Change one product total price
@@ -25,6 +26,8 @@
 
             //Now change all products total price
             SetAllProductsTotalPrice();
+
+            input.setAttribute('value', e.target.value);
         })
     })
 }

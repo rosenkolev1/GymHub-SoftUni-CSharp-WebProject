@@ -3,10 +3,14 @@
     var inputModel = Model.InputModel;
     var viewModel = Model.ViewModel;
 }
+@{ 
+    var buyButtonInactiveDueToError = this.ViewData["CartBuyButtonErrorForQuantity"] as bool? == true || Model.ViewModel.Count <= 0;
+}
+
 <div>
     <h1 class="main-cart-title">My Cart:</h1>
 </div>
-<div asp-validation-summary="All"></div>
+@*<div asp-validation-summary="All" class="alert-danger validation-all-div" style="background-color: none;"></div>*@
 <form asp-controller="Carts" asp-action="Buy" class="cart-form-products">
     <table class="cart-table-container">
         <thead class="cart-thead-container">
@@ -38,6 +42,7 @@
                 </td>
                 <td class="cart-td-element" id="quantity">
                     <input class="cart-input-quantity" type="number" asp-for="InputModel[i].Quantity" value="@product.Quantity" />
+                    <span asp-validation-for="InputModel[i].Quantity" class="alert-danger validation-span-cart" style="background-color:transparent"></span>
                     <button asp-controller="Carts" asp-action="Remove" asp-route-productId="@product.Id" type="submit" class="cart-input-remove alert-danger">Remove</button>
                 </td>
                 <td class="cart-td-element">
@@ -54,7 +59,7 @@
             </tr>
         </tbody>
     </table>
-    <button class="@(Model.ViewModel.Count > 0 ? "cart-form-buyButton" : "cart-form-buyButton-inactive")">Buy</button>
+    <button id="cart-buyButton" class="@(buyButtonInactiveDueToError == false ? "cart-form-buyButton" : "cart-form-buyButton-inactive")">Buy</button>
 </form>
 
 @section Scripts{ 

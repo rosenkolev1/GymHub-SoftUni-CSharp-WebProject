@@ -85,7 +85,6 @@
                 <textarea class="checkout-textarea" asp-for="InputModel.AdditionalInformation" placeholder="Any additional information about address, time of delivery etc..."></textarea>
                 <span asp-validation-for="InputModel.AdditionalInformation" class="validation-span"></span>
             </label>
-            <input hidden type="text" name="InputModel.ClientSecret" value="@this.ViewData[GlobalConstants.StripePaymentIntentId]" />
         </form>
         <div class="Yorder">
             <table>

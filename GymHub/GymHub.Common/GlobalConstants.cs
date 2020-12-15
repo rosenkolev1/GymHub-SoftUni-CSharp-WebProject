@@ -59,14 +59,8 @@
         //CheckoutViewModelInfo for checkout
         public const string CheckoutViewModelInfo = "CheckoutViewModelInfo";
 
-        //Stripe payment intent id
-        public const string StripePaymentIntentId = "StripePaymentIntentId";
-
-        //Stripe payment intent client secret
-        public const string StripePaymentIntentClientSecret = "StripePaymentIntentClientSecret";
-
-        //Stripe session id
-        public const string StripeSessionId = "StripeSessionId";
+        //Stripe paymentIntentId
+        public const string PaymentIntentId = "PaymentIntentId";
 
         //PaymentMethods
         public const string DebitOrCreditCard = "Debit or credit card";

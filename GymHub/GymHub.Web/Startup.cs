@@ -93,9 +93,11 @@ namespace GymHub.Web
             var sendGrid = new SendGridEmailSender(this.Configuration["SendGrid:ApiKey"]);
             services.AddSingleton(sendGrid);
 
-            //Add Stripe
+            //Configure stripe services Stripe
             StripeConfiguration.ApiKey = this.Configuration["Stripe:ApiKey"];
             services.AddTransient<SessionService>();
+            services.AddTransient<PaymentIntentService>();
+            services.AddTransient<RefundService>();
 
             //Add Automapper
             services.AddAutoMapper(typeof(UserProfile));

@@ -5,6 +5,7 @@ using GymHub.Services.Common;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -117,6 +118,33 @@ namespace GymHub.Services.ServicesFolder.CartService
                     Name = x.Product.Name,
                     QuantityInStock = x.Product.QuantityInStock
                 }).ToList();
+        }
+
+        public List<ProductCheckoutQuantitiesModel> GetQuantitesForProductCheckout(string userId)
+        {
+            return this.context.Carts
+                .Where(x => x.UserId == userId)
+                .Select(x => new ProductCheckoutQuantitiesModel
+                {
+                    Quantity = x.Quantity,
+                    QuantityInStock = x.Product.QuantityInStock
+                }).ToList();
+        }
+
+        public bool IsQuantityOfPurchasesValid(string userId, List<BuyProductInputModel> buyProductInputModels)
+        {
+            var productsIds = buyProductInputModels.Select(x => x.Id).ToList();
+
+            return !(this.context.Carts
+                .Where(x => x.UserId == userId && productsIds.Contains(x.ProductId))
+                .Include(x => x.Product)
+                .ToList()
+                .Select(x => new
+                {
+                    QuantityOfPurchase = buyProductInputModels.First(y => y.Id == x.ProductId).Quantity,
+                    QuantityInStock = x.Product.QuantityInStock
+                })
+                .Any(x => x.QuantityOfPurchase > x.QuantityInStock));
         }
     }
 }

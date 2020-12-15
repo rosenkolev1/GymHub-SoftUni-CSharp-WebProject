@@ -8,6 +8,8 @@
 
 -Add user profile pages and functionality
 
+-Add admin functionality for changing a sale's state(say from „обработва се“ на „Успешно“ или „Denied“)
+
 -Add functionality for reinstating a comment if you are an admin
 
 -Seperate controllers and views into areas

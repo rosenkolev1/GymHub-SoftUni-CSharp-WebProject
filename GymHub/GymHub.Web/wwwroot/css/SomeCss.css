@@ -418,23 +418,29 @@ th {
     width: 8vw;
     text-align: center;
     padding-left: 15px;
+    margin-top: 4px;
 }
 
 .cart-form-products {
     text-align: right;
 }
 
-.validation-span{
-    display:block;
-    color: orangered;
+.validation-span, .validation-span-cart {
+    display: block;
+    color: #b32319;
 }
 
-.product-page-mainImage{
-    float:right;
-    margin-right:10px;
-    height:30vh;
-    width:20vw;
-    display:block;
+.validation-span-hidden{
+    display: block;
+
+}
+
+.product-page-mainImage {
+    float: right;
+    margin-right: 10px;
+    height: 30vh;
+    width: 20vw;
+    display: block;
 }
 
 .product-page-name {

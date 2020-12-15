@@ -9,6 +9,7 @@ using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GymHub.Services.ServicesFolder.SaleService
@@ -33,7 +34,21 @@ namespace GymHub.Services.ServicesFolder.SaleService
             await this.context.Entry(sale).Collection(x => x.Products).LoadAsync();
             foreach (var product in purchasedProducts)
             {
-                sale.Products.Add(new ProductSale { ProductId = product.Id, Quantity = product.Quantity, Sale = sale });
+                sale.Products.Add(new ProductSale { ProductId = product.Id, Quantity = product.Quantity, Sale = sale });               
+            }
+
+            await this.context.SaveChangesAsync();
+        }
+
+        private async Task SubtractQuantityInStockWithPurchaseQuantity(List<CheckoutProductViewModel> purchasedProducts)
+        {
+            var productIds = purchasedProducts.Select(x => x.Id);
+            var products = this.context.Products
+                .Where(x => productIds.Contains(x.Id));
+
+            foreach (var product in products)
+            {
+                product.QuantityInStock -= purchasedProducts.First(x => x.Id == product.Id).Quantity;
             }
 
             await this.context.SaveChangesAsync();
@@ -71,7 +86,11 @@ namespace GymHub.Services.ServicesFolder.SaleService
 
         public async Task CheckoutAsync(CheckoutInputModel inputModel, string userId, List<CheckoutProductViewModel> purchasedProducts)
         {
+            //Do this first to avoid concurrency failures and clashes
+            await this.SubtractQuantityInStockWithPurchaseQuantity(purchasedProducts);
+
             var newSale = await this.CreateNewSaleAsync(inputModel, userId);
+
             await this.AddProductsToSaleAsync(newSale, purchasedProducts);
 
             await this.cartService.ClearCartAsync(userId);
