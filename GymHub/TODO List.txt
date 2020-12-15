@@ -1,4 +1,6 @@
--Add mock payment system like Stripe.
+-Fix checkout so it actually reduces the quantity in stock amount. Also refund the purchase if the quantity in stock gets reduced below the purchase quantity while attempting to checkout.
+
+-Add error notification for a product in the cart when user is trying to buy more than there is in stock for the product
 
 -Add category based searching.
 
