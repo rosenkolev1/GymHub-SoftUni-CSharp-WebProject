@@ -1,5 +1,3 @@
--Add option for admin to change order status for all users. Maybe add table to database for sale statuses.
-
 -Add category based searching.
 
 -Add image upload to product adding. Use some kind of blob storage for images.

@@ -57,14 +57,8 @@
             @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 <div class="nav-bar-element">
-                    <a class="nav-bar-button" asp-controller="Products" asp-action="Add">Add Product</a>
-                </div>
-                <div class="nav-bar-element">
-                    <a class="nav-bar-button" asp-controller="Categories" asp-action="All">Categories</a>
-                </div>
-                <div class="nav-bar-element">
-                    <a class="nav-bar-button" asp-controller="Sales" asp-action="Search">Search Sales</a>
-                </div>
+                    <a class="nav-bar-button" asp-controller="Admin" asp-action="AdminControls">AdminControls</a>
+                </div>             
             }
             <div class="nav-bar-element shop-button">
                 <a class="nav-bar-button" asp-controller="Products" asp-action="All">Shop</a>
