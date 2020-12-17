@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GymHub.Common;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.Common;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -312,6 +314,52 @@ namespace GymHub.Services.ServicesFolder.ProductService
             imageUrls.AddRange(something.AdditionalImages);
 
             return imageUrls;
+        }
+
+        public List<ProductViewModel> GetProductsFrom(int page)
+        {
+            var listOfViewModelsForCurrentPage = context.Products
+                .Skip((page - 1) * GlobalConstants.ProductsPerPage)
+                .Take(GlobalConstants.ProductsPerPage)
+                .Select(product => new
+                {
+                    product.Id,
+                    product.Name,
+                    product.Description,
+                    product.QuantityInStock,
+                    product.MainImage,
+                    product.Model,
+                    product.Price,
+                    product.Warranty,
+                    product.ProductRatings,
+                    ProductSalesCount = product.ProductSales.Count
+                }).ToList();
+
+            var listOfViewModels = listOfViewModelsForCurrentPage
+                .Select(product => new ProductViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    QuantityInStock = product.QuantityInStock,
+                    MainImage = product.MainImage,
+                    Model = product.Model,
+                    Price = product.Price,
+                    Warranty = product.Warranty,
+                    ProductSalesCount = product.ProductSalesCount,
+                    ShortDescription = this.GetShordDescription(product.Description, 40),
+                    ProductRatingViewModel = new ProductRatingViewModel(this.GetAverageRating(product.ProductRatings.ToList()))
+                }).ToList();
+
+            return listOfViewModels;
+        }
+
+        public IQueryable<Product> GetProductsFiltered()
+        {
+            var listOfProductsFiltered = this.context.Products
+                .Where(x => true);
+
+            return listOfProductsFiltered;
         }
     }
 }

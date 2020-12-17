@@ -3,6 +3,7 @@ using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GymHub.Services.ServicesFolder.ProductService
@@ -13,6 +14,7 @@ namespace GymHub.Services.ServicesFolder.ProductService
         public Task AddAsync(AddProductInputModel inputModel);
         public Task AddAsync(Product product);
         public List<ProductViewModel> GetAllProducts();
+        public List<ProductViewModel> GetProductsFrom(int page);
         public bool ProductExistsById(string id);
         public bool ProductExistsByName(string name);
         public bool ProductExistsByName(string name, string excludedProductId);
@@ -37,5 +39,6 @@ namespace GymHub.Services.ServicesFolder.ProductService
         public string GetProductName(string productId);
         public string GetProductModel(string productId);
         public List<string> GetImageUrlsForProduct(string productId);
+        public IQueryable<Product> GetProductsFiltered();
     }
 }

@@ -246,7 +246,7 @@
                             </div>
                             @if (viewModel.ParentsChildrenComments.Count > 0)
                             {
-                                <partial name="_PaginationPartial" model="@new PaginationViewModel { CurrentPage = viewModel.CurrentCommentsPage, NumberOfPages = viewModel.NumberOfCommentsPages, CutoffNumber = 14}" />
+                                <partial name="_PaginationPartial" model="@new PaginationViewModel { CurrentPage = viewModel.CurrentCommentsPage, NumberOfPages = viewModel.NumberOfCommentsPages, CutoffNumber = GlobalConstants.CommentsPagesCutoffNumber}" />
                             }
                         </section>
 

@@ -371,9 +371,23 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(int productsPage)
         {
-            var products = this.productService.GetAllProducts();
+            //Filter the products by categories and search string
+            var productsFiltered = this.productService.GetProductsFiltered();
+
+            //Get the count of the filtered products and the pages for these products
+            var productsCount = productsFiltered.Count();
+            var pagesCount = (productsCount % GlobalConstants.ProductsPerPage == 0)
+                ? (productsCount / GlobalConstants.ProductsPerPage)
+                : (productsCount / GlobalConstants.ProductsPerPage) + 1;
+
+            //Validate current page
+            if (productsPage <= 0 || productsPage > pagesCount) productsPage = 1;
+
+            //Get the products for the current page
+            //TODO: change the name of this function maybe
+            var productsForCurrentPage = this.productService.GetProductsFrom(productsPage);
 
             //This is for debugging purposes for now. It removes unnecessary temp data
             foreach (var key in TempData.Keys)
@@ -384,17 +398,18 @@ namespace GymHub.Web.Controllers
                 }
             }
 
-            //Add
+            //Create pagination model
             var paginationViewModel = new PaginationViewModel
             {
                 CurrentPage = 1,
-                CutoffNumber = 14,
-                NumberOfPages = products.Count
+                CutoffNumber = GlobalConstants.ProductsPagesCutoffNumber,
+                NumberOfPages = pagesCount
             };
 
+            //Create the view model
             var allProductViewModel = new AllProductsViewModel
             {
-                ProductViewModels = products,
+                ProductViewModels = productsForCurrentPage,
                 PaginationViewModel = paginationViewModel
             };
 

@@ -56,8 +56,13 @@
         public const int ProductNameLengthMin = 3;
         public const int ProductNameLengthMax = 100;
 
-        //Product Comments Pagination DEFAULT value is 8
+        //Products pagination products per page
+        public const int ProductsPerPage = 1;
+        public const int ProductsPagesCutoffNumber = 14;
+
+        //Product Comments Pagination comments per page DEFAULT value is 8
         public const int CommentsPerPage = 1;
+        public const int CommentsPagesCutoffNumber = 14;
 
         //Default comment removal email text
         public const string CommentRemovalJustificationText = "Hello, {username}, your comment for this product: {productName:model} has been deleted because it was deemed against our TOS policy.";
