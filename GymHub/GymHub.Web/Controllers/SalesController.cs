@@ -56,7 +56,7 @@ namespace GymHub.Web.Controllers
             this.paymentIntentService = paymentIntentService;
         }
 
-        public async Task<IActionResult> Checkout()
+        public IActionResult Checkout()
         {
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
 
@@ -83,8 +83,6 @@ namespace GymHub.Web.Controllers
             {
                 ViewModel = checkoutViewModel
             };
-
-            //TODO: Add input model on error from post request
 
             if(this.TempData[GlobalConstants.ErrorsFromPOSTRequest] != null)
             {
@@ -138,7 +136,7 @@ namespace GymHub.Web.Controllers
             var inputModel = complexModel.InputModel;
 
             //Check if the user has any products in their cart
-            if (await this.cartService.GetNumberOfProductsInCart(currentUserId) == 0)
+            if (this.cartService.GetNumberOfProductsInCart(currentUserId) == 0)
             {
                 //Set notification
                 NotificationHelper.SetNotification(TempData, NotificationType.Error, "You do not have any products in your cart");
@@ -322,7 +320,7 @@ namespace GymHub.Web.Controllers
             }
         }
 
-        public async Task<IActionResult> All()
+        public IActionResult All()
         {
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
 
@@ -332,7 +330,7 @@ namespace GymHub.Web.Controllers
         }
 
 
-        public async Task<IActionResult> Details(string saleId)
+        public IActionResult Details(string saleId)
         {
             var saleDetails = this.saleService.GetSaleDetailsViewModel(saleId);
 
@@ -340,7 +338,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public async Task<IActionResult> Search()
+        public ActionResult Search()
         {
             var saleInfoViewModels = this.saleService.GetSalesForAllUsers();
 
@@ -348,7 +346,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public async Task<IActionResult> ChangeSaleStatus(string saleId)
+        public IActionResult ChangeSaleStatus(string saleId)
         {
             if (this.saleService.SaleExists(saleId) == false)
             {

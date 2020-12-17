@@ -6,6 +6,7 @@ using GymHub.Services;
 using GymHub.Services.Messaging;
 using GymHub.Services.ServicesFolder.CategoryService;
 using GymHub.Services.ServicesFolder.ProductCommentService;
+using GymHub.Services.ServicesFolder.ProductImageService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Web.AuthorizationPolicies;
 using GymHub.Web.Helpers.NotificationHelpers;
@@ -34,10 +35,11 @@ namespace GymHub.Web.Controllers
         private readonly UserManager<User> userManager;
         private readonly SendGridEmailSender sendGridEmailSender;
         private readonly ICategoryService categoryService;
+        private readonly IProductImageService productImageService;
         public ProductsController
             (IProductService productService, IMapper mapper, IProductCommentService productCommentService, IUserService userService,
             JavaScriptEncoder javaScriptEncoder, UserManager<User> userManager, SendGridEmailSender sendGridEmailSender,
-            HtmlEncoder htmlEncoder, ICategoryService categoryService)
+            HtmlEncoder htmlEncoder, ICategoryService categoryService, IProductImageService productImageService)
         {
             this.productService = productService;
             this.mapper = mapper;
@@ -48,10 +50,11 @@ namespace GymHub.Web.Controllers
             this.sendGridEmailSender = sendGridEmailSender;
             this.htmlEncoder = htmlEncoder;
             this.categoryService = categoryService;
+            this.productImageService = productImageService;
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public async Task<IActionResult> Add()
+        public IActionResult Add()
         {
             AddProductInputModel inputModel = null;
 
@@ -101,14 +104,15 @@ namespace GymHub.Web.Controllers
                 this.ModelState.AddModelError("Name", "Product with this name already exists.");
             }
 
+            //CHECK the IMAGES LINKS
             //Check if all of these images are unique
-            if (this.productService.ImagesAreRepeated(inputModel.MainImage, inputModel.AdditionalImages))
+            if (this.productImageService.ImagesAreRepeated(inputModel.MainImage, inputModel.AdditionalImages))
             {
                 this.ModelState.AddModelError("", "There are 2 or more non-unique images");
             }
 
             //Check if main image is already used
-            if (this.productService.ProductImageExists(inputModel.MainImage) == true)
+            if (this.productImageService.ProductImageExists(inputModel.MainImage) == true)
             {
                 this.ModelState.AddModelError("MainImage", "This image is already used.");
             }
@@ -117,11 +121,14 @@ namespace GymHub.Web.Controllers
             for (int i = 0; i < inputModel.AdditionalImages.Count; i++)
             {
                 var additionalImage = inputModel.AdditionalImages[i];
-                if (this.productService.ProductImageExists(additionalImage) == true)
+                if (this.productImageService.ProductImageExists(additionalImage) == true)
                 {
                     this.ModelState.AddModelError($"AdditionalImages[{i}]", "This image is already used.");
                 }
             }
+
+            //CHECK THE IMAGES UPLOADS
+
 
             //Check if categories exist in the database or if there are even any categories for this product
             for (int i = 0; i < inputModel.CategoriesIds.Count; i++)
@@ -169,7 +176,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public async Task<IActionResult> LoadCategoryInput(AddCategoryToProductViewModel viewModel)
+        public IActionResult LoadCategoryInput(AddCategoryToProductViewModel viewModel)
         {
             viewModel.Categories = this.mapper.Map<List<CategoryViewModel>>(this.categoryService.GetAllCategories());
 
@@ -177,7 +184,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public async Task<IActionResult> Edit(string productId, string errorReturnUrl)
+        public IActionResult Edit(string productId, string errorReturnUrl)
         {           
             //Check if product with this id exists. MAYBE I WILL REPLACE THIS LATER WILL HAVE TO SWITCH TO DEVELOPMENT AND SEED
             if (this.productService.ProductExistsById(productId) == false)
@@ -269,13 +276,13 @@ namespace GymHub.Web.Controllers
             }
 
             //Check if all of these images are unique
-            if(this.productService.ImagesAreRepeated(inputModel.MainImage, inputModel.AdditionalImages))
+            if(this.productImageService.ImagesAreRepeated(inputModel.MainImage, inputModel.AdditionalImages))
             {
                 this.ModelState.AddModelError("", "There are 2 or more non-unique images");
             }
 
             //Check if main image is already used
-            if (this.productService.ProductImageExists(inputModel.MainImage, productId) == true)
+            if (this.productImageService.ProductImageExists(inputModel.MainImage, productId) == true)
             {
                 this.ModelState.AddModelError("MainImage", "This image is already used.");
             }
@@ -333,7 +340,7 @@ namespace GymHub.Web.Controllers
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> LoadAddProductPreview(string inputModelJSON)
+        public IActionResult LoadAddProductPreview(string inputModelJSON)
         {
             var inputModel = JsonSerializer.Deserialize<AddProductInputModel>(inputModelJSON);
 
@@ -371,7 +378,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> All(int productsPage)
+        public IActionResult All(int productsPage)
         {
             //Filter the products by categories and search string
             var productsFiltered = this.productService.GetProductsFiltered();

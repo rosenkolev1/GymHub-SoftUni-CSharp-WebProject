@@ -30,15 +30,9 @@ namespace GymHub.Services.ServicesFolder.ProductService
         public ProductRating GetProductRating(string userId, string productId);
         public bool ProductRatingExists(string userId, string productId);
         public Task EditProductRating(ProductRating productRating, double rating);
-        public bool ProductImageExists(string imageUrl, bool hardCheck = false);
-        public bool ProductImageExists(string imageUrl, string excludedProductId, bool hardCheck = false);
-        public Task AddProductImageAsync(ProductImage image);
         public Task RemoveProductAsync(string productId);
         public Task EditAsync(AddProductInputModel inputModel);
-        public bool ImagesAreRepeated(string mainImage, List<string> additionalImages);
         public string GetProductName(string productId);
-        public string GetProductModel(string productId);
-        public List<string> GetImageUrlsForProduct(string productId);
         public IQueryable<Product> GetProductsFiltered();
     }
 }

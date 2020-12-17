@@ -767,6 +767,14 @@ th {
     width: 40vw;
 }
 
+.image-uploads-container {
+    text-align:center;
+}
+
+.input-image-upload{
+    display:inline-block !important;
+}
+
 .product-add-name, .product-add-model, category-add-name {
     width: 30vw;
 }
@@ -774,6 +782,27 @@ th {
 .product-add-actionMessage-title, .product-edit-actionMessage-title {
     text-align: center;
 }
+
+.image-mode-container {
+    text-align: center;
+    font-size: 20px;
+}
+
+.image-mode-button {
+    display: inline-block;
+    font-size: 20px;
+    border: solid;
+    border-radius: 3px;
+    border-width: 2px;
+    padding: 5px;
+}
+
+    .image-mode-button:hover {
+        cursor: pointer;
+        background-color: #bde9ff;
+        border-color: #3a87ad;
+        color: #5c8ccc
+    }
 
 #addCategoryToProduct {
     font-size: 20px;

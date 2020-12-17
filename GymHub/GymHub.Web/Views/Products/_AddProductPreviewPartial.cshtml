@@ -44,6 +44,14 @@
                         <span> 0/10</span>
                     </div>
                     <hr>
+                    <div class="container productPage-categories-container">
+                        @foreach (var categoryName in Model.ProductCategoriesNames)
+                        {
+                            <div class="productPage-category-container">
+                                @categoryName
+                            </div>
+                        }
+                    </div>
                     <div class="product-price">$ @Model?.Price</div>
                     <div class="product-stock">In Stock: @Model?.QuantityInStock</div>
                     <hr>

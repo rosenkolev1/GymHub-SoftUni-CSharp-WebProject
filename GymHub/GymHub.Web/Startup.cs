@@ -13,6 +13,7 @@ using GymHub.Services.ServicesFolder.GenderService;
 using GymHub.Services.ServicesFolder.PaymentMethodService;
 using GymHub.Services.ServicesFolder.ProductCommentService;
 using GymHub.Services.ServicesFolder.ProductService;
+using GymHub.Services.ServicesFolder.ProductImageService;
 using GymHub.Services.ServicesFolder.RoleService;
 using GymHub.Services.ServicesFolder.SaleService;
 using GymHub.Web.AuthorizationPolicies;
@@ -107,6 +108,7 @@ namespace GymHub.Web
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProductService, Services.ServicesFolder.ProductService.ProductService>();
+            services.AddTransient<IProductImageService, ProductImageService>();
             services.AddTransient<ICartService, CartService>();
             services.AddTransient<IProductCommentService, ProductCommentService>();
             services.AddTransient<ICategoryService, CategoryService>();

@@ -9,6 +9,7 @@ using GymHub.Services.ServicesFolder.CountryService;
 using GymHub.Services.ServicesFolder.GenderService;
 using GymHub.Services.ServicesFolder.PaymentMethodService;
 using GymHub.Services.ServicesFolder.ProductCommentService;
+using GymHub.Services.ServicesFolder.ProductImageService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Services.ServicesFolder.RoleService;
 using GymHub.Services.ServicesFolder.SaleService;
@@ -38,6 +39,7 @@ namespace GymHub.Services.SeederFolder
         private readonly ICountryService countryService;
         private readonly IPaymentMethodService paymentMethodService;
         private readonly SaleService saleService;
+        private readonly IProductImageService productImageService;
 
         public Seeder(IServiceProvider serviceProvider, IConfiguration configuration)
         {
@@ -64,6 +66,9 @@ namespace GymHub.Services.SeederFolder
 
             //Set up productService
             this.productService = new ProductService(context, this.mapper);
+
+            //Set up productImageService
+            this.productImageService = new ProductImageService(context);
 
             //Set up productCommentService
             this.productCommentService = new ProductCommentService(context);
@@ -329,9 +334,9 @@ namespace GymHub.Services.SeederFolder
 
             foreach (var productImage in productsImages)
             {
-                if (this.productService.ProductImageExists(productImage.Image, true) == false)
+                if (this.productImageService.ProductImageExists(productImage.Image, true) == false)
                 {
-                    await this.productService.AddProductImageAsync(productImage);
+                    await this.productImageService.AddProductImageAsync(productImage);
                 }
             }
             return true;

@@ -307,7 +307,7 @@ namespace GymHub.Web.Controllers
 
         [Authorize]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> LoadReplyToComment(ReplyCommentInputModel inputModel)
+        public IActionResult LoadReplyToComment(ReplyCommentInputModel inputModel)
         {
             return this.PartialView("Views/Products/_ProductCommentReplyPartial.cshtml", inputModel);
         }

@@ -1,8 +1,14 @@
--Add category based searching.
+-Add categories to page preview in add and edit products previews
+
+-Refactor the view and input models into folders based on the controllers
 
 -Add image upload to product adding. Use some kind of blob storage for images.
 
--For searching sales by admin make datatable use server-side data
+-Add admin functionality for uploading products images
+
+-Add category based searching.
+
+-For searching sales by admin make datatables use server-side data
 
 -Add user profile pages and functionality
 

@@ -22,6 +22,12 @@
 
         let additionalImages = Array.from(document.querySelectorAll('.product-addProduct-additionalImage')).map(x => x.value);
 
+        let productCategoriesInputs = Array.from(document.querySelectorAll('.category-select'))
+            .reduce((acc, x) => {
+                if (x.value && x.value !== 'null') acc.push(x.value);
+                return acc;
+            }, []);
+
         let dataObject = {
             Name: name,
             Model: model,
@@ -30,7 +36,8 @@
             Price: price,
             Description: description,
             QuantityInStock: quantityInStock,
-            AdditionalImages: additionalImages
+            AdditionalImages: additionalImages,
+            ProductCategoriesNames: productCategoriesInputs
         };
 
         let dataObjectJSON = JSON.stringify(dataObject);

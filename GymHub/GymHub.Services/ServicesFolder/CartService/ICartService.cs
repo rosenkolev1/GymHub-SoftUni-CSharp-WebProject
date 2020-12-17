@@ -14,7 +14,7 @@ namespace GymHub.Services.ServicesFolder.CartService
         public ProductCart GetProductFromCart(string productId, string userId);
         public List<ProductCartViewModel> GetAllProductsForCartViewModel(string userId);
         public List<CheckoutProductViewModel> GetAllProductsForCheckoutViewModel(string userId);
-        public Task<int> GetNumberOfProductsInCart(string userId);
+        public int GetNumberOfProductsInCart(string userId);
         public Task RemoveProductByIdAsync(string userId, string productId);
         public Task ClearCartAsync(string userId);
         public List<ProductCheckoutQuantitiesModel> GetQuantitesForProductCheckout(string userId);

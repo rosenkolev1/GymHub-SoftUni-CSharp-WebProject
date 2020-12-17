@@ -54,7 +54,7 @@ namespace GymHub.Web.Controllers
             return this.RedirectToAction(nameof(All));
         }
 
-        public async Task<IActionResult> All()
+        public IActionResult All()
         {
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
             var productsInCart = this.cartService.GetAllProductsForCartViewModel(currentUserId);

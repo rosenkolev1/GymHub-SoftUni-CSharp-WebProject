@@ -9,7 +9,7 @@
     <link href="/css/ProductPageCommentBox.css" rel="stylesheet" asp-append-version="true" />
     <!------ Include the above in your HEAD tag ---------->
 }
-<form asp-controller="Products" asp-action="@(Model?.IsAdding != false ? "Add" : "Edit")" method="post" class="product-addProduct-form">
+<form asp-controller="Products" asp-action="@(Model?.IsAdding != false ? "Add" : "Edit")" method="post" class="product-addProduct-form" enctype="multipart/form-data">
     @if (Model?.IsAdding != false)
     {
         <h4 class="product-add-actionMessage-title">Create a new Product.</h4>
@@ -20,31 +20,64 @@
     }
     <hr />
     <div asp-validation-summary="All" class="alert-danger"></div>
-    <div class="input-container">
-        <label asp-for="MainImage" class="input-label">Main image</label>
-        <input asp-for="MainImage" type="text" placeholder="Type url here" class="input-link">
-        <span asp-validation-for="MainImage" class="validation-span"></span>
+    <div hidden>Image upload</div>
+    <div class="image-mode-container">
+        <p class="image-mode-button alert-info">Image link</p>
     </div>
-    @for (int i = 0; i < 3; i++)
-    {
-        @if (Model?.AdditionalImages != null)
+    <div class="image-links-container">
+        <div class="input-container">
+            <label asp-for="MainImage" class="input-label">Main image</label>
+            <input asp-for="MainImage" type="text" placeholder="Type url here" class="input-link">
+            <span asp-validation-for="MainImage" class="validation-span"></span>
+        </div>
+        @for (int i = 0; i < 3; i++)
         {
-            @if (Model.AdditionalImages.Count <= i) Model.AdditionalImages.Add(null);
-            <div class="input-container">
-                <label asp-for="AdditionalImages[i]" class="input-label">Additional image @(i+1)</label>
-                <input asp-for="AdditionalImages[i]" class="product-addProduct-additionalImage input-link" type="text" placeholder="Type url here">
-                <span asp-validation-for="AdditionalImages[i]" class="validation-span"></span>
-            </div>
+            @if (Model?.AdditionalImages != null)
+            {
+                @if (Model.AdditionalImages.Count <= i) Model.AdditionalImages.Add(null);
+                <div class="input-container">
+                    <label asp-for="AdditionalImages[i]" class="input-label">Additional image @(i+1)</label>
+                    <input asp-for="AdditionalImages[i]" class="product-addProduct-additionalImage input-link" type="text" placeholder="Type url here">
+                    <span asp-validation-for="AdditionalImages[i]" class="validation-span"></span>
+                </div>
+            }
+            else
+            {
+                <div class="input-container">
+                    <label asp-for="AdditionalImages[i]" class="input-label">Additional image @(i+1)</label>
+                    <input asp-for="AdditionalImages[i]" class="product-addProduct-additionalImage input-link" type="text" placeholder="Type url here">
+                    <span asp-validation-for="AdditionalImages[i]" class="validation-span"></span>
+                </div>
+            }
         }
-        else
+    </div>
+    <div hidden class="image-uploads-container">
+        <div class="input-container">
+            <label asp-for="MainImageUpload" class="input-label">Main image</label>
+            <input asp-for="MainImageUpload" placeholder="Type url here" class="input-image-upload">
+            <span asp-validation-for="MainImageUpload" class="validation-span"></span>
+        </div>
+        @for (int i = 0; i < 3; i++)
         {
-            <div class="input-container">
-                <label asp-for="AdditionalImages[i]" class="input-label">Additional image @(i+1)</label>
-                <input asp-for="AdditionalImages[i]" class="product-addProduct-additionalImage input-link" type="text" placeholder="Type url here">
-                <span asp-validation-for="AdditionalImages[i]" class="validation-span"></span>
-            </div>
+            @if (Model?.AdditionalImagesUploads != null)
+            {
+                @if (Model.AdditionalImagesUploads.Count <= i) Model.AdditionalImagesUploads.Add(null);
+                <div class="input-container">
+                    <label asp-for="AdditionalImagesUploads[i]" class="input-label">Additional image @(i+1)</label>
+                    <input asp-for="AdditionalImagesUploads[i]" class="product-addProduct-additionalImageUpload input-image-upload" placeholder="Type url here">
+                    <span asp-validation-for="AdditionalImagesUploads[i]" class="validation-span"></span>
+                </div>
+            }
+            else
+            {
+                <div class="input-container">
+                    <label asp-for="AdditionalImagesUploads[i]" class="input-label">Additional image @(i+1)</label>
+                    <input asp-for="AdditionalImagesUploads[i]" class="product-addProduct-additionalImageUpload input-image-upload" placeholder="Type url here">
+                    <span asp-validation-for="AdditionalImagesUploads[i]" class="validation-span"></span>
+                </div>
+            }
         }
-    }
+    </div>
     <div class="input-container">
         <label asp-for="Name" class="input-label"></label>
         <input type="text" asp-for="Name" class="input-label product-add-name" placeholder="Type name here" />
@@ -76,7 +109,7 @@
         <span asp-validation-for="QuantityInStock" class="validation-span"></span>
     </div>
     <div class="input-container" id="product-categories-container">
-        @if(Model?.CategoriesIds?.Count > 0)
+        @if (Model?.CategoriesIds?.Count > 0)
         {
             @for (int i = 0; i < Model.CategoriesIds.Count; i++)
             {
@@ -86,7 +119,7 @@
                     SelectedCategory = Model.CategoriesIds[i],
                     Categories = categoryService.GetAllCategories().Select(x => new CategoryViewModel { Name = x.Name, Id = x.Id }).ToList()
                 };
-                <partial name="_AddCategoryToProductPartial.cshtml" model="addCategoryToProductViewModel"/>
+                <partial name="_AddCategoryToProductPartial.cshtml" model="addCategoryToProductViewModel" />
             }
         }
         <div class="container" id="addCategoryToProduct-container">
@@ -116,9 +149,12 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js" asp-append-version="true"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js" asp-append-version="true"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js" asp-append-version="true"></script>
+
+    <!--My Scripts-->
     <script src="~/js/AddProductPage/PreviewPage.js" asp-append-version="true"></script>
     <script src="~/js/Shared/ChangeProductImage.js" asp-append-version="true"></script>
     <script src="~/js/AddProductPage/AddCategoryToProduct.js" asp-append-version="true"></script>
+    <script src="~/js/AddProductPage/SwitchImageMode.js" asp-append-version="true"></script>
 
     <partial name="_ValidationScriptsPartial.cshtml">
 }

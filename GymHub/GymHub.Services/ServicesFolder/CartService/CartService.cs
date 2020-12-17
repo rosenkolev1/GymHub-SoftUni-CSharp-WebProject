@@ -2,6 +2,7 @@
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.Common;
+using GymHub.Services.ServicesFolder.ProductImageService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
@@ -17,13 +18,15 @@ namespace GymHub.Services.ServicesFolder.CartService
         private readonly IMapper mapper;
         private readonly IUserService userService;
         private readonly IProductService productService;
+        private readonly IProductImageService productImageService;
 
-        public CartService(ApplicationDbContext context, IMapper mapper, IUserService userService, IProductService productService)
+        public CartService(ApplicationDbContext context, IMapper mapper, IUserService userService, IProductService productService, IProductImageService productImageService)
             : base(context)
         {
             this.mapper = mapper;
             this.userService = userService;
             this.productService = productService;
+            this.productImageService = productImageService;
         }
         public async Task AddToCartAsync(string productId, string userId, int quantity = 1)
         {
@@ -63,7 +66,7 @@ namespace GymHub.Services.ServicesFolder.CartService
             }).ToList();
         }
 
-        public async Task<int> GetNumberOfProductsInCart(string userId)
+        public int GetNumberOfProductsInCart(string userId)
         {
             var countOfProducts = context.Carts
                 .Select(x => new
@@ -113,7 +116,7 @@ namespace GymHub.Services.ServicesFolder.CartService
                     SinglePrice = x.Product.Price,
                     Description = x.Product.Description,
                     Id = x.ProductId,
-                    ImagesUrls = this.productService.GetImageUrlsForProduct(x.Product.Id),
+                    ImagesUrls = this.productImageService.GetImageUrlsForProduct(x.Product.Id),
                     Model = x.Product.Model,
                     Name = x.Product.Name,
                     QuantityInStock = x.Product.QuantityInStock

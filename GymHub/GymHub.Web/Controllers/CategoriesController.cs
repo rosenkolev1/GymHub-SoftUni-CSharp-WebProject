@@ -25,7 +25,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public async Task<IActionResult> All()
+        public IActionResult All()
         {
             var allCategories = this.categoryService.GetAllCategories(true);
 
@@ -40,7 +40,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             if(TempData[GlobalConstants.ErrorsFromPOSTRequest] != null)
             {
@@ -74,7 +74,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public async Task<IActionResult> Edit(string categoryId)
+        public IActionResult Edit(string categoryId)
         {
             EditCategoryInputModel inputModel;
 
