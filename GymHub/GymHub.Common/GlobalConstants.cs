@@ -12,6 +12,7 @@
         public const string CompanyAddress = "455 Foggy Heights, AZ 85004, US";
         public const string CompanyContactNumber = "(123) 456-789";
         public const string CompanyContactEmail = "rosenandreevkolev1@gmail.com";
+        public const string PathToSiteLogo = "/GymHub/GymHub logo.png";
 
         //Errors from POST request temp data
         public const string ErrorsFromPOSTRequest = "ErrorsFromPOSTRequest";
