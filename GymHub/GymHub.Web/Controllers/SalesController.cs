@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GymHub.Common;
+using GymHub.Data.Models;
 using GymHub.Services;
 using GymHub.Services.ServicesFolder.CartService;
 using GymHub.Services.ServicesFolder.CountryService;
@@ -349,14 +350,63 @@ namespace GymHub.Web.Controllers
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
         public async Task<IActionResult> ChangeSaleStatus(string saleId)
         {
-            return this.View();
+            if (this.saleService.SaleExists(saleId) == false)
+            {
+                return this.NotFound();
+            }
+
+            if(this.TempData[GlobalConstants.ErrorsFromPOSTRequest] != null)
+            {
+                ModelStateHelper.MergeModelStates(this.TempData, this.ModelState);
+            }
+
+            var viewModel = this.saleService.GetAllSaleStatuses();
+            var inputModel = new ChangeSaleStatusInputModel { SaleId = saleId };
+
+            if(this.TempData["NewSaleStatusId"] != null)
+            {
+                inputModel.NewSaleStatusId = this.TempData["NewSaleStatusId"].ToString();
+            }
+
+            var complexModel = new ComplexModel<ChangeSaleStatusInputModel, List<SaleStatus>> { ViewModel = viewModel, InputModel = inputModel };
+
+            return this.View(complexModel);
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
         [HttpPost]
-        public async Task<IActionResult> ChangeSaleStatus(ChangeSaleStatusInputModel inputModel)
+        public async Task<IActionResult> ChangeSaleStatus(ComplexModel<ChangeSaleStatusInputModel, List<SaleStatus>> complexModel)
         {
-            return this.NotFound();
+            if(this.ModelState.IsValid == false)
+            {
+                //Set up temp data with model state and input model
+                this.TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
+                this.TempData["NewSaleStatusId"] = complexModel.InputModel.NewSaleStatusId;
+
+                return this.RedirectToAction(nameof(ChangeSaleStatus), new { saleId = complexModel.InputModel.SaleId });
+            }
+
+            //Check if status and sale exist
+            if(this.saleService.SaleStatusExists(complexModel.InputModel.NewSaleStatusId) == false)
+            {
+                this.ModelState.AddModelError("InputModel.NewSaleStatusId", "This sale status doesn't exist");
+            }
+
+            if (this.ModelState.IsValid == false)
+            {
+                //Set up temp data with model state and input model
+                this.TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
+                this.TempData["NewSaleStatusId"] = complexModel.InputModel.NewSaleStatusId;
+
+                return this.RedirectToAction(nameof(ChangeSaleStatus), new { saleId = complexModel.InputModel.SaleId });
+            }
+
+            await this.saleService.ChangeSaleStatusAsync(complexModel.InputModel.SaleId, complexModel.InputModel.NewSaleStatusId);
+
+            //Set up success notification
+            NotificationHelper.SetNotification(this.TempData, NotificationType.Success, $"You have successfully changed notification status");
+
+            return this.RedirectToAction(nameof(Search));
         }
     }
 }

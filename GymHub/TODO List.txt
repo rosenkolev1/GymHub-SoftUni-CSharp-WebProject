@@ -1,10 +1,12 @@
 -Add option for admin to change order status for all users. Maybe add table to database for sale statuses.
 
--Add admin control panel in the application
-
 -Add category based searching.
 
 -Add image upload to product adding. Use some kind of blob storage for images.
+
+-Add admin control panel in the application(a single button which, when pressed, opens a new control panel page where the admin can simply choose what action to do like he can now from the layout. Aka I do this to not fill the layout to the brim with buttons)
+
+-For searching sales by admin make datatable use server-side data
 
 -Add user profile pages and functionality
 
@@ -16,11 +18,13 @@
 
 -Add email confirmation on register
 
+-Add favicon
+
 -Add registered user welcome page.
 
 -Add double click prevention
 
--Add vaptcha validation
+-Add captcha validation
 
 -Add email sender for when there is availability for a sold out product.
 

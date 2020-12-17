@@ -790,13 +790,26 @@ th {
 }
 
 .sales-all-paymentStatus {
-    background-color: #edb832;
-    color: white;
     font-weight: 700;
     text-align:center;
     border-radius: 4px;
     padding-top: 4px;
     padding-bottom:4px;
+}
+
+.sales-all-paymentStatus-pending {
+    background-color: #edb832;
+    color: white;
+}
+
+.sales-all-paymentStatus-confirmed {
+    background-color: #edb832;
+    color: white;
+}
+
+.sales-all-paymentStatus-declined {
+    background-color: #edb832;
+    color: white;
 }
 
 .sales-details-button, .sales-changeStatus-button {

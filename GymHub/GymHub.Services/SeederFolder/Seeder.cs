@@ -11,6 +11,7 @@ using GymHub.Services.ServicesFolder.PaymentMethodService;
 using GymHub.Services.ServicesFolder.ProductCommentService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Services.ServicesFolder.RoleService;
+using GymHub.Services.ServicesFolder.SaleService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +37,7 @@ namespace GymHub.Services.SeederFolder
         private readonly ICategoryService categoryService;
         private readonly ICountryService countryService;
         private readonly IPaymentMethodService paymentMethodService;
+        private readonly SaleService saleService;
 
         public Seeder(IServiceProvider serviceProvider, IConfiguration configuration)
         {
@@ -74,6 +76,9 @@ namespace GymHub.Services.SeederFolder
 
             //Set up countryService
             this.paymentMethodService = new PaymentMethodService(context);
+
+            //Set up sales service 
+            this.saleService = new SaleService(context);
         }
 
         public async Task SeedAsync()
@@ -84,6 +89,7 @@ namespace GymHub.Services.SeederFolder
             await SeedRolesAsync();
             await SeedCountriesAsync();
             await SeedPaymentMethodsAsync();
+            await SeedSaleStatusesAsync();
 
             //Seed the users
             await SeedUsersAsync();
@@ -161,6 +167,26 @@ namespace GymHub.Services.SeederFolder
                 if (this.paymentMethodService.PaymentMethodExistsByName(paymentMethod) == false)
                 {
                     await this.paymentMethodService.AddAsync(paymentMethod);
+                }
+            }
+
+            return true;
+        }
+
+        private async Task<bool> SeedSaleStatusesAsync()
+        {
+            var saleStatuses = new List<SaleStatus>
+            {
+                new SaleStatus{Id = GlobalConstants.PendingSaleStatus, Name = GlobalConstants.PendingSaleStatus},
+                new SaleStatus{Id = GlobalConstants.ConfirmedSaleStatus, Name = GlobalConstants.ConfirmedSaleStatus},
+                new SaleStatus{Id = GlobalConstants.DeclinedSaleStatus, Name = GlobalConstants.DeclinedSaleStatus}
+            };
+
+            foreach (var saleStatus in saleStatuses)
+            {
+                if (this.saleService.SaleStatusExists(saleStatus.Id) == false)
+                {
+                    await this.saleService.AddSaleStatusAsync(saleStatus);
                 }
             }
 

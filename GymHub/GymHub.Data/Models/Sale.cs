@@ -30,6 +30,12 @@ namespace GymHub.Data.Models
         public string PaymentMethodId { get; set; }
         public virtual PaymentMethod PaymentMethod { get; set; }
 
+        [ForeignKey(nameof(SaleStatus))]
+        [Required]
+        public string SaleStatusId { get; set; }
+
+        public virtual SaleStatus SaleStatus { get; set; }
+
         //Collections
         public virtual ICollection<ProductSale> Products { get; set; }
 
@@ -60,9 +66,6 @@ namespace GymHub.Data.Models
 
         [Required]
         public string EmailAddress { get; set; }
-
-        [Required]
-        public string SaleStatus { get; set; }
 
         public string AdditionalInformation { get; set; }
 

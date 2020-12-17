@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GymHub.Common;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.Common;
@@ -20,6 +21,12 @@ namespace GymHub.Services.ServicesFolder.SaleService
         private readonly ICountryService countryService;
         private readonly IProductService productService;
         private readonly ICartService cartService;
+
+        public SaleService(ApplicationDbContext context)
+            :base(context)
+        {
+            
+        }
 
         public SaleService(ApplicationDbContext context, IMapper mapper, ICountryService countryService, IProductService productService, ICartService cartService)
             :base(context)
@@ -72,7 +79,7 @@ namespace GymHub.Services.ServicesFolder.SaleService
                 PurchasedOn = DateTime.UtcNow,
                 UserId = userId,
                 Country = this.countryService.GetCountryByCode(inputModel.CountryCode),
-                SaleStatus = "Pending Review",
+                SaleStatus = this.GetSaleStatus(GlobalConstants.PendingSaleStatus),
                 Municipality = inputModel.Municipality
             };
 
@@ -109,7 +116,7 @@ namespace GymHub.Services.ServicesFolder.SaleService
                 {
                     BillingAccount = x.User.UserName,
                     ReceivingAccount = x.User.UserName,
-                    PaymentStatus = x.SaleStatus,
+                    PaymentStatus = x.SaleStatus.Name,
                     Id = x.Id,
                     PaymentMethod = x.PaymentMethod,
                     PurchasedOn = x.PurchasedOn,
@@ -126,7 +133,7 @@ namespace GymHub.Services.ServicesFolder.SaleService
                 .ThenInclude(x => x.Product)
                 .Select(x => new SaleDetailsViewModel
                 {
-                    SaleStatus = x.SaleStatus,
+                    SaleStatus = x.SaleStatus.Name,
                     Address = x.Address,
                     EmailAddress = x.EmailAddress,
                     CompanyName = x.CompanyName,
@@ -152,13 +159,46 @@ namespace GymHub.Services.ServicesFolder.SaleService
                 {
                     BillingAccount = x.User.UserName,
                     ReceivingAccount = x.User.UserName,
-                    PaymentStatus = x.SaleStatus,
+                    PaymentStatus = x.SaleStatus.Name,
                     Id = x.Id,
                     PaymentMethod = x.PaymentMethod,
                     PurchasedOn = x.PurchasedOn,
                     TotalPayment = x.Products.Sum(x => x.Product.Price * x.Quantity)
                 })
                 .ToList();
+        }
+
+        public SaleStatus GetSaleStatus(string name)
+        {
+            return this.context.SaleStatuses.First(x => x.Name == name);
+        }
+
+        public async Task AddSaleStatusAsync(SaleStatus saleStatus)
+        {
+            await this.context.SaleStatuses.AddAsync(saleStatus);
+            await this.context.SaveChangesAsync();
+        }
+
+        public bool SaleStatusExists(string id)
+        {
+            return this.context.SaleStatuses.Any(x => x.Id == id);
+        }
+
+        public List<SaleStatus> GetAllSaleStatuses()
+        {
+            return this.context.SaleStatuses.ToList();
+        }
+
+        public bool SaleExists(string saleId)
+        {
+            return this.context.Sales.Any(x => x.Id == saleId);
+        }
+
+        public async Task ChangeSaleStatusAsync(string saleId, string saleStatusId)
+        {
+            this.context.Sales.First(x => x.Id == saleId).SaleStatusId = saleStatusId;
+
+            await this.context.SaveChangesAsync();
         }
     }
 }

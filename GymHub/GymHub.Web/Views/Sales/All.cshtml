@@ -57,8 +57,18 @@
                         @Html.DisplayFor(model => sale.TotalPayment)
                     </td>
                     <td>
-                        <div class="sales-all-paymentStatus">@sale.PaymentStatus</div>
-                        <form hidden id="saleDetailsForm@(sale.Id)" method="get"></form>
+                        @if (sale.PaymentStatus == GlobalConstants.PendingSaleStatus)
+                        {
+                            <div class="sales-all-paymentStatus sales-all-paymentStatus-pending">@sale.PaymentStatus</div>
+                        }
+                        else if (sale.PaymentStatus == GlobalConstants.ConfirmedSaleStatus)
+                        {
+                            <div class="sales-all-paymentStatus alert-success">@sale.PaymentStatus</div>
+                        }
+                        else if (sale.PaymentStatus == GlobalConstants.DeclinedSaleStatus)
+                        {
+                            <div class="sales-all-paymentStatus alert-danger">@sale.PaymentStatus</div>
+                        }
                         <a asp-action="Details" asp-controller="Sales" asp-route-saleId="@sale.Id" class="alert-info sales-details-button">Details</a>
                         @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
                         {

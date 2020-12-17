@@ -1,17 +1,21 @@
 ﻿@using GymHub.Common
+@using GymHub.Data.Models
 
-@model ChangeSaleStatusInputModel
+@model ComplexModel<ChangeSaleStatusInputModel, List<SaleStatus>>
 
 <div class="input-container">
     <form asp-controller="Sales" asp-action="ChangeSaleStatus" method="post">
-        <label asp-for="NewSaleStatus" class="input-label">Category Name</label>
-        <select asp-for="NewSaleStatus">
+        <input hidden asp-for="InputModel.SaleId" />
+        <span asp-validation-for="InputModel.SaleId" class="validation-span"></span>
+        <label asp-for="InputModel.NewSaleStatusId" class="input-label">Category Name</label>
+        <select asp-for="InputModel.NewSaleStatusId">
             <option selected value="">Select new sale status</option>
-            <option selected value="@GlobalConstants.PendingSaleStatus">@GlobalConstants.PendingSaleStatus</option>
-            <option selected value="@GlobalConstants.ConfirmedSaleStatus">@GlobalConstants.ConfirmedSaleStatus</option>
-            <option selected value="@GlobalConstants.DeclinedSaleStatus">@GlobalConstants.DeclinedSaleStatus</option>
+            @foreach (var saleStatus in Model.ViewModel)
+            {
+                <option value="@saleStatus.Id">@saleStatus.Name</option>
+            }
         </select>
-        <span asp-validation-for="NewSaleStatus" class="validation-span"></span>
+        <span asp-validation-for="InputModel.NewSaleStatusId" class="validation-span"></span>
         <div class="button-container">
             <button type="submit">Change sale status</button>
         </div>
