@@ -12,5 +12,7 @@
         public int QuantityInStock { get; set; }
         public string ShortDescription { get; set; }
         public string Model { get; set; }
+        public int ProductSalesCount { get; set; }
+        public ProductRatingViewModel ProductRatingViewModel { get; set; }
     }
 }

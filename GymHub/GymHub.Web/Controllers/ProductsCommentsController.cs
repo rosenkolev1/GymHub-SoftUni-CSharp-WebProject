@@ -124,7 +124,7 @@ namespace GymHub.Web.Controllers
 
             await this.productCommentService.AddAsync(newComment);
 
-            newComment.ProductRating = newRating;
+            newComment.ProductRatingId = newRating.Id;
 
             await this.productService.AddRatingAsync(newRating);
 
@@ -302,7 +302,7 @@ namespace GymHub.Web.Controllers
 
             await this.productCommentService.AddAsync(replyComment);
 
-            return this.RedirectToAction("ProductPage", "Products", new { productId, toReplyComment = replyComment.Id, commentsPage, commentsOrderingOption }, pageFragment);
+            return this.RedirectToAction("ProductPage", "Products", new { productId, toReplyComment = replyComment.Id, commentsPage = commentsPage, commentsOrderingOption }, pageFragment);
         }
 
         [Authorize]

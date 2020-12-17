@@ -60,7 +60,37 @@ namespace GymHub.Services.ServicesFolder.ProductService
 
         public List<ProductViewModel> GetAllProducts()
         {
-            return context.Products.Select(product => mapper.Map<ProductViewModel>(product)).ToList();
+            var listOfViewModelsFirst = context.Products.Select(product => new
+            {
+                product.Id,
+                product.Name,
+                product.Description,
+                product.QuantityInStock,
+                product.MainImage,
+                product.Model,
+                product.Price,
+                product.Warranty,
+                product.ProductRatings,
+                ProductSalesCount = product.ProductSales.Count
+            }).ToList();
+
+            var listOfViewModels = listOfViewModelsFirst
+                .Select(product => new ProductViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    QuantityInStock = product.QuantityInStock,
+                    MainImage = product.MainImage,
+                    Model = product.Model,
+                    Price = product.Price,
+                    Warranty = product.Warranty,
+                    ProductSalesCount = product.ProductSalesCount,
+                    ShortDescription = this.GetShordDescription(product.Description, 40),
+                    ProductRatingViewModel = new ProductRatingViewModel(this.GetAverageRating(product.ProductRatings.ToList()))
+                }).ToList();
+
+            return listOfViewModels;
         }
 
         public Product GetProductById(string productId, bool withNavigationalProperties)

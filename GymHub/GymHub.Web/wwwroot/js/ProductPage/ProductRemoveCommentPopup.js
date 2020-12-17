@@ -55,7 +55,7 @@
             }
 
             //Add comment page
-            SetFormDataCommentPage();
+            SetFormDataPage(pageQueryParamName);
 
             commentRemoveForm.requestSubmit();  
         }    

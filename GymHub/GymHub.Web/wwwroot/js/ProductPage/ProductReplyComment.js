@@ -50,7 +50,7 @@
                         //Add url page fragment to form data on submit for the reply form
                         SetFormDataPageFragment();
                         //Add comments page to form data on submit for the reply form
-                        SetFormDataCommentPage();
+                        SetFormDataPage(pageQueryParamName);
                         //Add url comments ordering option to form data on submit for the reply form
                         SetUrlCommentsOrderingOption();
 

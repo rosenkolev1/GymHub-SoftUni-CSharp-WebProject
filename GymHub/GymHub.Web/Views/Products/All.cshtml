@@ -1,22 +1,63 @@
-﻿@model List<ProductViewModel>
+﻿@model AllProductsViewModel
 
-@for (int i = 0; i < Model.Count; i++)
-{ var product = Model[i];
-    <div class="product-container">
+@{ 
+    var productViewModels = Model.ProductViewModels;
+    var paginationViewModel = Model.PaginationViewModel;
+}
+
+@section ImportantLinks{ 
+    <link href="~/css/ProductsAllPagination.css" rel="stylesheet" asp-append-version="true"/>
+}
+
+@for (int i = 0; i < productViewModels.Count; i++)
+{ var product = productViewModels[i];
+    <div class="product-container">    
         <div class="product-content-container">
+            <div class="product-rating-all">
+                @{
+                    var productRating = product.ProductRatingViewModel;
+                }
+                @for (int y = 0; y < productRating.FullStarsCount; y++)
+                {
+                    <i class="fa fa-star gold"></i>
+                }
+                @if (productRating.HasHalfStar == true)
+                {
+                    <i class="fa fa-star-half-o gold"></i>
+                }
+                @for (int y = 0; y < productRating.EmptyStarsCount; y++)
+                {
+                    <i class="fa fa-star-o gold"></i>
+                }
+                <span> @productRating.AverageRating/10</span>
+            </div>
             <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-name">@product.Name</a>
+            <hr class="product-headers-line-break"/>
             <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-name">Model: @product.Model</a>
             <img class="product-mainImage" src="@product.MainImage">
-            <p class="product-element-even">Price: @product.Price $</p>
-            <p class="product-element-odd">Description: @product.ShortDescription</p>
-            <p class="product-element-even">Warranty: @product.Warranty Months</p>
-            <p class="product-element-odd">QuantityInStock: @product.QuantityInStock</p>
+            <div class="product-elements-info">
+                <p class="product-element-even"><b>$@product.Price</b><span class="product-element-sales">@product.ProductSalesCount <span style="color:gray">@(product.ProductSalesCount != 1 ? "sales" : "sale")</span></span></p>
+                <p class="product-element-odd product-element-description">@product.ShortDescription</p>
+            </div>
         </div>
-        <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-button">Info</a>
-        <form method="post">
-            <input type="hidden" name="productId" value="@product.Id"/>
-            <input type="hidden" name="quantity" value="1"/>
-            <button asp-controller="Carts" asp-action="AddToCart" type="submit" class="product-button">Add</button>
-        </form>
+        <div class="product-buttons-container">
+            <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-button">Info</a>
+            <form class="product-element-form" method="post">
+                <input type="hidden" name="productId" value="@product.Id" />
+                <input type="hidden" name="quantity" value="1" />
+                <button asp-controller="Carts" asp-action="AddToCart" type="submit" class="product-button">Add</button>
+            </form>
+        </div>
     </div>
+}
+<div class="products-all-pagination-container">
+    <partial name="_PaginationPartial" model="paginationViewModel" />
+</div>
+
+    
+@section Scripts{ 
+    <script src="~/js/Shared/Pagination.js" asp-append-version="true"></script>
+    <script>
+        PaginationInit('productsPage');
+    </script>
 }

@@ -1,0 +1,10 @@
+﻿.products-all-pagination-container {
+    text-align: right;
+    margin-top: 10px;
+}
+
+.product-pagination {
+    flex-grow: 1;
+    flex-direction: row;
+    float: right;
+}

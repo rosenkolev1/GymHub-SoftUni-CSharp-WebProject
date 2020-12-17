@@ -374,12 +374,8 @@ namespace GymHub.Web.Controllers
         public async Task<IActionResult> All()
         {
             var products = this.productService.GetAllProducts();
-            foreach (var product in products)
-            {
-                product.ShortDescription = this.productService.GetShordDescription(product.Description, 40);
-            }
 
-            //This is for debugging purposes for now
+            //This is for debugging purposes for now. It removes unnecessary temp data
             foreach (var key in TempData.Keys)
             {
                 if(key == GlobalConstants.InputModelFromPOSTRequest || key == GlobalConstants.InputModelFromPOSTRequestType)
@@ -388,7 +384,21 @@ namespace GymHub.Web.Controllers
                 }
             }
 
-            return this.View(products);
+            //Add
+            var paginationViewModel = new PaginationViewModel
+            {
+                CurrentPage = 1,
+                CutoffNumber = 14,
+                NumberOfPages = products.Count
+            };
+
+            var allProductViewModel = new AllProductsViewModel
+            {
+                ProductViewModels = products,
+                PaginationViewModel = paginationViewModel
+            };
+
+            return this.View(allProductViewModel);
         }
 
         [Authorize]

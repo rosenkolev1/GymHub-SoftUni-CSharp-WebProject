@@ -8,7 +8,6 @@
         ProductPageCommentBoxInit,
         ProductRemoveCommentPopupInit,
         ProductReplyCommentInit,
-        ProductPageCommentsPaginationInit,
         ProductCommentsOrderingInit,
         ProductPageBuyingQuantityInit,
         RemoveProductInit,

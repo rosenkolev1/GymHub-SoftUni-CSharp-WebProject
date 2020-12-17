@@ -8,6 +8,8 @@
 
 -Add functionality for reinstating a comment if you are an admin
 
+-Remove unused models from database in the future maybe
+
 -Seperate controllers and views into areas
 
 -Add column (Deleted by whom) or something similar to indicate which admin deleted a comment, product etc...

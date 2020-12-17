@@ -1,0 +1,75 @@
+﻿@model PaginationViewModel
+
+<div>
+    <nav aria-label="Page navigation example">
+        <input hidden value="@Model.NumberOfPages" />
+        <ul class="pagination product-pagination">
+            <li class="page-item page-element-previous"><a class="page-link">Previous</a></li>
+            @if (Model.NumberOfPages <= Model.CutoffNumber)
+            {
+                @for (int i = 1; i <= Model.NumberOfPages; i++)
+                {
+                    <li class="page-item page-element"><a class="page-link">@i</a></li>
+                }
+            }
+            else
+            {
+                @if (Model.CurrentPage <= Model.CutoffNumber/2 && Model.CurrentPage <= Model.NumberOfPages - Model.CurrentPage)
+                {
+                    @for (int i = 1; i <= Model.CutoffNumber / 2; i++)
+                    {
+                        <li class="page-item page-element"><a class="page-link">@i</a></li>
+                    }
+                    if (Model.NumberOfPages >= Model.CutoffNumber / 2 + 4)
+                    {
+                        <li class="page-item page-element-dots pageNumber=fromPrevious"><a class="page-link">...</a></li>
+                    }
+                    @for (int i = Model.NumberOfPages - 3; i <= Model.NumberOfPages; i++)
+                    {
+                        if (i > Model.CutoffNumber / 2)
+                        {
+                            <li class="page-item page-element"><a class="page-link">@i</a></li>
+                        }
+                    }
+                }
+                else if (Model.CurrentPage > Model.NumberOfPages - Model.CutoffNumber / 2)
+                {
+                    @for (int i = 1; i <= 3; i++)
+                    {
+                        <li class="page-item page-element"><a class="page-link">@i</a></li>
+                    }
+                    if (Model.NumberOfPages >= Model.CutoffNumber / 2 + 4)
+                    {
+                        <li class="page-item page-element-dots pageNumber=fromNext"><a class="page-link">...</a></li>
+                    }
+                    @for (int i = Model.NumberOfPages - Model.CutoffNumber / 2 + 1; i <= Model.NumberOfPages; i++)
+                    {
+                        if (i > 3)
+                        {
+                            <li class="page-item page-element"><a class="page-link">@i</a></li>
+                        }
+                    }
+
+                }
+                else
+                {
+                    @for (int i = 1; i <= 3; i++)
+                    {
+                        <li class="page-item page-element"><a class="page-link">@i</a></li>
+                    }
+                    <li class="page-item page-element-dots pageNumber=fromNext"><a class="page-link">...</a></li>
+                    @for (int i = Model.CurrentPage - 2; i <= Model.CurrentPage + 2; i++)
+                    {
+                        <li class="page-item page-element"><a class="page-link">@i</a></li>
+                    }
+                    <li class="page-item page-element-dots pageNumber=fromPrevious"><a class="page-link">...</a></li>
+                    @for (int i = Model.NumberOfPages - 2; i <= Model.NumberOfPages; i++)
+                    {
+                        <li class="page-item page-element"><a class="page-link">@i</a></li>
+                    }
+                }
+            }
+            <li class="page-item page-element-next"><a class="page-link">Next</a></li>
+        </ul>
+    </nav>
+</div>

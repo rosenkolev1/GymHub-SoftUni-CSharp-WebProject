@@ -110,5 +110,33 @@
     "Rating": 3,
     "Username": "userThirteen",
     "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentSeventeenRating",
+    "CommentId": "RootCommentSeventeen",
+    "Rating": 3,
+    "Username": "userFourteen",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentEighteenRating",
+    "CommentId": "RootCommentEighteen",
+    "Rating": 3,
+    "Username": "userFifteen",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentNineteenRating",
+    "CommentId": "RootCommentNineteen",
+    "Rating": 3,
+    "Username": "userSixteen",
+    "ProductModel": "LEM:1082-45"
+  },
+  {
+    "Id": "RootCommentTwentyRating",
+    "CommentId": "RootCommentTwenty",
+    "Rating": 3,
+    "Username": "userSeventeen",
+    "ProductModel": "LEM:1082-45"
   }
 ]

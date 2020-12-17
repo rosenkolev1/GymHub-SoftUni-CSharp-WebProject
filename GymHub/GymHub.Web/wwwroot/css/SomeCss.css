@@ -1,4 +1,7 @@
-﻿body {
+﻿/*********************************************
+    			SHARED AND GENERAL SETTINGS
+*********************************************/
+body {
     background-color: skyblue;
     margin: 0px;
     height: 100%;
@@ -177,6 +180,40 @@ footer p{
     display:inline-block;
 }
 
+.fa-sign-out-alt {
+    margin-right: 1px;
+    padding-left: 2px;
+}
+
+.fa-sign-in-alt {
+    margin-right: 4px;
+}
+
+.fa-shopping-cart {
+    margin-right: 3px;
+}
+
+#notificationMessage {
+    position: fixed;
+    top: 60px;
+    z-index: 100000000;
+    width: 100vw;
+    height: 6vh;
+}
+
+#DataTable_length {
+    height: 5vh;
+}
+
+.datatable-container-div-custom {
+    width: 90vw;
+    margin-left: 5vw;
+}
+
+.input-label-inline {
+    display: inline;
+}
+
 .form-container {
     padding-top: 10px;
 }
@@ -222,21 +259,26 @@ button {
     background-color: #0B8E4C;
 }
 
+/*********************************************
+    		SHOP PRODUCTS/ALL VIEW SETTINGS
+*********************************************/
+
 .product-container {
-    display: inline-block;
+    display: inline-flex;
     margin-top: 10px;
     margin-left: 10px;
     margin-right: 10px;
-    margin-bottom:0px;
+    margin-bottom: 0px;
     border-style: solid;
     border-radius: 5px;
     border-width: 2px;
-    border-color: darkblue;
+    border-color: black;
     background-color: white;
-    width: 308px;
+    flex-flow: column;
 }
+
 .product-content-container {
-    display: inline-block;
+    display: block;
     margin-left: 2px;
     margin-right: 2px;
     margin-top: 2px;
@@ -244,39 +286,51 @@ button {
     border-style: solid;
     border-radius: 5px;
     border-width: 2px;
-    border-color: darkblue;
+    border-color: black;
     background-color: white;
     width: 300px;
 }
 
+.gold {
+    color: #FFBF00;
+}
+
+.product-rating-all{
+    text-align:center;
+    font-size: 20px;
+}
+
 .product-name {
-    margin: 4px;
     text-align: center;
     font-size: 20px;
     font-weight: 600;
-    border-style: solid;
-    border-radius: 5px;
-    border-width: 2px;
-    border-color: gray;
-    background-color: darkgray;
+    background-color: white;
     display: block;
     text-decoration: none;
     color: black;
 }
 
 .product-name:hover{
-    background-color:slategray;
-    border-color: black
+    background-color:whitesmoke;
+    border-color: black;
+    text-decoration:none;
+}
+
+.product-headers-line-break{
+    margin: 2px 0px;
 }
 
 .product-mainImage {
-    margin: 10px;
-    height: 70%;
-    width: 80%;
+    border-top: 2px solid black;
+    max-height: 95%;
+    max-width: 100%;
+}
+
+.product-elements-info {
+    border-top: 2px solid black;
 }
 
 .product-element-even, .product-element-odd {
-
     padding-top: 5px;
     padding-bottom: 5px;
     margin: 0px;
@@ -284,48 +338,66 @@ button {
 }
 
 .product-element-even {
-    border-style: solid;
-    border-left: none;
-    border-right: none;
-    border-width: 2px;
-    border-color: darkslategray;
-    background-color: darkgray;
+    border-color: black;
+    background-color: white;
 }
 
 .product-element-odd {
-    background-color: lightgray;
+    background-color: white;
+}
+
+.product-element-description{
+    color: dimgray;
+    font-style: italic;
+}
+
+.product-element-sales{
+    float:right;
+    margin-right: 2px;
+}
+
+.product-element-form {
+    display: flex;
+    flex-grow: 1;
+}
+
+.product-buttons-container {
+    display:flex;
+    flex-direction: row;
 }
 
 .product-button {
-    float: left;
     margin: 2px;
     text-align: center;
-    vertical-align: central;
     font-size: 20px;
     font-weight: 600;
     border-style: solid;
     border-radius: 5px;
     border-width: 2px;
-    border-color: darkblue;
-    background-color: darkgray;
+    border-color: #b8daff;
+    background-color: #cce5ff;
     text-decoration: none;
-    display: inline-block;
-    height: 30px;
-    width: 146px;
+    display: inline;
     color: black;
+    flex-grow: 1;
+    padding: 0px;
 }
 
-.product-button:hover{
+.product-button:hover {
     background-color: #F3F3F3;
-    color:black;
+    color: black;
+    text-decoration: none;
 }
 
+/*********************************************
+    		CART/ALL VIEW SETTINGS
+*********************************************/
 .cart-table-container {
-    width:95vw;
+    width: 95vw;
     margin-left: 2.5vw;
     background-color: aquamarine;
     border-width: 1px;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
 .cart-thead-container {
@@ -435,6 +507,9 @@ th {
 
 }
 
+/*********************************************
+    		PRODUCTS/PRODUCTPAGE VIEW SETTINGS
+*********************************************/
 .product-page-mainImage {
     float: right;
     margin-right: 10px;
@@ -664,21 +739,11 @@ th {
     display:block;
 }
 
+/***************************************************************************************
+    		SHOP PRODUCTS/ADD & PRODUCTS/EDIT & CATEGORIES/ADD & CATEGORIES/EDIT VIEW SETTINGS
+****************************************************************************************/
 .product-edit-container{
     margin-top: 10px;
-}
-
-.fa-sign-out-alt {
-    margin-right: 1px;
-    padding-left: 2px;
-}
-
-.fa-sign-in-alt {
-    margin-right: 4px;
-}
-
-.fa-shopping-cart{
-    margin-right: 3px;
 }
 
 .shop-button{
@@ -730,10 +795,6 @@ th {
     cursor: pointer;
 }
 
-.input-label-inline{
-    display: inline;
-}
-
 #product-addCategory-span {
     font-size: 16px;
     font-weight: 600;
@@ -741,14 +802,6 @@ th {
 
 #addCategoryToProduct-container {
     margin-top: 15px;
-}
-
-#notificationMessage {
-    position: fixed;
-    top: 60px;
-    z-index: 100000000;
-    width: 100vw;
-    height: 6vh;
 }
 
 .productPage-category-container {
@@ -761,6 +814,9 @@ th {
     padding: 8px;
 }
 
+/*********************************************
+    		SALES/* VIEW SETTINGS
+*********************************************/
 .productPage-categories-container{
     text-align:center;
 }
@@ -779,15 +835,6 @@ th {
         background-color: seagreen;
         color: #D2FFF7;
     }
-
-#DataTable_length{
-    height: 5vh;
-}
-
-.datatable-container-div-custom{
-    width: 90vw;
-    margin-left: 5vw;
-}
 
 .sales-all-paymentStatus {
     font-weight: 700;

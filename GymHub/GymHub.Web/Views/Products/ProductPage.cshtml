@@ -11,8 +11,8 @@
 @section AdditionalLinks{
 
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" asp-append-version="true">
-    <link href="~/css/ProductPageForOnlineShop.css" rel="stylesheet"  asp-append-version="true"/>
-    <link href="/css/ProductPageCommentBox.css" rel="stylesheet"  asp-append-version="true"/>
+    <link href="~/css/ProductPageForOnlineShop.css" rel="stylesheet" asp-append-version="true" />
+    <link href="/css/ProductPageCommentBox.css" rel="stylesheet" asp-append-version="true" />
     <!------ Include the above in your HEAD tag ---------->
 }
 @{
@@ -246,79 +246,7 @@
                             </div>
                             @if (viewModel.ParentsChildrenComments.Count > 0)
                             {
-                                <div class="container">
-                                    <nav aria-label="Page navigation example">
-                                        <input hidden class="product-comment-numberOfPages" value="@viewModel.NumberOfCommentsPages" />
-                                        <ul class="pagination product-comment-pagination">
-                                            <li class="page-item product-comment-page-previous"><a class="page-link">Previous</a></li>
-                                            @if (viewModel.NumberOfCommentsPages <= 18)
-                                            {
-                                                @for (int i = 1; i <= viewModel.NumberOfCommentsPages; i++)
-                                                {
-                                                    <li class="page-item product-comment-page-item"><a class="page-link">@i</a></li>
-                                                }
-                                            }
-                                            else
-                                            {
-                                                @if (viewModel.CurrentCommentsPage <= 9 && viewModel.CurrentCommentsPage <= viewModel.NumberOfCommentsPages - viewModel.CurrentCommentsPage)
-                                                {
-                                                    @for (int i = 1; i <= 9; i++)
-                                                    {
-                                                        <li class="page-item product-comment-page-item"><a class="page-link">@i</a></li>
-                                                    }
-                                                    if (viewModel.NumberOfCommentsPages >= 14)
-                                                    {
-                                                        <li class="page-item product-comment-page-dots pageNumber=fromPrevious"><a class="page-link">...</a></li>
-                                                    }
-                                                    @for (int i = viewModel.NumberOfCommentsPages - 3; i <= viewModel.NumberOfCommentsPages; i++)
-                                                    {
-                                                        if (i > 9)
-                                                        {
-                                                            <li class="page-item product-comment-page-item"><a class="page-link">@i</a></li>
-                                                        }
-                                                    }
-                                                }
-                                                else if (viewModel.CurrentCommentsPage >= viewModel.NumberOfCommentsPages - 9)
-                                                {
-                                                    @for (int i = 1; i <= 3; i++)
-                                                    {
-                                                        <li class="page-item product-comment-page-item"><a class="page-link">@i</a></li>
-                                                    }
-                                                    if (viewModel.NumberOfCommentsPages >= 14)
-                                                    {
-                                                        <li class="page-item product-comment-page-dots pageNumber=fromNext"><a class="page-link">...</a></li>
-                                                    }
-                                                    @for (int i = viewModel.NumberOfCommentsPages - 9; i <= viewModel.NumberOfCommentsPages; i++)
-                                                    {
-                                                        if (i > 3)
-                                                        {
-                                                            <li class="page-item product-comment-page-item"><a class="page-link">@i</a></li>
-                                                        }
-                                                    }
-
-                                                }
-                                                else
-                                                {
-                                                    @for (int i = 1; i <= 3; i++)
-                                                    {
-                                                        <li class="page-item product-comment-page-item"><a class="page-link">@i</a></li>
-                                                    }
-                                                    <li class="page-item product-comment-page-dots pageNumber=fromNext"><a class="page-link">...</a></li>
-                                                    @for (int i = viewModel.CurrentCommentsPage - 2; i <= viewModel.CurrentCommentsPage + 2; i++)
-                                                    {
-                                                        <li class="page-item product-comment-page-item"><a class="page-link">@i</a></li>
-                                                    }
-                                                    <li class="page-item product-comment-page-dots pageNumber=fromPrevious"><a class="page-link">...</a></li>
-                                                    @for (int i = viewModel.NumberOfCommentsPages - 2; i <= viewModel.NumberOfCommentsPages; i++)
-                                                    {
-                                                        <li class="page-item product-comment-page-item"><a class="page-link">@i</a></li>
-                                                    }
-                                                }
-                                            }
-                                            <li class="page-item product-comment-page-next"><a class="page-link">Next</a></li>
-                                        </ul>
-                                    </nav>
-                                </div>
+                                <partial name="_PaginationPartial" model="@new PaginationViewModel { CurrentPage = viewModel.CurrentCommentsPage, NumberOfPages = viewModel.NumberOfCommentsPages, CutoffNumber = 14}" />
                             }
                         </section>
 
@@ -335,6 +263,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js" asp-append-version="true"></script>
 
     @*My js page scripts*@
+
     <script src="/js/ProductPage/ProductCommentsShowRepliesButton.js" asp-append-version="true"></script>
     <script src="/js/ProductPage/ProductPageCommentBox.js" asp-append-version="true"></script>
     <script src="/js/ProductPage/ProductInfoReviewDynamicRating.js" asp-append-version="true"></script>
@@ -343,15 +272,21 @@
     <script src="/js/ProductPage/ProductReplyComment.js" asp-append-version="true"></script>
     <script src="/js/ProductPage/ProductRemoveCommentPopup.js" asp-append-version="true"></script>
     <script src="/js/ProductPage/ProductCommentLike.js" asp-append-version="true"></script>
-    <script src="/js/ProductPage/ProductPageCommentsPagination.js" asp-append-version="true"></script>
     <script src="/js/ProductPage/ProductCommentsOrdering.js" asp-append-version="true"></script>
     <script src="/js/ProductPage/ProductPageBuyingQuantity.js" asp-append-version="true"></script>
     <script src="~/js/ProductPage/RemoveProduct.js" asp-append-version="true"></script>
 
     <!--Shared scripts-->
     <script src="~/js/Shared/ChangeProductImage.js" asp-append-version="true"></script>
+    <script src="/js/Shared/Pagination.js" asp-append-version="true"></script>
 
-    <!--This one is last-->
+    <!--This one is last to all except the paginationInit no-name script -->
     <script src="/js/ProductPage/ProductPageScripts.js" asp-append-version="true"></script>
+
+    <script>
+        let pageQueryParamName = 'commentsPage';
+        PaginationInit(pageQueryParamName);
+    </script>
+
     <partial name="_ValidationScriptsPartial.cshtml">
 }
