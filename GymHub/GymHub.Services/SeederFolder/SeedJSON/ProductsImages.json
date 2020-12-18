@@ -1,5 +1,15 @@
 ﻿[
   {
+    "ProductModel": "LCM:5470-331",
+    "Image": "/ProductsImages/LegCurlMachine_LCM5470-331/Main.jpg",
+    "IsMain":  true
+  },
+  {
+    "ProductModel": "LEM:1082-45",
+    "Image": "/ProductsImages/LegExtensionMachine_LEM1082-45/Main.jpeg",
+    "IsMain": true
+  },
+  {
     "ProductModel": "LEM:1082-45",
     "Image": "https://cdn.shopify.com/s/files/1/1950/1891/products/F-LEGM_1024x1024.jpg?v=1594269343"
   },

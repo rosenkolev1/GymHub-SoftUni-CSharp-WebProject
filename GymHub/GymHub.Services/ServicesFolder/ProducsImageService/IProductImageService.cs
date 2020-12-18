@@ -14,5 +14,8 @@ namespace GymHub.Services.ServicesFolder.ProductImageService
         public Task AddProductImageAsync(ProductImage image);
         public bool ImagesAreRepeated(string mainImage, List<string> additionalImages);
         public List<string> GetImageUrlsForProduct(string productId);
+        public ProductImage GetImageByPath(string imagePath);
+        public ProductImage GetMainImage(string productId);
+        public List<ProductImage> GetAdditionalImages(string productId);
     }
 }

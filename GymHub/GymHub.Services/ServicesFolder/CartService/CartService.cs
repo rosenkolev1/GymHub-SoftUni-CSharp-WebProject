@@ -56,7 +56,7 @@ namespace GymHub.Services.ServicesFolder.CartService
         {
             return context.Carts.Where(x => x.UserId == userId).Select(x => new ProductCartViewModel
             {
-                MainImage = x.Product.MainImage,
+                MainImage = x.Product.Images.First(x => x.IsMain == true).Image,
                 Name = x.Product.Name,
                 Price = x.Product.Price,
                 Id = x.Product.Id,

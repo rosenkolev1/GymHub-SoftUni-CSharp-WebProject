@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GymHub.Data.Models
 {
@@ -15,7 +16,7 @@ namespace GymHub.Data.Models
         public string Id { get; set; }
 
         //Collections
-        public virtual ICollection<ProductImage> AdditionalImages { get; set; }
+        public virtual ICollection<ProductImage> Images { get; set; }
         public virtual ICollection<ProductCart> ProductCarts { get; set; }
         public virtual ICollection<ProductSale> ProductSales { get; set; }
         public virtual ICollection<ProductComment> ProductComments { get; set; }
@@ -27,8 +28,6 @@ namespace GymHub.Data.Models
         public string Name { get; set; }
         [Required]
         public string Model { get; set; }
-        [Required]
-        public string MainImage { get; set; }
         [Required]
         public decimal Price { get; set; }
         [Required]

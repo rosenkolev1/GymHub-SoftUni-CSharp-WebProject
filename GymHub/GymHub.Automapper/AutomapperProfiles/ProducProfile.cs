@@ -11,10 +11,12 @@ namespace GymHub.Automapper.AutomapperProfiles
         {
             CreateMap<Product, ProductViewModel>();
 
-            CreateMap<Product, ProductInfoViewModel>();
+            CreateMap<Product, ProductInfoViewModel>()
+                .ForMember(x => x.MainImage, opt => opt.Ignore())
+                .ForMember(x => x.AdditionalImages, opt => opt.Ignore());
 
             CreateMap<AddProductInputModel, Product>()
-                .ForMember(x => x.AdditionalImages, opt => opt.Ignore())
+                .ForMember(x => x.Images, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore())
                 .ReverseMap();
         }

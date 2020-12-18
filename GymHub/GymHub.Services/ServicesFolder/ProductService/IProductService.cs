@@ -10,10 +10,10 @@ namespace GymHub.Services.ServicesFolder.ProductService
 {
     public interface IProductService
     {
-        public Task AddAsync(string name, string mainImage, decimal price, string description, int warranty, int quantityInStock);
-        public Task AddAsync(AddProductInputModel inputModel);
+        //public Task AddAsync(string name, string mainImage, decimal price, string description, int warranty, int quantityInStock);
+        //public Task AddAsync(AddProductInputModel inputModel);
         public Task AddAsync(Product product);
-        public List<ProductViewModel> GetAllProducts();
+        //public List<ProductViewModel> GetAllProducts();
         public List<ProductViewModel> GetProductsFrom(int page);
         public bool ProductExistsById(string id);
         public bool ProductExistsByName(string name);

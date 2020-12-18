@@ -64,11 +64,11 @@ namespace GymHub.Services.SeederFolder
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             this.userService = new UserService(context, this.roleService as RoleService, this.genderService as GenderService, userManager, this.mapper);
 
-            //Set up productService
-            this.productService = new ProductService(context, this.mapper);
-
             //Set up productImageService
             this.productImageService = new ProductImageService(context);
+
+            //Set up productService
+            this.productService = new ProductService(context, this.mapper, this.productImageService);
 
             //Set up productCommentService
             this.productCommentService = new ProductCommentService(context);
@@ -104,8 +104,8 @@ namespace GymHub.Services.SeederFolder
 
             //Seed anything directly product related
             await SeedProductsAsync();
-            await SeedProductsCommentsAndRatingsAsync();
             await SeedProductsImagesAsync();
+            await SeedProductsCommentsAndRatingsAsync();
         }
 
         private async Task<bool> SeedRolesAsync()
@@ -244,7 +244,7 @@ namespace GymHub.Services.SeederFolder
                     Model = x.Model,
                     Warranty = x.Warranty,
                     QuantityInStock = x.QuantityInStock,
-                    MainImage = x.MainImage,
+                    Images = new List<ProductImage>(),
                     Description = x.Description,
                     Price = x.Price,
                     ProductCategories = x.Categories
@@ -329,7 +329,8 @@ namespace GymHub.Services.SeederFolder
                 .Select(x => new ProductImage
                 {
                     Image = x.Image,
-                    ProductId = this.productService.GetProductId(x.ProductModel, true)
+                    ProductId = this.productService.GetProductId(x.ProductModel, true),
+                    IsMain = x.IsMain != null & x.IsMain != false ? true : false 
                 }).ToList();
 
             foreach (var productImage in productsImages)
@@ -339,6 +340,20 @@ namespace GymHub.Services.SeederFolder
                     await this.productImageService.AddProductImageAsync(productImage);
                 }
             }
+
+            var productWithImages = this.context.ProductsImages
+                .Select(x => new
+                {
+                    ProductImages = x.Product.Images,
+                    Image = x
+                });
+
+            //Assign images to products
+            foreach (var productWithImage in productWithImages)
+            {
+                productWithImage.ProductImages.Add(productWithImage.Image);
+            }
+
             return true;
         }
     }

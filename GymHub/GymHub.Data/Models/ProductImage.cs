@@ -24,5 +24,8 @@ namespace GymHub.Data.Models
         //Path to image
         [Required]
         public string Image { get; set; }
+
+        [Required]
+        public bool IsMain { get; set; }
     }
 }

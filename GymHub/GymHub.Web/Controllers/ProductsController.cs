@@ -92,8 +92,6 @@ namespace GymHub.Web.Controllers
                 return this.RedirectToAction(nameof(Add), "Products");
             }
 
-            await this.TryUpdateModelAsync(inputModel, typeof(AddProductInputModel), "");
-
             //Check if product with this model or name
             if (this.productService.ProductExistsByModel(inputModel.Model) == true)
             {
@@ -104,7 +102,7 @@ namespace GymHub.Web.Controllers
                 this.ModelState.AddModelError("Name", "Product with this name already exists.");
             }
 
-            //CHECK the IMAGES LINKS
+            //CHECK THE IMAGES LINKS
             //Check if all of these images are unique
             if (this.productImageService.ImagesAreRepeated(inputModel.MainImage, inputModel.AdditionalImages))
             {
@@ -127,8 +125,7 @@ namespace GymHub.Web.Controllers
                 }
             }
 
-            //CHECK THE IMAGES UPLOADS
-
+            //TODO: CHECK THE IMAGES UPLOADS
 
             //Check if categories exist in the database or if there are even any categories for this product
             for (int i = 0; i < inputModel.CategoriesIds.Count; i++)
@@ -158,16 +155,21 @@ namespace GymHub.Web.Controllers
                 return this.RedirectToAction(nameof(Add), "Products");
             }
 
+            if (newProduct.Images == null) newProduct.Images = new List<ProductImage>();
+
             //Set additional images
-            newProduct.AdditionalImages = inputModel.AdditionalImages
+            newProduct.Images = inputModel.AdditionalImages
                 .Where(x => x != null)
                 .Select(x => new ProductImage { Image = x, Product = newProduct }).ToList();
+
+            //Set main image
+            newProduct.Images.Add(new ProductImage { Image = inputModel.MainImage, IsMain = true, Product = newProduct, ProductId = newProduct.Id });
 
             //Add product
             await this.productService.AddAsync(newProduct);
 
             //Add categories
-            await this.categoryService.AddCategoriesToProductAsync(newProduct, inputModel.CategoriesIds);/**/
+            await this.categoryService.AddCategoriesToProductAsync(newProduct, inputModel.CategoriesIds);
 
             //Set notification
             NotificationHelper.SetNotification(this.TempData, NotificationType.Success, "Product was successfully added");
@@ -186,7 +188,6 @@ namespace GymHub.Web.Controllers
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
         public IActionResult Edit(string productId, string errorReturnUrl)
         {           
-            //Check if product with this id exists. MAYBE I WILL REPLACE THIS LATER WILL HAVE TO SWITCH TO DEVELOPMENT AND SEED
             if (this.productService.ProductExistsById(productId) == false)
             {
                 return this.NotFound();
@@ -215,13 +216,25 @@ namespace GymHub.Web.Controllers
                 inputModel = this.mapper.Map<AddProductInputModel>(product);
 
                 //Get the categories for the product
-                inputModel.CategoriesIds = this.categoryService.GetCategoriesForProduct(product.Id).Select(x => x.Id).ToList();
+                var productCategories = this.categoryService.GetCategoriesForProduct(product.Id).ToList();
+                inputModel.CategoriesIds = productCategories.Select(x => x.Id).ToList();
+                inputModel.ProductCategoriesNames = productCategories.Select(x => x.Name).ToList();
+
+                //Set the main image
+                var mainImagePath = product.Images.First(x => x.IsMain == true).Image;
+                inputModel.MainImage = mainImagePath;
 
                 //Set the correct additional images paths
-                for (int i = 0; i < product.AdditionalImages.Count; i++)
+                var additionalImages = product.Images
+                    .Where(x => x.IsMain == false)
+                    .ToList();
+
+                inputModel.AdditionalImages = new List<string>();
+
+                for (int i = 0; i < additionalImages.Count; i++)
                 {
-                    var image = product.AdditionalImages.ToList()[i];
-                    inputModel.AdditionalImages[i] = image.Image;
+                    var image = additionalImages[i];
+                    inputModel.AdditionalImages.Add(image.Image);
                 }
             }
 
@@ -285,6 +298,16 @@ namespace GymHub.Web.Controllers
             if (this.productImageService.ProductImageExists(inputModel.MainImage, productId) == true)
             {
                 this.ModelState.AddModelError("MainImage", "This image is already used.");
+            }
+
+            //Check if any of the additional images are already used
+            for (int i = 0; i < inputModel.AdditionalImages.Count; i++)
+            {
+                var additionalImage = inputModel.AdditionalImages[i];
+                if (this.productImageService.ProductImageExists(additionalImage, productId) == true)
+                {
+                    this.ModelState.AddModelError($"AdditionalImages[{i}]", "This image is already used.");
+                }
             }
 
             //Check if categories exist in the database or if there are even any categories for this product
@@ -434,6 +457,14 @@ namespace GymHub.Web.Controllers
 
             var product = this.productService.GetProductById(productId, true);
             var viewModel = mapper.Map<ProductInfoViewModel>(product);
+
+            //Add main image to product view model
+            var productMainImage = this.productImageService.GetMainImage(productId);
+            viewModel.MainImage = productMainImage.Image;
+
+            //Add additional images
+            var additionalImages = this.productImageService.GetAdditionalImages(productId);
+            viewModel.AdditionalImages = additionalImages;
 
             viewModel.ProductCategories = this.categoryService.GetCategoriesForProduct(productId);
 

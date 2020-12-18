@@ -3,6 +3,7 @@ using GymHub.Common;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.Common;
+using GymHub.Services.ServicesFolder.ProductImageService;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -18,33 +19,14 @@ namespace GymHub.Services.ServicesFolder.ProductService
     public class ProductService : DeleteableEntityService, IProductService
     {
         private readonly IMapper mapper;
+        private readonly IProductImageService productImageService;
 
-        public ProductService(ApplicationDbContext context, IMapper mapper)
+        public ProductService(ApplicationDbContext context, IMapper mapper, IProductImageService productImageService)
             : base(context)
         {
             this.mapper = mapper;
-        }
-        public async Task AddAsync(string name, string mainImage, decimal price, string description, int warranty, int quantityInStock)
-        {
-            context.Add(new Product
-            {
-                Name = name,
-                MainImage = mainImage,
-                Price = price,
-                Description = description,
-                Warranty = warranty,
-                QuantityInStock = quantityInStock,
-                IsDeleted = false,
-                DeletedOn = null
-            });
-            await context.SaveChangesAsync();
-        }
-
-        public async Task AddAsync(AddProductInputModel inputModel)
-        {
-            await context.AddAsync(mapper.Map<Product>(inputModel));
-            await context.SaveChangesAsync();
-        }
+            this.productImageService = productImageService;
+        }      
 
         public bool ProductExistsById(string id)
         {
@@ -58,42 +40,7 @@ namespace GymHub.Services.ServicesFolder.ProductService
         public bool ProductExistsByModel(string model, bool hardCheck = false)
         {
             return context.Products.IgnoreAllQueryFilters(hardCheck).Any(x => x.Model == model);
-        }
-
-        public List<ProductViewModel> GetAllProducts()
-        {
-            var listOfViewModelsFirst = context.Products.Select(product => new
-            {
-                product.Id,
-                product.Name,
-                product.Description,
-                product.QuantityInStock,
-                product.MainImage,
-                product.Model,
-                product.Price,
-                product.Warranty,
-                product.ProductRatings,
-                ProductSalesCount = product.ProductSales.Count
-            }).ToList();
-
-            var listOfViewModels = listOfViewModelsFirst
-                .Select(product => new ProductViewModel
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Description = product.Description,
-                    QuantityInStock = product.QuantityInStock,
-                    MainImage = product.MainImage,
-                    Model = product.Model,
-                    Price = product.Price,
-                    Warranty = product.Warranty,
-                    ProductSalesCount = product.ProductSalesCount,
-                    ShortDescription = this.GetShordDescription(product.Description, 40),
-                    ProductRatingViewModel = new ProductRatingViewModel(this.GetAverageRating(product.ProductRatings.ToList()))
-                }).ToList();
-
-            return listOfViewModels;
-        }
+        }      
 
         public Product GetProductById(string productId, bool withNavigationalProperties)
         {
@@ -104,7 +51,7 @@ namespace GymHub.Services.ServicesFolder.ProductService
                 .ThenInclude(pc => pc.User)
                 .Include(x => x.ProductRatings)
                 .ThenInclude(x => x.User)
-                .Include(x => x.AdditionalImages)
+                .Include(x => x.Images)
                 .FirstOrDefault(x => x.Id == productId);
             }
             else
@@ -227,22 +174,30 @@ namespace GymHub.Services.ServicesFolder.ProductService
 
         public async Task EditAsync(AddProductInputModel inputModel)
         {
-            var productToEdit = GetProductById(inputModel.Id, true);
+            var productToEdit = this.context.Products
+                .Include(x => x.Images)
+                .First(x => x.Id == inputModel.Id);
             var newAdditionalImages = inputModel.AdditionalImages.Where(x => x != null).ToList();
 
             //Edit all of the images for the product
-            context.ProductsImages.RemoveRange(productToEdit.AdditionalImages);
+            productToEdit.Images.Clear();
+            this.context.RemoveRange(this.context.ProductsImages
+                .Where(x => x.ProductId == productToEdit.Id));
+
+            //Edit main image for product
+            var mainImage = new ProductImage { Image = inputModel.MainImage, ProductId = productToEdit.Id, IsMain = true };
+            productToEdit.Images.Add(mainImage);
 
             for (int i = 0; i < newAdditionalImages.Count; i++)
             {
-                var newImage = newAdditionalImages[i];
-                productToEdit.AdditionalImages.Add(new ProductImage { Image = newImage, ProductId = productToEdit.Id });
+                var newImagePath = newAdditionalImages[i];
+                var newImage = new ProductImage { Image = newImagePath, ProductId = productToEdit.Id, Product = productToEdit };
+                productToEdit.Images.Add(newImage);
             }
 
             //Edit all of the simple properties
             productToEdit.Description = inputModel.Description;
             productToEdit.Warranty = inputModel.Warranty;
-            productToEdit.MainImage = inputModel.MainImage;
             productToEdit.Model = inputModel.Model;
             productToEdit.Name = inputModel.Name;
             productToEdit.Price = inputModel.Price;
@@ -287,7 +242,7 @@ namespace GymHub.Services.ServicesFolder.ProductService
                     product.Name,
                     product.Description,
                     product.QuantityInStock,
-                    product.MainImage,
+                    product.Images.First(x => x.IsMain == true).Image,
                     product.Model,
                     product.Price,
                     product.Warranty,
@@ -302,7 +257,7 @@ namespace GymHub.Services.ServicesFolder.ProductService
                     Name = product.Name,
                     Description = product.Description,
                     QuantityInStock = product.QuantityInStock,
-                    MainImage = product.MainImage,
+                    MainImage = product.Image,
                     Model = product.Model,
                     Price = product.Price,
                     Warranty = product.Warranty,

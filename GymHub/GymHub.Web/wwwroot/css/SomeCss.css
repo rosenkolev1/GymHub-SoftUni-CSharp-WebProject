@@ -775,6 +775,19 @@ th {
     display:inline-block !important;
 }
 
+.product-addProduct-cancel-button {
+    font-size: 18px;
+    border: solid;
+    border-radius: 3px;
+    border-width: 1px;
+    padding: 5px;
+}
+
+.product-addProduct-cancel-button:hover {
+    cursor: pointer;
+    text-decoration: none;
+}
+
 .product-add-name, .product-add-model, category-add-name {
     width: 30vw;
 }

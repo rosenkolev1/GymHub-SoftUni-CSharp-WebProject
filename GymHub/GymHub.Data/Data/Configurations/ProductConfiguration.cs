@@ -8,7 +8,9 @@ namespace GymHub.Data.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
-            
+            builder.HasMany(x => x.Images)
+                .WithOne(x => x.Product)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

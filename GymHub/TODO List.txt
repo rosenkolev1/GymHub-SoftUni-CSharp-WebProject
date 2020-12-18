@@ -1,6 +1,4 @@
--Add categories to page preview in add and edit products previews
-
--Refactor the view and input models into folders based on the controllers
+-Make payment be charged only when the admin changes the status of the sale to confirmed. As such cancel the payment when the admin declines it
 
 -Add image upload to product adding. Use some kind of blob storage for images.
 
@@ -8,7 +6,11 @@
 
 -Add category based searching.
 
+-Refactor the view and input models into folders based on the controllers
+
 -For searching sales by admin make datatables use server-side data
+
+-Add cool font-awesome icons for certain buttons. Like the images links/upload switch button or the admin panel button
 
 -Add user profile pages and functionality
 
@@ -56,6 +58,8 @@
 -Lazy Kit
 -Cloudinary
 -Make website be hosted on secure(HTTPS) connection
+-Elasticsearch
+-Full text search
 
 
 -Technologies used
