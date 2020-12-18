@@ -90,5 +90,11 @@
         public const string PendingSaleStatus = "Pending";
         public const string ConfirmedSaleStatus = "Confirmed";
         public const string DeclinedSaleStatus = "Declined";
+
+        //Allowed products images file types
+        public static readonly string[] AllowedExtensions = new[] { "jpg", "png", "gif", "jpeg" };
+
+        //Azure blob storage products images container
+        public const string ProductsImagesBlobContainer = "products-images";
     }
 }

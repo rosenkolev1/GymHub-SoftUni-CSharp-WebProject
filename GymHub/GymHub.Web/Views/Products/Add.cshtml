@@ -10,6 +10,7 @@
     <!------ Include the above in your HEAD tag ---------->
 }
 <form asp-controller="Products" asp-action="@(Model?.IsAdding != false ? "Add" : "Edit")" method="post" class="product-addProduct-form" enctype="multipart/form-data">
+    <input hidden type="hidden" asp-for="ImagesAsFileUploads" value="@(Model != null ? Model.ImagesAsFileUploads : false)"/>
     @if (Model?.IsAdding != false)
     {
         <h4 class="product-add-actionMessage-title">Create a new Product.</h4>
@@ -20,14 +21,20 @@
     }
     <hr />
     <div asp-validation-summary="All" class="alert-danger"></div>
-    <div hidden>Image upload</div>
     <div class="image-mode-container">
-        <p class="image-mode-button alert-info">Image link</p>
+        @if (Model?.ImagesAsFileUploads == true)
+        {
+            <p class="image-mode-button alert-info">Switch to image links</p>
+        }
+        else
+        {
+            <p class="image-mode-button alert-info">Switch to image uploads</p>
+        }
     </div>
-    <div class="image-links-container">
+    <div @(Model?.ImagesAsFileUploads == true ? "hidden" : "") class="image-links-container">
         <div class="input-container">
             <label asp-for="MainImage" class="input-label">Main image</label>
-            <input asp-for="MainImage" type="text" placeholder="Type url here" class="input-link">
+            <input asp-for="MainImage" type="text" placeholder="Type url here" class="input-link input-image-link-main">
             <span asp-validation-for="MainImage" class="validation-span"></span>
         </div>
         @for (int i = 0; i < 3; i++)
@@ -51,11 +58,12 @@
             }
         }
     </div>
-    <div hidden class="image-uploads-container">
+    <div @(Model?.ImagesAsFileUploads == false || Model?.ImagesAsFileUploads == null ? "hidden" : "")  class="image-uploads-container">
         <div class="input-container">
             <label asp-for="MainImageUpload" class="input-label">Main image</label>
-            <input asp-for="MainImageUpload" placeholder="Type url here" class="input-image-upload">
+            <input asp-for="MainImageUpload" placeholder="Type url here" class="input-image-upload input-image-upload-main">
             <span asp-validation-for="MainImageUpload" class="validation-span"></span>
+            <img hidden class="input-image-upload-image image-upload-main" />
         </div>
         @for (int i = 0; i < 3; i++)
         {
@@ -63,17 +71,19 @@
             {
                 @if (Model.AdditionalImagesUploads.Count <= i) Model.AdditionalImagesUploads.Add(null);
                 <div class="input-container">
-                    <label asp-for="AdditionalImagesUploads[i]" class="input-label">Additional image @(i+1)</label>
-                    <input asp-for="AdditionalImagesUploads[i]" class="product-addProduct-additionalImageUpload input-image-upload" placeholder="Type url here">
-                    <span asp-validation-for="AdditionalImagesUploads[i]" class="validation-span"></span>
+                    <label asp-for="AdditionalImagesUploads" class="input-label">Additional image @(i+1)</label>
+                    <input asp-for="AdditionalImagesUploads" class="product-addProduct-additionalImageUpload input-image-upload" placeholder="Type url here">
+                    <span asp-validation-for="AdditionalImagesUploads" class="validation-span"></span>
+                    <img hidden class="input-image-upload-image image-upload-additional" />
                 </div>
             }
             else
             {
                 <div class="input-container">
-                    <label asp-for="AdditionalImagesUploads[i]" class="input-label">Additional image @(i+1)</label>
-                    <input asp-for="AdditionalImagesUploads[i]" class="product-addProduct-additionalImageUpload input-image-upload" placeholder="Type url here">
-                    <span asp-validation-for="AdditionalImagesUploads[i]" class="validation-span"></span>
+                    <label asp-for="AdditionalImagesUploads" class="input-label">Additional image @(i+1)</label>
+                    <input asp-for="AdditionalImagesUploads" class="product-addProduct-additionalImageUpload input-image-upload" placeholder="Type url here">
+                    <span asp-validation-for="AdditionalImagesUploads" class="validation-span"></span>
+                    <img hidden class="input-image-upload-image image-upload-additional" />
                 </div>
             }
         }
@@ -142,8 +152,8 @@
     </div>
     @*TODO ENABLE THIS IN RELEASE*@
     @*<div class="button-container">
-        <a class="product-addProduct-cancel-button alert-danger" href="/Admin/AdminControls">Cancel</a>
-    </div>*@
+            <a class="product-addProduct-cancel-button alert-danger" href="/Admin/AdminControls">Cancel</a>
+        </div>*@
 </form>
 @if (Model != null)
 {
@@ -159,6 +169,7 @@
     <script src="~/js/Shared/ChangeProductImage.js" asp-append-version="true"></script>
     <script src="~/js/AddProductPage/AddCategoryToProduct.js" asp-append-version="true"></script>
     <script src="~/js/AddProductPage/SwitchImageMode.js" asp-append-version="true"></script>
+    <script src="~/js/AddProductPage/LoadImageFromFileInput.js" asp-append-version="true"></script>
 
     <partial name="_ValidationScriptsPartial.cshtml">
 }

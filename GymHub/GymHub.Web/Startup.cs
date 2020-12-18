@@ -31,6 +31,8 @@ using Stripe;
 using Stripe.Checkout;
 using System;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
+using GymHub.Services.ServicesFolder.AzureBlobService;
 
 namespace GymHub.Web
 {
@@ -93,6 +95,10 @@ namespace GymHub.Web
             // Add sendgrid
             var sendGrid = new SendGridEmailSender(this.Configuration["SendGrid:ApiKey"]);
             services.AddSingleton(sendGrid);
+
+            //Add Azure blob storage
+            services.AddSingleton(x => new BlobServiceClient(this.Configuration["AzureBlobStorage:ConnectionString"]));
+            services.AddTransient<IAzureBlobService, AzureBlobService>();
 
             //Configure stripe services Stripe
             StripeConfiguration.ApiKey = this.Configuration["Stripe:ApiKey"];

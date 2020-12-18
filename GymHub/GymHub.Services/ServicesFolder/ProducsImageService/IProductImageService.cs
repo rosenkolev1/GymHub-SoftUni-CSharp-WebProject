@@ -1,6 +1,8 @@
 ﻿using GymHub.Data.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,5 +19,10 @@ namespace GymHub.Services.ServicesFolder.ProductImageService
         public ProductImage GetImageByPath(string imagePath);
         public ProductImage GetMainImage(string productId);
         public List<ProductImage> GetAdditionalImages(string productId);
+        public bool ValidImageExtension(IFormFile image);
+
+        public Task<string> UploadImageAsync(IFormFile image, Product product);
+        public Task<string> UploadImageAsync(Stream image, string imageFilePath);
+        public Task ClearBlobImagesAsync();
     }
 }

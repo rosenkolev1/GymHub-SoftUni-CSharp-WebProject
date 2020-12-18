@@ -817,6 +817,13 @@ th {
         color: #5c8ccc
     }
 
+.input-image-upload-image{
+    width: 30%;
+    height: 30%;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
 #addCategoryToProduct {
     font-size: 20px;
     margin-left: 6px;

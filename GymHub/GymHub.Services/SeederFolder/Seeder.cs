@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs;
 using GymHub.Automapper.AutomapperProfiles;
 using GymHub.Common;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.DTOs;
+using GymHub.Services.ServicesFolder.AzureBlobService;
 using GymHub.Services.ServicesFolder.CategoryService;
 using GymHub.Services.ServicesFolder.CountryService;
 using GymHub.Services.ServicesFolder.GenderService;
@@ -13,6 +15,7 @@ using GymHub.Services.ServicesFolder.ProductImageService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Services.ServicesFolder.RoleService;
 using GymHub.Services.ServicesFolder.SaleService;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,14 +43,23 @@ namespace GymHub.Services.SeederFolder
         private readonly IPaymentMethodService paymentMethodService;
         private readonly SaleService saleService;
         private readonly IProductImageService productImageService;
+        private readonly IAzureBlobService azureBlobService;
+        private readonly BlobServiceClient blobServiceClient;
 
         public Seeder(IServiceProvider serviceProvider, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             this.context = new ApplicationDbContext(connectionString);
-            this.genderService = new GenderService(context);
 
+            //Set up blob service client
+            this.blobServiceClient = new BlobServiceClient(configuration["AzureBlobStorage:ConnectionString"]);
+
+            //Set up azure blob service
+            this.azureBlobService = new AzureBlobService(this.blobServiceClient);
+
+            //Set up gender service
+            this.genderService = new GenderService(context);
 
             //Set up roleService
             var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
@@ -65,7 +77,7 @@ namespace GymHub.Services.SeederFolder
             this.userService = new UserService(context, this.roleService as RoleService, this.genderService as GenderService, userManager, this.mapper);
 
             //Set up productImageService
-            this.productImageService = new ProductImageService(context);
+            this.productImageService = new ProductImageService(context, this.azureBlobService);
 
             //Set up productService
             this.productService = new ProductService(context, this.mapper, this.productImageService);
@@ -324,21 +336,33 @@ namespace GymHub.Services.SeederFolder
 
         private async Task<bool> SeedProductsImagesAsync()
         {
+            //Remove all productsImages
+            this.context.ProductsImages.RemoveRange(this.context.ProductsImages.ToList());
+
             var productsImagesDTOs = JsonSerializer.Deserialize<List<ProductImageDTO>>(File.ReadAllText($"../GymHub.Services/SeederFolder/SeedJSON/ProductsImages.json"));
             var productsImages = productsImagesDTOs
                 .Select(x => new ProductImage
                 {
                     Image = x.Image,
                     ProductId = this.productService.GetProductId(x.ProductModel, true),
-                    IsMain = x.IsMain != null & x.IsMain != false ? true : false 
+                    IsMain = x.IsMain != null && x.IsMain != false ? true : false 
                 }).ToList();
 
+            //Clear the azure blob storage images
+            await this.productImageService.ClearBlobImagesAsync();
+
+            //Upload each product image to azure blob if it is upload-able(aka is not a link) and then add it to database as well
             foreach (var productImage in productsImages)
             {
-                if (this.productImageService.ProductImageExists(productImage.Image, true) == false)
+                if(productImage.Image.StartsWith("/") == true)
                 {
-                    await this.productImageService.AddProductImageAsync(productImage);
+                    using Stream fileStream = new FileStream($"../GymHub.Web/wwwroot/{productImage.Image}", FileMode.Open);
+
+                    var productImageUri = await this.productImageService.UploadImageAsync(fileStream, productImage.Image);
+                    productImage.Image = productImageUri;
                 }
+
+                await this.productImageService.AddProductImageAsync(productImage);
             }
 
             var productWithImages = this.context.ProductsImages

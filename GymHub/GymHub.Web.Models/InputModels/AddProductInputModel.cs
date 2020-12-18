@@ -19,7 +19,6 @@ namespace GymHub.Web.Models.InputModels
         [MinLength(GlobalConstants.ProductNameLengthMin)]
         public string Model { get; set; }
 
-        [Required]
         public string MainImage { get; set; }
 
         public IFormFile MainImageUpload { get; set; }
@@ -50,5 +49,7 @@ namespace GymHub.Web.Models.InputModels
         public List<string> CategoriesIds { get; set; } = new List<string>();
 
         public List<string> ProductCategoriesNames { get; set; } = new List<string>();
+
+        public bool ImagesAsFileUploads { get; set; }
     }
 }

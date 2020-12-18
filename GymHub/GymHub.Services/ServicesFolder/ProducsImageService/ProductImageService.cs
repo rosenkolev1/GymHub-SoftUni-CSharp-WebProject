@@ -1,8 +1,12 @@
-﻿using GymHub.Data.Data;
+﻿using GymHub.Common;
+using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.Common;
+using GymHub.Services.ServicesFolder.AzureBlobService;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +15,12 @@ namespace GymHub.Services.ServicesFolder.ProductImageService
 {
     public class ProductImageService : DeleteableEntityService, IProductImageService
     {
-        public ProductImageService(ApplicationDbContext context)
+        private readonly IAzureBlobService azureBlobService;
+
+        public ProductImageService(ApplicationDbContext context, IAzureBlobService azureBlobService)
             :base(context)
         {
-
+            this.azureBlobService = azureBlobService;
         }
 
         public async Task AddProductImageAsync(ProductImage image)
@@ -76,6 +82,40 @@ namespace GymHub.Services.ServicesFolder.ProductImageService
                 .Where(x => x.Id != excludedProductId)
                 .SelectMany(x => x.Images)
                 .Any(x => x.Image == imageUrl);
+        }
+
+        public async Task<string> UploadImageAsync(IFormFile image, Product product)
+        {
+            var imageExtension = Path.GetExtension(image.FileName).TrimStart('.');
+            var imageBlobName = $"{product.Name}_{product.Model}_{Guid.NewGuid()}.{imageExtension}";
+
+            return await this.azureBlobService.UploadBlobAsync(image, GlobalConstants.ProductsImagesBlobContainer, imageBlobName);
+        }
+
+        public async Task<string> UploadImageAsync(Stream image, string imageFilePath)
+        {
+            var blobNameParts = imageFilePath.Split("/", 3);
+            var blobNameProductAndModelPart = blobNameParts[1];
+            var blobNameIdentificatorPart = blobNameParts[2];
+            var blobName = $"{blobNameProductAndModelPart}_{blobNameIdentificatorPart}";
+
+            return await this.azureBlobService.UploadBlobAsync(image, GlobalConstants.ProductsImagesBlobContainer, blobName);
+        }
+
+        public async Task ClearBlobImagesAsync()
+        {
+            await this.azureBlobService.ClearBlobContainerAsync(GlobalConstants.ProductsImagesBlobContainer);
+        }
+
+        public bool ValidImageExtension(IFormFile image)
+        {
+            var extension = Path.GetExtension(image.FileName).TrimStart('.');
+            if (!GlobalConstants.AllowedExtensions.Any(x => extension.EndsWith(x)))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

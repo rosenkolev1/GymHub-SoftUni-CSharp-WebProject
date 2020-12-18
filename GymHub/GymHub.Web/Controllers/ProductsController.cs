@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs;
 using GymHub.Common;
 using GymHub.Data.Models;
 using GymHub.Data.Models.Enums;
 using GymHub.Services;
 using GymHub.Services.Messaging;
+using GymHub.Services.ServicesFolder.AzureBlobService;
 using GymHub.Services.ServicesFolder.CategoryService;
 using GymHub.Services.ServicesFolder.ProductCommentService;
 using GymHub.Services.ServicesFolder.ProductImageService;
@@ -14,9 +16,11 @@ using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -36,10 +40,14 @@ namespace GymHub.Web.Controllers
         private readonly SendGridEmailSender sendGridEmailSender;
         private readonly ICategoryService categoryService;
         private readonly IProductImageService productImageService;
+        private readonly IAzureBlobService azureBlobService;
+        private readonly BlobServiceClient blobServiceClient;
+
         public ProductsController
             (IProductService productService, IMapper mapper, IProductCommentService productCommentService, IUserService userService,
             JavaScriptEncoder javaScriptEncoder, UserManager<User> userManager, SendGridEmailSender sendGridEmailSender,
-            HtmlEncoder htmlEncoder, ICategoryService categoryService, IProductImageService productImageService)
+            HtmlEncoder htmlEncoder, ICategoryService categoryService, IProductImageService productImageService,
+            BlobServiceClient blobServiceClient, IAzureBlobService azureBlobService)
         {
             this.productService = productService;
             this.mapper = mapper;
@@ -51,6 +59,8 @@ namespace GymHub.Web.Controllers
             this.htmlEncoder = htmlEncoder;
             this.categoryService = categoryService;
             this.productImageService = productImageService;
+            this.blobServiceClient = blobServiceClient;
+            this.azureBlobService = azureBlobService;
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
@@ -74,6 +84,7 @@ namespace GymHub.Web.Controllers
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
         public async Task<IActionResult> Add(AddProductInputModel inputModel)
         {
+            var something = this.Request.Form;
             var newProduct = this.mapper.Map<Product>(inputModel);
 
             //Set input model short description
@@ -102,30 +113,64 @@ namespace GymHub.Web.Controllers
                 this.ModelState.AddModelError("Name", "Product with this name already exists.");
             }
 
+            //Check if there is a main image, regardless of the imageMode
+            if((inputModel.MainImage == null && inputModel.ImagesAsFileUploads == false) || (inputModel.MainImageUpload == null && inputModel.ImagesAsFileUploads == true))
+            {
+                this.ModelState.AddModelError("", "Main image is required");
+
+                //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
+                TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
+                return this.RedirectToAction(nameof(Add), "Products");
+            }
+
             //CHECK THE IMAGES LINKS
-            //Check if all of these images are unique
-            if (this.productImageService.ImagesAreRepeated(inputModel.MainImage, inputModel.AdditionalImages))
+            if(inputModel.ImagesAsFileUploads == false)
             {
-                this.ModelState.AddModelError("", "There are 2 or more non-unique images");
-            }
-
-            //Check if main image is already used
-            if (this.productImageService.ProductImageExists(inputModel.MainImage) == true)
-            {
-                this.ModelState.AddModelError("MainImage", "This image is already used.");
-            }
-
-            //Check if any of the additional images are used
-            for (int i = 0; i < inputModel.AdditionalImages.Count; i++)
-            {
-                var additionalImage = inputModel.AdditionalImages[i];
-                if (this.productImageService.ProductImageExists(additionalImage) == true)
+                //Check if all of these images are unique
+                if (this.productImageService.ImagesAreRepeated(inputModel.MainImage, inputModel.AdditionalImages))
                 {
-                    this.ModelState.AddModelError($"AdditionalImages[{i}]", "This image is already used.");
+                    this.ModelState.AddModelError("", "There are 2 or more non-unique images");
+                }
+
+                //Check if main image is already used
+                if (this.productImageService.ProductImageExists(inputModel.MainImage) == true)
+                {
+                    this.ModelState.AddModelError("MainImage", "This image is already used.");
+                }
+
+                if (inputModel.AdditionalImages == null) inputModel.AdditionalImages = new List<string>();
+
+                //Check if any of the additional images are used
+                for (int i = 0; i < inputModel.AdditionalImages.Count; i++)
+                {
+                    var additionalImage = inputModel.AdditionalImages[i];
+                    if (this.productImageService.ProductImageExists(additionalImage) == true)
+                    {
+                        this.ModelState.AddModelError($"AdditionalImages[{i}]", "This image is already used.");
+                    }
                 }
             }
+            else
+            {
+                //Check main image upload
+                if (this.productImageService.ValidImageExtension(inputModel.MainImageUpload) == false)
+                {
+                    this.ModelState.AddModelError("MainImageUpload", "The uploaded image is invalid");
+                }
 
-            //TODO: CHECK THE IMAGES UPLOADS
+                if (inputModel.AdditionalImagesUploads == null) inputModel.AdditionalImagesUploads = new List<IFormFile>();
+
+                //Check additional images uploads
+                for (int i = 0; i < inputModel.AdditionalImagesUploads.Count; i++)
+                {
+                    var imageUpload = inputModel.AdditionalImagesUploads[i];
+                    if (this.productImageService.ValidImageExtension(imageUpload) == false)
+                    {
+                        this.ModelState.AddModelError($"AdditionalImageUpload[{i}]", "The uploaded image is invalid");
+                    }
+                }
+            }            
 
             //Check if categories exist in the database or if there are even any categories for this product
             for (int i = 0; i < inputModel.CategoriesIds.Count; i++)
@@ -155,15 +200,35 @@ namespace GymHub.Web.Controllers
                 return this.RedirectToAction(nameof(Add), "Products");
             }
 
-            if (newProduct.Images == null) newProduct.Images = new List<ProductImage>();
+            if(inputModel.ImagesAsFileUploads == false)
+            {
+                newProduct.Images = new List<ProductImage>();
 
-            //Set additional images
-            newProduct.Images = inputModel.AdditionalImages
-                .Where(x => x != null)
-                .Select(x => new ProductImage { Image = x, Product = newProduct }).ToList();
+                //Set additional images
+                newProduct.Images = inputModel.AdditionalImages
+                    .Where(x => x != null)
+                    .Select(x => new ProductImage { Image = x, Product = newProduct }).ToList();
 
-            //Set main image
-            newProduct.Images.Add(new ProductImage { Image = inputModel.MainImage, IsMain = true, Product = newProduct, ProductId = newProduct.Id });
+                //Set main image
+                newProduct.Images.Add(new ProductImage { Image = inputModel.MainImage, IsMain = true, Product = newProduct, ProductId = newProduct.Id });
+            }
+            else
+            {
+                newProduct.Images = new List<ProductImage>();
+
+                //Upload main image
+                var imageUrl = await this.productImageService.UploadImageAsync(inputModel.MainImageUpload, newProduct);
+
+                //Set the main image
+                newProduct.Images.Add(new ProductImage { Image = imageUrl, IsMain = true, Product = newProduct, ProductId = newProduct.Id });
+
+                //Upload the additional images and set the additional images
+                foreach (var additionalImage in inputModel.AdditionalImagesUploads)
+                {
+                    var additionalImageUrl = await this.productImageService.UploadImageAsync(additionalImage, newProduct);
+                    newProduct.Images.Add(new ProductImage { Image = additionalImageUrl, IsMain = false, Product = newProduct, ProductId = newProduct.Id });
+                }
+            }
 
             //Add product
             await this.productService.AddAsync(newProduct);
