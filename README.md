@@ -5,8 +5,8 @@
 ## :pencil: Description
 **GymHub** is a basic shoppings website which sells all kinds of gym equipment. It has products with categories and a product cart.
             It also has user reviews, comments and ratings for each product. There are also popup notifications for certain actions.             
-- As an admin you can edit, add and remove categories and products. You can also buy products yourself. 
-- As a user, you can buy products, leave reviews, comments and ratings for a product.
+- As an admin you can edit, add and remove categories and products. You can also do everything a normal user can as well. You can also manage the sales and change their statuses.
+- As a user, you can buy products, leave reviews, comments and ratings for a product. You can see details for your sales from your profile at any time.  
 
 ### :hammer: Built With
 
@@ -29,6 +29,7 @@
 - Azure blob storage
 - Automapper 
 - SendGrid
+- Azure App Service + Azure SQL Database + Azure Application Insights
 ### :hammer: And in the future hopefully also with                
 - Facebook for developers API
 - Twitter for developers API
