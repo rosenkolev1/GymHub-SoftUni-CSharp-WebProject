@@ -179,7 +179,7 @@ namespace GymHub.Services.ServicesFolder.ProductService
                 .First(x => x.Id == inputModel.Id);
             var newAdditionalImages = inputModel.AdditionalImages.Where(x => x != null).ToList();
 
-            //Edit all of the images for the product
+            //Remove all of the images for the product
             productToEdit.Images.Clear();
             this.context.RemoveRange(this.context.ProductsImages
                 .Where(x => x.ProductId == productToEdit.Id));

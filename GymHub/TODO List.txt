@@ -1,8 +1,6 @@
+-Fix editing a product with image uploads
+
 -Make payment be charged only when the admin changes the status of the sale to confirmed. As such cancel the payment when the admin declines it
-
--Add image upload to product adding. Use some kind of blob storage for images.
-
--Add admin functionality for uploading products images
 
 -Add category based searching.
 

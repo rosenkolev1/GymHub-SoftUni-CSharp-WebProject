@@ -1,12 +1,25 @@
 ﻿using GymHub.Common;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace GymHub.Web.Models.InputModels
 {
     public class AddProductInputModel
     {
+        public AddProductInputModel(IFormFile mainImageUpload, ICollection<IFormFile> additionalImagesUploads)
+        {
+            this.MainImageUpload = mainImageUpload;
+            this.AdditionalImagesUploads = (List<IFormFile>)additionalImagesUploads;
+        }
+
+        public AddProductInputModel()
+        {
+
+        }
+
         public string Id { get; set; }
 
         [Required]
@@ -21,10 +34,12 @@ namespace GymHub.Web.Models.InputModels
 
         public string MainImage { get; set; }
 
+        [JsonIgnore]
         public IFormFile MainImageUpload { get; set; }
 
         public List<string> AdditionalImages{ get; set; }
 
+        [JsonIgnore]
         public List<IFormFile> AdditionalImagesUploads { get; set; }
 
         [Required]

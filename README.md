@@ -27,6 +27,7 @@
 - Lots of boostrap themes and templates
 - Stripe Checkout API
 - Mapbox for maps
+- Azure blob storage
 ### :hammer: And in the future hopefully also with                
 - Facebook for developers API
 - Twitter for developers API

@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -84,7 +85,6 @@ namespace GymHub.Web.Controllers
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
         public async Task<IActionResult> Add(AddProductInputModel inputModel)
         {
-            var something = this.Request.Form;
             var newProduct = this.mapper.Map<Product>(inputModel);
 
             //Set input model short description
@@ -151,6 +151,7 @@ namespace GymHub.Web.Controllers
                     }
                 }
             }
+            //CHECK IMAGES UPLOADS
             else
             {
                 //Check main image upload
@@ -200,6 +201,7 @@ namespace GymHub.Web.Controllers
                 return this.RedirectToAction(nameof(Add), "Products");
             }
 
+            //Add images to product
             if(inputModel.ImagesAsFileUploads == false)
             {
                 newProduct.Images = new List<ProductImage>();
@@ -353,25 +355,52 @@ namespace GymHub.Web.Controllers
                 this.ModelState.AddModelError("Name", "Product with this name already exists.");
             }
 
-            //Check if all of these images are unique
-            if(this.productImageService.ImagesAreRepeated(inputModel.MainImage, inputModel.AdditionalImages))
+            //CHECK THE IMAGES LINKS
+            if (inputModel.ImagesAsFileUploads == false)
             {
-                this.ModelState.AddModelError("", "There are 2 or more non-unique images");
-            }
-
-            //Check if main image is already used
-            if (this.productImageService.ProductImageExists(inputModel.MainImage, productId) == true)
-            {
-                this.ModelState.AddModelError("MainImage", "This image is already used.");
-            }
-
-            //Check if any of the additional images are already used
-            for (int i = 0; i < inputModel.AdditionalImages.Count; i++)
-            {
-                var additionalImage = inputModel.AdditionalImages[i];
-                if (this.productImageService.ProductImageExists(additionalImage, productId) == true)
+                //Check if all of these images are unique
+                if (this.productImageService.ImagesAreRepeated(inputModel.MainImage, inputModel.AdditionalImages))
                 {
-                    this.ModelState.AddModelError($"AdditionalImages[{i}]", "This image is already used.");
+                    this.ModelState.AddModelError("", "There are 2 or more non-unique images");
+                }
+
+                //Check if main image is already used
+                if (this.productImageService.ProductImageExists(inputModel.MainImage) == true)
+                {
+                    this.ModelState.AddModelError("MainImage", "This image is already used.");
+                }
+
+                if (inputModel.AdditionalImages == null) inputModel.AdditionalImages = new List<string>();
+
+                //Check if any of the additional images are used
+                for (int i = 0; i < inputModel.AdditionalImages.Count; i++)
+                {
+                    var additionalImage = inputModel.AdditionalImages[i];
+                    if (this.productImageService.ProductImageExists(additionalImage) == true)
+                    {
+                        this.ModelState.AddModelError($"AdditionalImages[{i}]", "This image is already used.");
+                    }
+                }
+            }
+            //CHECK IMAGES UPLOADS
+            else
+            {
+                //Check main image upload
+                if (this.productImageService.ValidImageExtension(inputModel.MainImageUpload) == false)
+                {
+                    this.ModelState.AddModelError("MainImageUpload", "The uploaded image is invalid");
+                }
+
+                if (inputModel.AdditionalImagesUploads == null) inputModel.AdditionalImagesUploads = new List<IFormFile>();
+
+                //Check additional images uploads
+                for (int i = 0; i < inputModel.AdditionalImagesUploads.Count; i++)
+                {
+                    var imageUpload = inputModel.AdditionalImagesUploads[i];
+                    if (this.productImageService.ValidImageExtension(imageUpload) == false)
+                    {
+                        this.ModelState.AddModelError($"AdditionalImageUpload[{i}]", "The uploaded image is invalid");
+                    }
                 }
             }
 
