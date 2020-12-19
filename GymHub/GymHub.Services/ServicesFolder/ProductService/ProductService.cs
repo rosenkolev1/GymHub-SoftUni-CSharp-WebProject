@@ -172,7 +172,7 @@ namespace GymHub.Services.ServicesFolder.ProductService
             await DeleteEntityAsync(productToDelete);
         }
 
-        public async Task EditAsync(AddProductInputModel inputModel)
+        public async Task EditAsync(EditProductInputModel inputModel)
         {
             var productToEdit = this.context.Products
                 .Include(x => x.Images)

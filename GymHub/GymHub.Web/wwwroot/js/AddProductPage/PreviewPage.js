@@ -20,14 +20,21 @@
         let isImageUploadMode = document.querySelector("#ImagesAsFileUploads").value.toLowerCase();
 
         //Get the main image value depending on the image mode
-        mainImage = document.querySelector('.input-image-link-main').value;
-        //if (isImageUploadMode === "false") mainImage = document.querySelector('.input-image-link-main').value;
-        //else mainImage = document.querySelector('.image-upload-main').src;
+        if (isImageUploadMode === "false") mainImage = document.querySelector('.input-image-link-main').value;
+        else {
+            mainImage = document.querySelector('.image-upload-main').src;
+            if (mainImage.startsWith('data:image')) mainImage = '';
+        }
 
         //Get the additional images depending on the image mode
-        additionalImages = Array.from(document.querySelectorAll('.product-addProduct-additionalImage')).map(x => x.value);
-        //if (isImageUploadMode === "false") additionalImages = Array.from(document.querySelectorAll('.product-addProduct-additionalImage')).map(x => x.value);
-        //else additionalImages = Array.from(document.querySelectorAll('.image-upload-additional')).map(x => x.src);
+        if (isImageUploadMode === "false") additionalImages = Array.from(document.querySelectorAll('.product-addProduct-additionalImage')).map(x => x.value);
+        else {
+            additionalImages = Array.from(document.querySelectorAll('.image-upload-additional')).map(x => {
+                let image = x.src;
+                if (image.startsWith('data:image')) image = '';
+                return image;
+            });
+        }
 
         let productCategoriesInputs = Array.from(document.querySelectorAll('.category-select'))
             .reduce((acc, x) => {

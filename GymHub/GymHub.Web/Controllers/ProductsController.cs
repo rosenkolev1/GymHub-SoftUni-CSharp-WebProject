@@ -253,7 +253,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public IActionResult Edit(string productId, string errorReturnUrl)
+        public async Task<IActionResult> Edit(string productId, string errorReturnUrl)
         {           
             if (this.productService.ProductExistsById(productId) == false)
             {
@@ -261,15 +261,15 @@ namespace GymHub.Web.Controllers
                 //return this.View("/Views/Shared/Error.cshtml");
             }
 
-            AddProductInputModel inputModel = null;
+            EditProductInputModel inputModel = null;
 
             //Add each model state error from the last action to this one. Fill the input model with he values from the last post action
-            if (TempData[GlobalConstants.ErrorsFromPOSTRequest] != null && TempData[GlobalConstants.InputModelFromPOSTRequestType]?.ToString() == nameof(AddProductInputModel))
+            if (TempData[GlobalConstants.ErrorsFromPOSTRequest] != null && TempData[GlobalConstants.InputModelFromPOSTRequestType]?.ToString() == nameof(EditProductInputModel))
             {
                 ModelStateHelper.MergeModelStates(TempData, this.ModelState);
 
                 var inputModelJSON = TempData[GlobalConstants.InputModelFromPOSTRequest]?.ToString();
-                inputModel = JsonSerializer.Deserialize<AddProductInputModel>(inputModelJSON);
+                inputModel = JsonSerializer.Deserialize<EditProductInputModel>(inputModelJSON);
 
                 var product = this.productService.GetProductById(productId, true);
 
@@ -280,53 +280,66 @@ namespace GymHub.Web.Controllers
             else
             {
                 var product = this.productService.GetProductById(productId, true);
-                inputModel = this.mapper.Map<AddProductInputModel>(product);
+                inputModel = this.mapper.Map<EditProductInputModel>(product);
 
                 //Get the categories for the product
                 var productCategories = this.categoryService.GetCategoriesForProduct(product.Id).ToList();
                 inputModel.CategoriesIds = productCategories.Select(x => x.Id).ToList();
                 inputModel.ProductCategoriesNames = productCategories.Select(x => x.Name).ToList();
 
-                //Set the main image
-                var mainImagePath = product.Images.First(x => x.IsMain == true).Image;
-                inputModel.MainImage = mainImagePath;
+                //Set image mode
+                inputModel.ImagesAsFileUploads = false;
 
-                //Set the correct additional images paths
-                var additionalImages = product.Images
-                    .Where(x => x.IsMain == false)
-                    .ToList();
+                //Get the main image
+                var mainImage = this.productImageService.GetMainImage(productId);
+
+                //Set main image path
+                inputModel.MainImage = mainImage.Image;
+
+                //Set main image upload info
+                inputModel.MainImageUploadInfo = new EditProductImageUploadInputModel
+                {
+                    ImageUpload = null,
+                    IsBeingModified = false,
+                    ModifiedImage = new ImageIdAndPathInputModel { Id = mainImage.Id, Path = mainImage.Image}
+                };
+
+                //Get additional images
+                var additionalImages = this.productImageService.GetAdditionalImages(productId);
 
                 inputModel.AdditionalImages = new List<string>();
+                inputModel.AdditionalImagesUploadsInfo = new List<EditProductImageUploadInputModel>();
 
+                //Sed additional images uploads and paths
                 for (int i = 0; i < additionalImages.Count; i++)
                 {
                     var image = additionalImages[i];
                     inputModel.AdditionalImages.Add(image.Image);
+                    inputModel.AdditionalImagesUploadsInfo.Add(new EditProductImageUploadInputModel
+                    {
+                        ImageUpload = null,
+                        IsBeingModified = false,
+                        ModifiedImage = new ImageIdAndPathInputModel { Id = image.Id, Path = image.Image}
+                    });
                 }
             }
-
-            //Set the input model mode to edit
-            inputModel.IsAdding = false;
 
             //Set input model short description
             inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);
 
-            return this.View("/Views/Products/Add.cshtml", inputModel);
+            return this.View(inputModel);
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
         [HttpPost]
-        public async Task<IActionResult> Edit(AddProductInputModel inputModel)
+        public async Task<IActionResult> Edit(EditProductInputModel inputModel)
         {
             //Set input model short description
             inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);
 
             //Store input model for passing in get action
             TempData[GlobalConstants.InputModelFromPOSTRequest] = JsonSerializer.Serialize(inputModel);
-            TempData[GlobalConstants.InputModelFromPOSTRequestType] = nameof(AddProductInputModel);
-
-            //Set input model mode to edit
-            inputModel.IsAdding = false;
+            TempData[GlobalConstants.InputModelFromPOSTRequestType] = nameof(EditProductInputModel);
 
             //Check without looking into the database
             if (this.ModelState.IsValid == false)
@@ -385,18 +398,22 @@ namespace GymHub.Web.Controllers
             //CHECK IMAGES UPLOADS
             else
             {
+                var mainImageUpload = inputModel.MainImageUploadInfo.ImageUpload;
+
                 //Check main image upload
-                if (this.productImageService.ValidImageExtension(inputModel.MainImageUpload) == false)
+                if (this.productImageService.ValidImageExtension(mainImageUpload) == false)
                 {
                     this.ModelState.AddModelError("MainImageUpload", "The uploaded image is invalid");
                 }
 
-                if (inputModel.AdditionalImagesUploads == null) inputModel.AdditionalImagesUploads = new List<IFormFile>();
+                if (inputModel.AdditionalImagesUploadsInfo == null) inputModel.AdditionalImagesUploadsInfo = new List<EditProductImageUploadInputModel>();
+
+                var additionalImagesUploads = inputModel.AdditionalImagesUploadsInfo.Select(x => x.ImageUpload).ToList();
 
                 //Check additional images uploads
-                for (int i = 0; i < inputModel.AdditionalImagesUploads.Count; i++)
+                for (int i = 0; i < additionalImagesUploads.Count; i++)
                 {
-                    var imageUpload = inputModel.AdditionalImagesUploads[i];
+                    var imageUpload = additionalImagesUploads[i];
                     if (this.productImageService.ValidImageExtension(imageUpload) == false)
                     {
                         this.ModelState.AddModelError($"AdditionalImageUpload[{i}]", "The uploaded image is invalid");
@@ -459,7 +476,7 @@ namespace GymHub.Web.Controllers
         [IgnoreAntiforgeryToken]
         public IActionResult LoadAddProductPreview(string inputModelJSON)
         {
-            var inputModel = JsonSerializer.Deserialize<AddProductInputModel>(inputModelJSON);
+            var inputModel = JsonSerializer.Deserialize<EditProductInputModel>(inputModelJSON);
 
             //Set input model short description
             inputModel.ShortDescription = this.productService.GetShordDescription(inputModel.Description, 40);

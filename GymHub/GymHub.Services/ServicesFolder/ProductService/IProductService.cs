@@ -28,7 +28,7 @@ namespace GymHub.Services.ServicesFolder.ProductService
         public bool ProductRatingExists(string userId, string productId);
         public Task EditProductRating(ProductRating productRating, double rating);
         public Task RemoveProductAsync(string productId);
-        public Task EditAsync(AddProductInputModel inputModel);
+        public Task EditAsync(EditProductInputModel inputModel);
         public string GetProductName(string productId);
         public IQueryable<Product> GetProductsFiltered();
     }

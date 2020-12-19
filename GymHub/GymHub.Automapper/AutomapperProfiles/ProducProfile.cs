@@ -19,6 +19,9 @@ namespace GymHub.Automapper.AutomapperProfiles
                 .ForMember(x => x.Images, opt => opt.Ignore())
                 .ForMember(x => x.Id, opt => opt.Ignore())
                 .ReverseMap();
+
+            CreateMap<Product, EditProductInputModel>();
+
         }
     }
 }

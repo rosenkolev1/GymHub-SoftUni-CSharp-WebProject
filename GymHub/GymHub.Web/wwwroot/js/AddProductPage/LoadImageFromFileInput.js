@@ -5,7 +5,14 @@
         inputImageUpload.addEventListener('change', e => {
             let selectedFile = e.target.files[0];
             let imageTag = inputImageUpload.closest('.input-container').querySelector('.input-image-upload-image');
-            readImage(selectedFile, imageTag);
+
+            if (selectedFile) {
+                readImage(selectedFile, imageTag);
+            }
+            else {
+                imageTag.removeAttribute('src');
+                imageTag.setAttribute('hidden', 'true');
+            }
         })
     })
     

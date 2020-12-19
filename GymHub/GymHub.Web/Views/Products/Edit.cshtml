@@ -1,4 +1,4 @@
-﻿@model AddProductInputModel
+﻿@model EditProductInputModel
 @using GymHub.Services.ServicesFolder.CategoryService
 @inject ICategoryService categoryService
 
@@ -9,10 +9,10 @@
     <link href="/css/ProductPageCommentBox.css" rel="stylesheet" asp-append-version="true" />
     <!------ Include the above in your HEAD tag ---------->
 }
-<form asp-controller="Products" asp-action="Add" method="post" class="product-addProduct-form" enctype="multipart/form-data">
+<form asp-controller="Products" asp-action="Edit" method="post" class="product-addProduct-form" enctype="multipart/form-data">
     <input hidden type="hidden" asp-for="ImagesAsFileUploads" value="@(Model != null ? Model.ImagesAsFileUploads : false)" />
-    <h4 class="product-add-actionMessage-title">Create a new Product.</h4>
-    @*<h4 class="product-edit-actionMessage-title">Edit Product.</h4>*@
+    @*<h4 class="product-add-actionMessage-title">Create a new Product.</h4>*@
+    <h4 class="product-edit-actionMessage-title">Edit Product.</h4>
     <hr />
     <div asp-validation-summary="All" class="alert-danger"></div>
     <div class="image-mode-container">
@@ -54,32 +54,65 @@
     </div>
     <div @(Model?.ImagesAsFileUploads == false || Model?.ImagesAsFileUploads == null ? "hidden" : "") class="image-uploads-container">
         <div class="input-container">
-            <label asp-for="MainImageUpload" class="input-label">Main image</label>
-            <input asp-for="MainImageUpload" placeholder="Type url here" class="input-image-upload input-image-upload-main">
-            <span asp-validation-for="MainImageUpload" class="validation-span"></span>
-            <img hidden class="input-image-upload-image image-upload-main" />
+            <label asp-for="MainImageUploadInfo.ImageUpload" class="input-label">Main image</label>
+            <input asp-for="MainImageUploadInfo.ImageUpload" placeholder="Type url here" class="input-image-upload input-image-upload-main edit-deactivated">
+            <span class="product-edit-image-upload-lock">
+                <i class="fas fa-lock"></i>
+            </span>
+            <span asp-validation-for="MainImageUploadInfo.ImageUpload" class="validation-span"></span>
+            <img class="input-image-upload-image image-upload-main" src="@Model.MainImageUploadInfo.ModifiedImage.Path"/>
+
+            <input type="hidden" asp-for="MainImageUploadInfo.IsBeingModified" class="input-image-isBeingModified" />
+            <input type="hidden" asp-for="MainImageUploadInfo.ModifiedImage.Id" />
         </div>
         @for (int i = 0; i < 3; i++)
         {
-            @if (Model?.AdditionalImagesUploads != null)
+            @if (Model.AdditionalImagesUploadsInfo == null) Model.AdditionalImagesUploadsInfo = new List<EditProductImageUploadInputModel>();
+            @if (Model.AdditionalImagesUploadsInfo.Count <= i) Model.AdditionalImagesUploadsInfo.Add(null);
+            <div class="input-container">
+                <label asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="input-label">Additional image @(i+1)</label>
+                <input asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="product-addProduct-additionalImageUpload input-image-upload edit-deactivated" placeholder="Type url here">
+                <span class="product-edit-image-upload-lock">
+                    <i class="fas fa-lock"></i>
+                </span>
+                <span asp-validation-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="validation-span"></span>
+                <img class="input-image-upload-image image-upload-additional" src="@Model.AdditionalImagesUploadsInfo[i].ModifiedImage.Path"/>
+
+                <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].IsBeingModified" class="input-image-isBeingModified" />
+                <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].ModifiedImage.Id" />
+            </div>
+            @*TODO: REMOVE THIS IF IT ISN'T NECESSARY*@
+            @*@if (Model?.AdditionalImagesUploadsInfo != null)
             {
-                @if (Model.AdditionalImagesUploads.Count <= i) Model.AdditionalImagesUploads.Add(null);
+                @if (Model.AdditionalImagesUploadsInfo.Count <= i) Model.AdditionalImagesUploadsInfo.Add(null);
                 <div class="input-container">
-                    <label asp-for="AdditionalImagesUploads" class="input-label">Additional image @(i+1)</label>
-                    <input asp-for="AdditionalImagesUploads" class="product-addProduct-additionalImageUpload input-image-upload" placeholder="Type url here">
-                    <span asp-validation-for="AdditionalImagesUploads" class="validation-span"></span>
+                    <label asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="input-label">Additional image @(i+1)</label>
+                    <input asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="product-addProduct-additionalImageUpload input-image-upload edit-deactivated" placeholder="Type url here">
+                    <span class="product-edit-image-upload-lock">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <span asp-validation-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="validation-span"></span>
                     <img hidden class="input-image-upload-image image-upload-additional" />
+
+                    <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].IsBeingModified" class="input-image-isBeingModified"/>
+                    <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].ModifiedImageId"/>
                 </div>
             }
             else
             {
                 <div class="input-container">
-                    <label asp-for="AdditionalImagesUploads" class="input-label">Additional image @(i+1)</label>
-                    <input asp-for="AdditionalImagesUploads" class="product-addProduct-additionalImageUpload input-image-upload" placeholder="Type url here">
-                    <span asp-validation-for="AdditionalImagesUploads" class="validation-span"></span>
+                    <label asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="input-label">Additional image @(i+1)</label>
+                    <input asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="product-addProduct-additionalImageUpload input-image-upload edit-deactivated" placeholder="Type url here">
+                    <span asp-validation-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="validation-span"></span>
+                    <span class="product-edit-image-upload-lock">
+                        <i class="fas fa-lock"></i>
+                    </span>
                     <img hidden class="input-image-upload-image image-upload-additional" />
+
+                    <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].IsBeingModified" class="input-image-isBeingModified"/>
+                    <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].ModifiedImageId"/>
                 </div>
-            }
+            }*@
         }
     </div>
     <div class="input-container">
@@ -131,9 +164,9 @@
         </div>
     </div>
     <div class="button-container">
-        <button type="submit">Add product</button>
-        @*<input hidden type="text" asp-for="Id" />
-        <button type="submit">Edit product</button>*@
+        @*<button type="submit">Add product</button>*@
+        <input hidden type="text" asp-for="Id" />
+        <button type="submit">Edit product</button>
     </div>
     <div class="button-container">
         <button class="product-addProduct-previewPage-button" type="button">Preview Page</button>
@@ -158,6 +191,7 @@
     <script src="~/js/AddProductPage/AddCategoryToProduct.js" asp-append-version="true"></script>
     <script src="~/js/AddProductPage/SwitchImageMode.js" asp-append-version="true"></script>
     <script src="~/js/AddProductPage/LoadImageFromFileInput.js" asp-append-version="true"></script>
+    <script src="~/js/EditProductPage/ManageImageUploadsLock.js" asp-append-version="true"></script>
 
     <partial name="_ValidationScriptsPartial.cshtml">
 }

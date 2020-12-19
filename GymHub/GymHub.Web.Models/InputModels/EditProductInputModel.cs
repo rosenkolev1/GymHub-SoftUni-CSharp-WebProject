@@ -1,15 +1,16 @@
 ﻿using GymHub.Common;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace GymHub.Web.Models.InputModels
 {
-    public class AddProductInputModel
+    public class EditProductInputModel
     {
-        //public string Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [MaxLength(GlobalConstants.ProductNameLengthMax)]
@@ -23,13 +24,7 @@ namespace GymHub.Web.Models.InputModels
 
         public string MainImage { get; set; }
 
-        [JsonIgnore]
-        public IFormFile MainImageUpload { get; set; }
-
-        public List<string> AdditionalImages{ get; set; }
-
-        [JsonIgnore]
-        public List<IFormFile> AdditionalImagesUploads { get; set; }
+        public List<string> AdditionalImages { get; set; }
 
         [Required]
         [Range(typeof(decimal), "0.01", "79228162514264337593543950335", ErrorMessage = "Price is either too high or is below or equal to 0")]
@@ -53,5 +48,10 @@ namespace GymHub.Web.Models.InputModels
         public List<string> ProductCategoriesNames { get; set; } = new List<string>();
 
         public bool ImagesAsFileUploads { get; set; }
+
+        public EditProductImageUploadInputModel MainImageUploadInfo { get; set; }
+
+        public List<EditProductImageUploadInputModel> AdditionalImagesUploadsInfo { get; set; }
+
     }
 }
