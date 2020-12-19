@@ -118,14 +118,14 @@
             {
                 <div>
                     <input form="checkout-form" type="radio" asp-for="InputModel.PaymentMethodId" value="@paymentMethod.Id" checked> @paymentMethod.Name
-                    @if (paymentMethod.Name == GlobalConstants.Paypal || paymentMethod.Name == GlobalConstants.DebitOrCreditCard)
+                    @if (paymentMethod.Name == GlobalConstants.PaymentMethodPaypal || paymentMethod.Name == GlobalConstants.PaymentMethodDebitOrCreditCard)
                     {
                         <span>
                             <img src="https://www.logolynx.com/images/logolynx/c3/c36093ca9fb6c250f74d319550acac4d.jpeg" alt="" width="50">
                         </span>
                     }
                 </div>
-                @if (paymentMethod.Name == GlobalConstants.DirectBankTransfer)
+                @if (paymentMethod.Name == GlobalConstants.PaymentMethodDirectBankTransfer)
                 {
                     <p>
                         Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.

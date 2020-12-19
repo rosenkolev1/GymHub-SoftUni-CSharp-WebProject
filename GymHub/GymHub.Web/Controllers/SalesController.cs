@@ -165,7 +165,7 @@ namespace GymHub.Web.Controllers
 
             var paymentMethod = this.paymentMethodService.GetPaymentMethod(complexModel.InputModel.PaymentMethodId);
 
-            if (paymentMethod == GlobalConstants.DebitOrCreditCard)
+            if (paymentMethod == GlobalConstants.PaymentMethodDebitOrCreditCard)
             {
                 //Set the temp data for a successful sale
                 var confirmSaleToken = SetTempDataForSale(complexModel.InputModel, cartProducts);
@@ -185,14 +185,14 @@ namespace GymHub.Web.Controllers
                     return this.Json(new { RedirectPath = $"/Carts/All" });
                 }
 
-                return this.Json(new { id = sessionId, PaymentMethod = GlobalConstants.DebitOrCreditCard });
+                return this.Json(new { id = sessionId, PaymentMethod = GlobalConstants.PaymentMethodDebitOrCreditCard });
             }
-            else if(paymentMethod == GlobalConstants.CashOnDelivery)
+            else if(paymentMethod == GlobalConstants.PaymentMethodCashOnDelivery)
             {
                 //Set the temp data for a successful sale
                 var confirmSaleToken = SetTempDataForSale(complexModel.InputModel, cartProducts);
 
-                return this.Json(new { PaymentMethod = GlobalConstants.CashOnDelivery, RedirectPath = $"/Sales/CheckoutSuccess?confirmSaleToken={confirmSaleToken}&paymentMethod={GlobalConstants.CashOnDelivery}" });
+                return this.Json(new { PaymentMethod = GlobalConstants.PaymentMethodCashOnDelivery, RedirectPath = $"/Sales/CheckoutSuccess?confirmSaleToken={confirmSaleToken}&paymentMethod={GlobalConstants.PaymentMethodCashOnDelivery}" });
             }
 
 
@@ -241,7 +241,7 @@ namespace GymHub.Web.Controllers
                         Quantity = product.Quantity
                     }).ToList(),
                 Mode = "payment",
-                SuccessUrl = currentDomain + $"/Sales/CheckoutSuccess?confirmSaleToken={confirmSaleToken}&paymentMethod={GlobalConstants.DebitOrCreditCard}",
+                SuccessUrl = currentDomain + $"/Sales/CheckoutSuccess?confirmSaleToken={confirmSaleToken}&paymentMethod={GlobalConstants.PaymentMethodDebitOrCreditCard}",
                 CancelUrl = currentDomain + $"/Sales/CheckoutCancel",
                 PaymentIntentData = new SessionPaymentIntentDataOptions { CaptureMethod = "manual"}
             };
@@ -303,10 +303,9 @@ namespace GymHub.Web.Controllers
                 }
 
                 //Capture the funds
-                if (paymentIntentId != null && paymentMethod == GlobalConstants.DebitOrCreditCard)
+                if (paymentIntentId != null && paymentMethod == GlobalConstants.PaymentMethodDebitOrCreditCard)
                 {
-                    //this.saleService.AddSaleStatusAsync()
-                    //await this.paymentIntentService.CaptureAsync(paymentIntentId);
+                    saleInfo.PaymentIntentId = paymentIntentId;
                 }
 
                 await this.saleService.CheckoutAsync(saleInfo, currentUserId, saleProductsInfo);
@@ -398,6 +397,34 @@ namespace GymHub.Web.Controllers
                 this.TempData["NewSaleStatusId"] = complexModel.InputModel.NewSaleStatusId;
 
                 return this.RedirectToAction(nameof(ChangeSaleStatus), new { saleId = complexModel.InputModel.SaleId });
+            }
+
+            //Capture the payment intent and officially complete the sale and charge the customer if the paymentStatus is confirmed
+            var newSaleStatus = this.saleService.GetSaleStatusById(complexModel.InputModel.NewSaleStatusId);
+            if(newSaleStatus.Name == GlobalConstants.ConfirmedSaleStatus)
+            {
+                var paymentIntentId = this.saleService.GetPaymentIntentId(complexModel.InputModel.SaleId);
+                if (paymentIntentId != null)
+                {
+                    var paymentIntent = await this.paymentIntentService.GetAsync(paymentIntentId);
+                    if(paymentIntent.Status == "requires_capture")
+                    {
+                        await this.paymentIntentService.CaptureAsync(paymentIntentId);
+                    }
+                }
+            }
+            //Set free the payment intent and the funds if the paymentStatus is declined
+            else if(newSaleStatus.Name == GlobalConstants.DeclinedSaleStatus)
+            {
+                var paymentIntentId = this.saleService.GetPaymentIntentId(complexModel.InputModel.SaleId);
+                if (paymentIntentId != null)
+                {
+                    var paymentIntent = await this.paymentIntentService.GetAsync(paymentIntentId);
+                    if (paymentIntent.Status == "requires_capture")
+                    {
+                        await this.paymentIntentService.CancelAsync(paymentIntentId);
+                    }
+                }
             }
 
             await this.saleService.ChangeSaleStatusAsync(complexModel.InputModel.SaleId, complexModel.InputModel.NewSaleStatusId);

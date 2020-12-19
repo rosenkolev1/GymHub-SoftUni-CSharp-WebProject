@@ -1,6 +1,6 @@
 - In Sales/All add search options like searching for only the pending sales and not the declined or completed.
 
--Fix editing a product with image uploads. On edit of images with uploads delete the now unused images from the blob storage. Or maybe use hangfire to automatically remove the unused blobs from the azure storage every x minutes.
+-Use hangfire to automatically remove the unused blobs from the azure storage every x minutes.
 
 -Make payment be charged only when the admin changes the status of the sale to confirmed. As such cancel the payment when the admin declines it
 

@@ -19,5 +19,8 @@ namespace GymHub.Services.ServicesFolder.SaleService
         public List<SaleStatus> GetAllSaleStatuses();
         public bool SaleExists(string saleId);
         public Task ChangeSaleStatusAsync(string saleId, string saleStatusId);
+
+        public string GetPaymentIntentId(string saleId);
+        public SaleStatus GetSaleStatusById(string saleStatusId);
     }
 }

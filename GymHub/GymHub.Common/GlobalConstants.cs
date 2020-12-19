@@ -75,11 +75,12 @@
 
         //CartBuyButtonErrorForQuantity
         public const string CartBuyButtonErrorForQuantity = "CartBuyButtonErrorForQuantity";
+
         //PaymentMethods
-        public const string DebitOrCreditCard = "Debit or credit card";
-        public const string Paypal = "Paypal";
-        public const string DirectBankTransfer = "Direct Bank Transfer";
-        public const string CashOnDelivery = "Cash on Delivery";
+        public const string PaymentMethodDebitOrCreditCard = "Debit or credit card";
+        public const string PaymentMethodPaypal = "Paypal";
+        public const string PaymentMethodDirectBankTransfer = "Direct Bank Transfer";
+        public const string PaymentMethodCashOnDelivery = "Cash on Delivery";
 
         //Sale temp data
         public const string SaleInfo = "SaleInfo";

@@ -5,6 +5,7 @@ using GymHub.Data.Models;
 using GymHub.Services.Common;
 using GymHub.Services.ServicesFolder.CartService;
 using GymHub.Services.ServicesFolder.CountryService;
+using GymHub.Services.ServicesFolder.PaymentMethodService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
@@ -21,6 +22,7 @@ namespace GymHub.Services.ServicesFolder.SaleService
         private readonly ICountryService countryService;
         private readonly IProductService productService;
         private readonly ICartService cartService;
+        private readonly IPaymentMethodService paymentMethodService;
 
         public SaleService(ApplicationDbContext context)
             :base(context)
@@ -28,12 +30,13 @@ namespace GymHub.Services.ServicesFolder.SaleService
             
         }
 
-        public SaleService(ApplicationDbContext context, IMapper mapper, ICountryService countryService, IProductService productService, ICartService cartService)
+        public SaleService(ApplicationDbContext context, IMapper mapper, ICountryService countryService, IProductService productService, ICartService cartService, IPaymentMethodService paymentMethodService)
             :base(context)
         {
             this.countryService = countryService;
             this.productService = productService;
             this.cartService = cartService;
+            this.paymentMethodService = paymentMethodService;
         }
 
         private async Task AddProductsToSaleAsync(Sale sale, List<CheckoutProductViewModel> purchasedProducts)
@@ -82,6 +85,11 @@ namespace GymHub.Services.ServicesFolder.SaleService
                 SaleStatus = this.GetSaleStatus(GlobalConstants.PendingSaleStatus),
                 Municipality = inputModel.Municipality
             };
+
+            if(this.paymentMethodService.GetPaymentMethod(inputModel.PaymentMethodId) == GlobalConstants.PaymentMethodDebitOrCreditCard && inputModel.PaymentIntentId != null)
+            {
+                newSale.PaymentIntentId = inputModel.PaymentIntentId;
+            }
 
             await this.context.AddAsync(newSale);
             await this.context.SaveChangesAsync();
@@ -199,6 +207,19 @@ namespace GymHub.Services.ServicesFolder.SaleService
             this.context.Sales.First(x => x.Id == saleId).SaleStatusId = saleStatusId;
 
             await this.context.SaveChangesAsync();
+        }
+
+        public string GetPaymentIntentId(string saleId)
+        {
+            return this.context.Sales
+                .Where(x => x.Id == saleId)
+                .Select(x => x.PaymentIntentId)
+                .FirstOrDefault();
+        }
+
+        public SaleStatus GetSaleStatusById(string saleStatusId)
+        {
+            return this.context.SaleStatuses.First(x => x.Id == saleStatusId);
         }
     }
 }
