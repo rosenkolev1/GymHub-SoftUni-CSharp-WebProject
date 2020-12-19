@@ -12,15 +12,14 @@
 
 - Visual Studio Enterprise
 - .NET 5.0           
-- ASP.NET CORE 5.0         
+- ASP.NET CORE 5.0
+- EF Core 5.0
 - ASP.NET CORE views and partial views and sections and view components
 - ASP.NET CORE areas
 - ASP.NET CORE MVC and Razor Pages
-- SQL Server and Microsoft SQL Server
+- SQL Server and Microsoft SQL Server Management Studio
 - Custom database seeder 
 - Bootstrap 3.0/4.0 depending on the page
-- Automapper 
-- SendGrid
 - Javascript
 - AJAX real-time Requests
 - JQuery and any kind of jQuery plugins such as DataTables and jquery animations
@@ -28,6 +27,8 @@
 - Stripe Checkout API
 - Mapbox for maps
 - Azure blob storage
+- Automapper 
+- SendGrid
 ### :hammer: And in the future hopefully also with                
 - Facebook for developers API
 - Twitter for developers API
