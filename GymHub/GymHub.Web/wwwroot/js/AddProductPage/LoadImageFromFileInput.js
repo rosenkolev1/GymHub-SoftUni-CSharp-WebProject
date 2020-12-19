@@ -3,8 +3,14 @@
 
     inputImageUploads.forEach(inputImageUpload => {
         inputImageUpload.addEventListener('change', e => {
+            let inputContainer = inputImageUpload.closest('.input-container');
+
+            //Remove the span which suggests that the image hasn't been modified  if it exists
+            let hasNotBeenModified = inputContainer.querySelector('.input-image-hasNotBeenModified');
+            if (hasNotBeenModified) hasNotBeenModified.remove();
+
             let selectedFile = e.target.files[0];
-            let imageTag = inputImageUpload.closest('.input-container').querySelector('.input-image-upload-image');
+            let imageTag = inputContainer.querySelector('.input-image-upload-image');
 
             if (selectedFile) {
                 readImage(selectedFile, imageTag);

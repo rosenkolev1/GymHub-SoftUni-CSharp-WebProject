@@ -1,6 +1,7 @@
 ﻿using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.Common;
+using GymHub.Web.Models.InputModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -66,7 +67,7 @@ namespace GymHub.Services.ServicesFolder.CategoryService
             await context.SaveChangesAsync();
         }
 
-        public async Task EditCategoriesToProductAsync(Product product, List<string> productCategoriesId)
+        public async Task EditCategoriesToProductAsync(Product product, List<string> productCategoriesIds)
         {
             var productCategories = context.Products
                 .Where(x => x == product)
@@ -76,16 +77,16 @@ namespace GymHub.Services.ServicesFolder.CategoryService
 
 
             //Delete the old categories
-            foreach (var category in productCategories.Where(x => productCategoriesId.Contains(x.Id) == false))
+            foreach (var category in productCategories.Where(x => productCategoriesIds.Contains(x.CategoryId) == false))
             {
                 category.IsDeleted = true;
                 category.DeletedOn = DateTime.UtcNow;
             }
 
             //Add the new categories
-            foreach (var categoryId in productCategoriesId)
+            foreach (var category in productCategoriesIds)
             {
-                var productCategory = productCategories.FirstOrDefault(x => x.CategoryId == categoryId);
+                var productCategory = productCategories.FirstOrDefault(x => x.CategoryId == category);
                 if (productCategory == null)
                 {
                     if (context.Entry(product).Collection(x => x.ProductCategories).IsLoaded == false)
@@ -93,7 +94,7 @@ namespace GymHub.Services.ServicesFolder.CategoryService
                         await context.Entry(product).Collection(x => x.ProductCategories).LoadAsync();
                     }
 
-                    product.ProductCategories.Add(new ProductCategory { CategoryId = categoryId, ProductId = product.Id });
+                    product.ProductCategories.Add(new ProductCategory { CategoryId = category, ProductId = product.Id });
                 }
                 else
                 {
@@ -124,6 +125,14 @@ namespace GymHub.Services.ServicesFolder.CategoryService
         public Category GetCategoryById(string id)
         {
             return context.Categories.First(x => x.Id == id);
+        }
+
+        public List<string> GetCategoryNamesFromIds(List<string> categoriesIds)
+        {
+            return this.context.Categories
+                .Where(x => categoriesIds.Contains(x.Id))
+                .Select(x => x.Name)
+                .ToList();
         }
 
         public List<Product> GetProductsForCategory(string categoryId)

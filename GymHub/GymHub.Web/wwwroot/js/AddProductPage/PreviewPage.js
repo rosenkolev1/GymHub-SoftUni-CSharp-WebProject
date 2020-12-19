@@ -22,7 +22,10 @@
         //Get the main image value depending on the image mode
         if (isImageUploadMode === "false") mainImage = document.querySelector('.input-image-link-main').value;
         else {
-            mainImage = document.querySelector('.image-upload-main').src;
+            let mainImageEl = document.querySelector('.image-upload-main');
+            mainImage = mainImageEl.src;
+
+            //If image comes from user image upload then don't send it to the server, but instead handle it client side
             if (mainImage.startsWith('data:image')) mainImage = '';
         }
 
@@ -30,15 +33,24 @@
         if (isImageUploadMode === "false") additionalImages = Array.from(document.querySelectorAll('.product-addProduct-additionalImage')).map(x => x.value);
         else {
             additionalImages = Array.from(document.querySelectorAll('.image-upload-additional')).map(x => {
-                let image = x.src;
+                let imageEl = x;
+                let image = imageEl.src;
+
+                //If image comes from user image upload then don't send it to the server, but instead handle it client side
                 if (image.startsWith('data:image')) image = '';
+
                 return image;
             });
         }
 
         let productCategoriesInputs = Array.from(document.querySelectorAll('.category-select'))
             .reduce((acc, x) => {
-                if (x.value && x.value !== 'null') acc.push(x.value);
+                if (x.value && x.value !== 'null') {
+                    let optionsInSelect = Array.from(x.querySelectorAll('option'));
+                    let optionSelected = optionsInSelect.find(y => y.value === x.value);
+
+                    acc.push(optionSelected.textContent);
+                }
                 return acc;
             }, []);
 
@@ -56,7 +68,7 @@
             Description: description,
             QuantityInStock: quantityInStock,
             AdditionalImages: additionalImages,
-            ProductCategoriesNames: productCategoriesInputs
+            CategoriesNames: productCategoriesInputs
         };
 
         let dataObjectJSON = JSON.stringify(dataObject);
@@ -69,6 +81,26 @@
             error: addPageReviewError
         })
     })
+
+    function CheckIfImageElHasNotBeenModifiedAndIsUnlocked(imageEl) {
+
+        //If image has not been modified and the lock is lifted, then show empty image. Otherwise return the original src
+        let inputContainer = imageEl.closest('.input-container');
+        let hasNotBeenModified = inputContainer.querySelector('.input-image-hasNotBeenModified');
+        let inputLock = inputContainer.querySelector('.product-edit-image-upload-lock .fas');
+        let originalImagePath = inputContainer.querySelector('.input-image-originalImagePath');
+        let originalImagePathValue;
+        if (originalImagePath) originalImagePathValue = originalImagePath.value;
+
+        if (hasNotBeenModified && inputLock.classList.contains('fa-unlock')) return '';
+        else if (!hasNotBeenModified && inputLock) {
+            if (inputLock.classList.contains('fa-lock')) {
+                return originalImagePathValue;
+            }
+        }
+
+        return imageEl.src;
+    }
 
     function addPagePreview(result) {
         let addProductForm = document.querySelector('.product-addProduct-form');
@@ -84,8 +116,13 @@
         //If we are in image upload mode, then manually place the images in the correct spots
         let isImageUploadMode = document.querySelector("#ImagesAsFileUploads").value.toLowerCase();
         if (isImageUploadMode === "true") {
-            let mainImageSrc = document.querySelector('.image-upload-main').src;
-            let additionalImagesSources = Array.from(document.querySelectorAll('.image-upload-additional')).map(x => x.src);
+            let mainImage = document.querySelector('.image-upload-main');
+
+            let mainImageSrc = CheckIfImageElHasNotBeenModifiedAndIsUnlocked(mainImage);
+            let additionalImagesSources = Array.from(document.querySelectorAll('.image-upload-additional'))
+                .map(imageEl => {
+                    return CheckIfImageElHasNotBeenModifiedAndIsUnlocked(imageEl);
+                });
 
             let productMainImagePreview = document.querySelector('.product-mainImage');
             productMainImagePreview.src = mainImageSrc;

@@ -76,6 +76,11 @@ namespace GymHub.Web.Controllers
 
                 var inputModelJSON = TempData[GlobalConstants.InputModelFromPOSTRequest]?.ToString();
                 inputModel = JsonSerializer.Deserialize<AddProductInputModel>(inputModelJSON);
+
+                //Add categories names
+                inputModel.CategoriesNames = new List<string>();
+                var categoriesNames = this.categoryService.GetCategoryNamesFromIds(inputModel.CategoriesIds);
+                inputModel.CategoriesNames.AddRange(categoriesNames);
             }
 
             return this.View(inputModel);
@@ -253,7 +258,7 @@ namespace GymHub.Web.Controllers
         }
 
         [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public async Task<IActionResult> Edit(string productId, string errorReturnUrl)
+        public async Task<IActionResult> Edit(string productId)
         {           
             if (this.productService.ProductExistsById(productId) == false)
             {
@@ -270,11 +275,30 @@ namespace GymHub.Web.Controllers
 
                 var inputModelJSON = TempData[GlobalConstants.InputModelFromPOSTRequest]?.ToString();
                 inputModel = JsonSerializer.Deserialize<EditProductInputModel>(inputModelJSON);
-
                 var product = this.productService.GetProductById(productId, true);
 
-                //Get the categories for the product
-                inputModel.CategoriesIds = this.categoryService.GetCategoriesForProduct(product.Id).Select(x => x.Id).ToList();
+                //Add categories names
+                inputModel.CategoriesNames = new List<string>();
+                var categoriesNames = this.categoryService.GetCategoryNamesFromIds(inputModel.CategoriesIds);
+                inputModel.CategoriesNames.AddRange(categoriesNames);
+
+                //Set the image path for all of the modifiedImages
+                if (inputModel.MainImageUploadInfo.ModifiedImage.Id != null)
+                {
+                    inputModel.MainImageUploadInfo.ModifiedImage.Path = this.productImageService.GetImageById(inputModel.MainImageUploadInfo.ModifiedImage.Id).Image;
+                }
+
+                //Set isBeingModified param for mainImageUpload to false
+                inputModel.MainImageUploadInfo.IsBeingModified = false;
+
+                foreach (var additionalImageUploadInfo in inputModel.AdditionalImagesUploadsInfo)
+                {
+                    var modifiedImage = additionalImageUploadInfo.ModifiedImage;
+                    if (modifiedImage.Id != null) modifiedImage.Path = this.productImageService.GetImageById(modifiedImage.Id).Image;
+
+                    //Set isBeingModified param for additionalImageUpload to false
+                    additionalImageUploadInfo.IsBeingModified = false;
+                }
             }
             //If there wasn't an error with the edit form prior to this, just fill the inputModel like normal
             else
@@ -285,7 +309,7 @@ namespace GymHub.Web.Controllers
                 //Get the categories for the product
                 var productCategories = this.categoryService.GetCategoriesForProduct(product.Id).ToList();
                 inputModel.CategoriesIds = productCategories.Select(x => x.Id).ToList();
-                inputModel.ProductCategoriesNames = productCategories.Select(x => x.Name).ToList();
+                inputModel.CategoriesNames = productCategories.Select(x => x.Name).ToList();
 
                 //Set image mode
                 inputModel.ImagesAsFileUploads = false;
@@ -300,7 +324,6 @@ namespace GymHub.Web.Controllers
                 inputModel.MainImageUploadInfo = new EditProductImageUploadInputModel
                 {
                     ImageUpload = null,
-                    IsBeingModified = false,
                     ModifiedImage = new ImageIdAndPathInputModel { Id = mainImage.Id, Path = mainImage.Image}
                 };
 
@@ -318,7 +341,6 @@ namespace GymHub.Web.Controllers
                     inputModel.AdditionalImagesUploadsInfo.Add(new EditProductImageUploadInputModel
                     {
                         ImageUpload = null,
-                        IsBeingModified = false,
                         ModifiedImage = new ImageIdAndPathInputModel { Id = image.Id, Path = image.Image}
                     });
                 }
@@ -368,6 +390,17 @@ namespace GymHub.Web.Controllers
                 this.ModelState.AddModelError("Name", "Product with this name already exists.");
             }
 
+            //Check if there is a main image, regardless of the imageMode
+            if ((inputModel.MainImage == null && inputModel.ImagesAsFileUploads == false) || (inputModel.MainImageUploadInfo.ImageUpload == null && inputModel.MainImageUploadInfo.IsBeingModified && inputModel.ImagesAsFileUploads == true))
+            {
+                this.ModelState.AddModelError("", "Main image is required");
+
+                //Store needed info for get request in TempData only if the model state is invalid after doing the complex checks
+                TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
+
+                return this.RedirectToAction(nameof(Edit), "Products", new { productId = productId});
+            }
+
             //CHECK THE IMAGES LINKS
             if (inputModel.ImagesAsFileUploads == false)
             {
@@ -377,19 +410,19 @@ namespace GymHub.Web.Controllers
                     this.ModelState.AddModelError("", "There are 2 or more non-unique images");
                 }
 
-                //Check if main image is already used
-                if (this.productImageService.ProductImageExists(inputModel.MainImage) == true)
+                //Check if main image is already used by OTHER products
+                if (this.productImageService.ProductImageExists(inputModel.MainImage, productId) == true)
                 {
                     this.ModelState.AddModelError("MainImage", "This image is already used.");
                 }
 
                 if (inputModel.AdditionalImages == null) inputModel.AdditionalImages = new List<string>();
 
-                //Check if any of the additional images are used
+                //Check if any of the additional images are used by OTHER products
                 for (int i = 0; i < inputModel.AdditionalImages.Count; i++)
                 {
                     var additionalImage = inputModel.AdditionalImages[i];
-                    if (this.productImageService.ProductImageExists(additionalImage) == true)
+                    if (this.productImageService.ProductImageExists(additionalImage, productId) == true)
                     {
                         this.ModelState.AddModelError($"AdditionalImages[{i}]", "This image is already used.");
                     }
@@ -400,23 +433,26 @@ namespace GymHub.Web.Controllers
             {
                 var mainImageUpload = inputModel.MainImageUploadInfo.ImageUpload;
 
-                //Check main image upload
-                if (this.productImageService.ValidImageExtension(mainImageUpload) == false)
+                //Check main image upload extension is valid, but only if the user has actually selected a file themselves
+                if (inputModel.MainImageUploadInfo.IsBeingModified && this.productImageService.ValidImageExtension(mainImageUpload) == false)
                 {
-                    this.ModelState.AddModelError("MainImageUpload", "The uploaded image is invalid");
+                    this.ModelState.AddModelError("MainImageUploadInfo.ImageUpload", "The uploaded image is invalid");
                 }
 
                 if (inputModel.AdditionalImagesUploadsInfo == null) inputModel.AdditionalImagesUploadsInfo = new List<EditProductImageUploadInputModel>();
 
-                var additionalImagesUploads = inputModel.AdditionalImagesUploadsInfo.Select(x => x.ImageUpload).ToList();
+                var additionalImagesUploads = inputModel.AdditionalImagesUploadsInfo
+                    .Select(x => x.ImageUpload)
+                    .Where(imageUpload => imageUpload != null)
+                    .ToList();
 
                 //Check additional images uploads
                 for (int i = 0; i < additionalImagesUploads.Count; i++)
                 {
                     var imageUpload = additionalImagesUploads[i];
-                    if (this.productImageService.ValidImageExtension(imageUpload) == false)
+                    if (imageUpload != null && this.productImageService.ValidImageExtension(imageUpload) == false)
                     {
-                        this.ModelState.AddModelError($"AdditionalImageUpload[{i}]", "The uploaded image is invalid");
+                        this.ModelState.AddModelError($"AdditionalImagesUploadsInfo[{i}].ImageUpload.", "The uploaded image is invalid");
                     }
                 }
             }
@@ -427,6 +463,7 @@ namespace GymHub.Web.Controllers
                 var categoryId = inputModel.CategoriesIds[i];
                 if (this.categoryService.CategoryExists(categoryId) == false)
                 {
+                    //TODO Fix categoriesId model error
                     this.ModelState.AddModelError($"CategoriesIds{i}", "This category doesn't exist");
                 }
             }
@@ -441,6 +478,7 @@ namespace GymHub.Web.Controllers
                 var categoryId = inputModel.CategoriesIds[i];
                 if (this.categoryService.CategoryExists(categoryId) == false)
                 {
+                    //TODO Fix categoriesId model error
                     this.ModelState.AddModelError($"CategoriesIds{i}", "This category doesn't exist");
                 }
             }

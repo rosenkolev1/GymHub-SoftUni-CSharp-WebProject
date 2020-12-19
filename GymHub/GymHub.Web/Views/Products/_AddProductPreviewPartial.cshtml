@@ -8,20 +8,20 @@
                     <div class="product col-md-3 service-image-left">
 
                         <center>
-                            <img id="item-display" class="product-mainImage" src="@Model?.MainImage" alt="">
+                            <img id="item-display" class="product-mainImage" src="@(Model.ImagesAsFileUploads ? Model?.MainImageUploadInfo?.ModifiedImage?.Path : Model?.MainImage)" alt="">
                         </center>
                     </div>
 
                     <div class="container service1-items col-sm-2 col-md-2 pull-left">
                         <center>
                             <a id="item-1" class="service1-item">
-                                <img src="@Model.AdditionalImages?[0]" class="product-additionalImage" alt="">
+                                <img src="@(Model.ImagesAsFileUploads ? Model?.AdditionalImagesUploadsInfo?[0]?.ModifiedImage?.Path : Model?.AdditionalImages[0])" class="product-additionalImage" alt="">
                             </a>
                             <a id="item-2" class="service1-item">
-                                <img src="@Model.AdditionalImages?[1]" class="product-additionalImage" alt="">
+                                <img src="@(Model.ImagesAsFileUploads ? Model?.AdditionalImagesUploadsInfo?[1]?.ModifiedImage?.Path : Model?.AdditionalImages[1])" class="product-additionalImage" alt="">
                             </a>
                             <a id="item-3" class="service1-item">
-                                <img src="@Model.AdditionalImages?[2]" class="product-additionalImage" alt="">
+                                <img src="@(Model.ImagesAsFileUploads ? Model?.AdditionalImagesUploadsInfo?[2]?.ModifiedImage?.Path : Model?.AdditionalImages[2])" class="product-additionalImage" alt="">
                             </a>
                         </center>
                     </div>
@@ -45,7 +45,7 @@
                     </div>
                     <hr>
                     <div class="container productPage-categories-container">
-                        @foreach (var categoryName in Model.ProductCategoriesNames)
+                        @foreach (var categoryName in Model.CategoriesNames)
                         {
                             <div class="productPage-category-container">
                                 @categoryName

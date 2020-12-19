@@ -145,7 +145,23 @@
 </form>
 @if (Model != null)
 {
-    <partial name="_AddProductPreviewPartial.cshtml" />
+    var editProductInputModel = new EditProductInputModel
+    {
+        ShortDescription = Model.ShortDescription,
+        QuantityInStock = Model.QuantityInStock,
+        AdditionalImages = Model.AdditionalImages,
+        CategoriesIds = Model.CategoriesIds,
+        CategoriesNames = Model.CategoriesNames,
+        Description = Model.Description,
+        MainImage = Model.MainImage,
+        ImagesAsFileUploads = Model.ImagesAsFileUploads,
+        Model = Model.Model,
+        Name = Model.Name,
+        Price = Model.Price,
+        Warranty = Model.Warranty
+    };
+
+    <partial name="_AddProductPreviewPartial.cshtml" model="editProductInputModel"/>
 }
 @section Scripts{
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js" asp-append-version="true"></script>

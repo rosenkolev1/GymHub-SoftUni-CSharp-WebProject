@@ -177,22 +177,57 @@ namespace GymHub.Services.ServicesFolder.ProductService
             var productToEdit = this.context.Products
                 .Include(x => x.Images)
                 .First(x => x.Id == inputModel.Id);
-            var newAdditionalImages = inputModel.AdditionalImages.Where(x => x != null).ToList();
 
-            //Remove all of the images for the product
-            productToEdit.Images.Clear();
-            this.context.RemoveRange(this.context.ProductsImages
-                .Where(x => x.ProductId == productToEdit.Id));
-
-            //Edit main image for product
-            var mainImage = new ProductImage { Image = inputModel.MainImage, ProductId = productToEdit.Id, IsMain = true };
-            productToEdit.Images.Add(mainImage);
-
-            for (int i = 0; i < newAdditionalImages.Count; i++)
+            //Edit images as links
+            if (inputModel.ImagesAsFileUploads == false) 
             {
-                var newImagePath = newAdditionalImages[i];
-                var newImage = new ProductImage { Image = newImagePath, ProductId = productToEdit.Id, Product = productToEdit };
-                productToEdit.Images.Add(newImage);
+                //Remove all of the images for the product
+                productToEdit.Images.Clear();
+                this.context.RemoveRange(this.context.ProductsImages
+                    .Where(x => x.ProductId == productToEdit.Id));
+
+                //Edit main image link for product
+                var mainImage = new ProductImage { Image = inputModel.MainImage, ProductId = productToEdit.Id, IsMain = true };
+                productToEdit.Images.Add(mainImage);
+
+                var newAdditionalImages = inputModel.AdditionalImages.Where(x => x != null).ToList();
+
+                //Edit additional images links for product
+                for (int i = 0; i < newAdditionalImages.Count; i++)
+                {
+                    var newImagePath = newAdditionalImages[i];
+                    var newImage = new ProductImage { Image = newImagePath, ProductId = productToEdit.Id, Product = productToEdit };
+                    productToEdit.Images.Add(newImage);
+                }
+            }
+            //Edit images as uploads
+            else if(inputModel.ImagesAsFileUploads == true)
+            {
+                //Change main image if set to be modified
+                if(inputModel.MainImageUploadInfo.IsBeingModified == true)
+                {
+                    var mainImageInfo = inputModel.MainImageUploadInfo;
+
+                    await this.productImageService.EditImageAsync(mainImageInfo, productToEdit);
+                }
+
+                //Change all additional images if set to be modified
+                var additionalImagesInfo = inputModel.AdditionalImagesUploadsInfo;
+                foreach (var additionalImageInfo in additionalImagesInfo)
+                {
+                    if(additionalImageInfo.IsBeingModified == true)
+                    {
+                        await this.productImageService.EditImageAsync(additionalImageInfo, productToEdit);
+                        ////Get the main image from the database
+                        //var image = this.productImageService.GetImageById(additionalImageInfo.ModifiedImage.Id);
+
+                        ////Upload main image to azure blob storage
+                        //var imageUri = await this.productImageService.UploadImageAsync(additionalImageInfo.ImageUpload, productToEdit);
+
+                        ////Set the main image uri in the database
+                        //image.Image = imageUri;
+                    }
+                }
             }
 
             //Edit all of the simple properties

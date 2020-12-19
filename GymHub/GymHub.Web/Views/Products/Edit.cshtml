@@ -11,9 +11,12 @@
 }
 <form asp-controller="Products" asp-action="Edit" method="post" class="product-addProduct-form" enctype="multipart/form-data">
     <input hidden type="hidden" asp-for="ImagesAsFileUploads" value="@(Model != null ? Model.ImagesAsFileUploads : false)" />
-    @*<h4 class="product-add-actionMessage-title">Create a new Product.</h4>*@
-    <h4 class="product-edit-actionMessage-title">Edit Product.</h4>
+    <h2 class="product-edit-actionMessage-title">Edit Product.</h2>
     <hr />
+    <h3 class="product-edit-actionMessage-title alert-warning">
+        Warning! If a product image file is locked, then it will not be edited. If it is unlocked, but there is no file selected, the image will be removed from the product.<br />
+        Refer to the product preview button to see how the page will look once edited.
+    </h3>
     <div asp-validation-summary="All" class="alert-danger"></div>
     <div class="image-mode-container">
         @if (Model?.ImagesAsFileUploads == true)
@@ -60,15 +63,17 @@
                 <i class="fas fa-lock"></i>
             </span>
             <span asp-validation-for="MainImageUploadInfo.ImageUpload" class="validation-span"></span>
-            <img class="input-image-upload-image image-upload-main" src="@Model.MainImageUploadInfo.ModifiedImage.Path"/>
+            <img hidden class="input-image-upload-image image-upload-main" src="@Model.MainImageUploadInfo.ModifiedImage.Path" />
 
-            <input type="hidden" asp-for="MainImageUploadInfo.IsBeingModified" class="input-image-isBeingModified" />
-            <input type="hidden" asp-for="MainImageUploadInfo.ModifiedImage.Id" />
+            <input type="hidden" class="input-image-originalImagePath" value="@Model.MainImageUploadInfo.ModifiedImage.Path" />
+            <span hidden class="input-image-hasNotBeenModified"></span>
+            <input type="hidden" asp-for="MainImageUploadInfo.IsBeingModified" value="@Model.MainImageUploadInfo.IsBeingModified" class="input-image-isBeingModified" />
+            <input type="hidden" asp-for="MainImageUploadInfo.ModifiedImage.Id"/>
         </div>
         @for (int i = 0; i < 3; i++)
         {
             @if (Model.AdditionalImagesUploadsInfo == null) Model.AdditionalImagesUploadsInfo = new List<EditProductImageUploadInputModel>();
-            @if (Model.AdditionalImagesUploadsInfo.Count <= i) Model.AdditionalImagesUploadsInfo.Add(null);
+            @if (Model.AdditionalImagesUploadsInfo.Count <= i) Model.AdditionalImagesUploadsInfo.Add(new EditProductImageUploadInputModel { ModifiedImage = new ImageIdAndPathInputModel { } });
             <div class="input-container">
                 <label asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="input-label">Additional image @(i+1)</label>
                 <input asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="product-addProduct-additionalImageUpload input-image-upload edit-deactivated" placeholder="Type url here">
@@ -76,43 +81,45 @@
                     <i class="fas fa-lock"></i>
                 </span>
                 <span asp-validation-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="validation-span"></span>
-                <img class="input-image-upload-image image-upload-additional" src="@Model.AdditionalImagesUploadsInfo[i].ModifiedImage.Path"/>
+                <img hidden class="input-image-upload-image image-upload-additional" src="@Model.AdditionalImagesUploadsInfo[i]?.ModifiedImage?.Path" />
 
-                <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].IsBeingModified" class="input-image-isBeingModified" />
+                <input type="hidden" class="input-image-originalImagePath" value="@Model.AdditionalImagesUploadsInfo[i].ModifiedImage.Path" />
+                <span hidden class="input-image-hasNotBeenModified"></span>
+                <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].IsBeingModified" value="@Model.AdditionalImagesUploadsInfo[i].IsBeingModified"  class="input-image-isBeingModified" />
                 <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].ModifiedImage.Id" />
             </div>
             @*TODO: REMOVE THIS IF IT ISN'T NECESSARY*@
             @*@if (Model?.AdditionalImagesUploadsInfo != null)
-            {
-                @if (Model.AdditionalImagesUploadsInfo.Count <= i) Model.AdditionalImagesUploadsInfo.Add(null);
-                <div class="input-container">
-                    <label asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="input-label">Additional image @(i+1)</label>
-                    <input asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="product-addProduct-additionalImageUpload input-image-upload edit-deactivated" placeholder="Type url here">
-                    <span class="product-edit-image-upload-lock">
-                        <i class="fas fa-lock"></i>
-                    </span>
-                    <span asp-validation-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="validation-span"></span>
-                    <img hidden class="input-image-upload-image image-upload-additional" />
+                {
+                    @if (Model.AdditionalImagesUploadsInfo.Count <= i) Model.AdditionalImagesUploadsInfo.Add(null);
+                    <div class="input-container">
+                        <label asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="input-label">Additional image @(i+1)</label>
+                        <input asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="product-addProduct-additionalImageUpload input-image-upload edit-deactivated" placeholder="Type url here">
+                        <span class="product-edit-image-upload-lock">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <span asp-validation-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="validation-span"></span>
+                        <img hidden class="input-image-upload-image image-upload-additional" />
 
-                    <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].IsBeingModified" class="input-image-isBeingModified"/>
-                    <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].ModifiedImageId"/>
-                </div>
-            }
-            else
-            {
-                <div class="input-container">
-                    <label asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="input-label">Additional image @(i+1)</label>
-                    <input asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="product-addProduct-additionalImageUpload input-image-upload edit-deactivated" placeholder="Type url here">
-                    <span asp-validation-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="validation-span"></span>
-                    <span class="product-edit-image-upload-lock">
-                        <i class="fas fa-lock"></i>
-                    </span>
-                    <img hidden class="input-image-upload-image image-upload-additional" />
+                        <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].IsBeingModified" class="input-image-isBeingModified"/>
+                        <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].ModifiedImageId"/>
+                    </div>
+                }
+                else
+                {
+                    <div class="input-container">
+                        <label asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="input-label">Additional image @(i+1)</label>
+                        <input asp-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="product-addProduct-additionalImageUpload input-image-upload edit-deactivated" placeholder="Type url here">
+                        <span asp-validation-for="AdditionalImagesUploadsInfo[i].ImageUpload" class="validation-span"></span>
+                        <span class="product-edit-image-upload-lock">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <img hidden class="input-image-upload-image image-upload-additional" />
 
-                    <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].IsBeingModified" class="input-image-isBeingModified"/>
-                    <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].ModifiedImageId"/>
-                </div>
-            }*@
+                        <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].IsBeingModified" class="input-image-isBeingModified"/>
+                        <input type="hidden" asp-for="AdditionalImagesUploadsInfo[i].ModifiedImageId"/>
+                    </div>
+                }*@
         }
     </div>
     <div class="input-container">
@@ -164,7 +171,6 @@
         </div>
     </div>
     <div class="button-container">
-        @*<button type="submit">Add product</button>*@
         <input hidden type="text" asp-for="Id" />
         <button type="submit">Edit product</button>
     </div>

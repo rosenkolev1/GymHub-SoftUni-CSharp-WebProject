@@ -1,4 +1,5 @@
 ﻿using GymHub.Common;
+using GymHub.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -42,10 +43,9 @@ namespace GymHub.Web.Models.InputModels
 
         public string ShortDescription { get; set; }
 
-        [Required]
         public List<string> CategoriesIds { get; set; } = new List<string>();
 
-        public List<string> ProductCategoriesNames { get; set; } = new List<string>();
+        public List<string> CategoriesNames { get; set; } = new List<string>();
 
         public bool ImagesAsFileUploads { get; set; }
 

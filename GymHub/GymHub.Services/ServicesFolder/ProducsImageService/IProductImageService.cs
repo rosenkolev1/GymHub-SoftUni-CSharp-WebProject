@@ -1,4 +1,5 @@
 ﻿using GymHub.Data.Models;
+using GymHub.Web.Models.InputModels;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace GymHub.Services.ServicesFolder.ProductImageService
         public ProductImage GetMainImage(string productId);
         public List<ProductImage> GetAdditionalImages(string productId);
         public bool ValidImageExtension(IFormFile image);
+        public ProductImage GetImageById(string id);
+        public Task EditImageAsync(EditProductImageUploadInputModel imageInfo, Product productToEdit);
 
         public Task<string> UploadImageAsync(IFormFile image, Product product);
         public Task<string> UploadImageAsync(Stream image, string imageFilePath);

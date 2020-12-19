@@ -1,4 +1,5 @@
 ﻿using GymHub.Data.Models;
+using GymHub.Web.Models.InputModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,5 +21,6 @@ namespace GymHub.Services.ServicesFolder.CategoryService
         public List<Category> GetCategoriesForProduct(string productId);
         public Task EditCategoriesToProductAsync(Product product, List<string> productCategoriesIds);
         public List<Product> GetProductsForCategory(string categoryId);
+        public List<string> GetCategoryNamesFromIds(List<string> categoriesIds);
     }
 }

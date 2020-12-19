@@ -50,7 +50,7 @@ namespace GymHub.Web.Models.InputModels
         [Required]
         public List<string> CategoriesIds { get; set; } = new List<string>();
 
-        public List<string> ProductCategoriesNames { get; set; } = new List<string>();
+        public List<string> CategoriesNames { get; set; } = new List<string>();
 
         public bool ImagesAsFileUploads { get; set; }
     }

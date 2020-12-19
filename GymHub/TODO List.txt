@@ -1,4 +1,4 @@
-- Use a seperate model for ProductImage ModifiedImage in EditProductImageUploadInputModel
+-Use editProductImageInputModel for editing product images with links
 
 - In Sales/All add search options like searching for only the pending sales and not the declined or completed.
 

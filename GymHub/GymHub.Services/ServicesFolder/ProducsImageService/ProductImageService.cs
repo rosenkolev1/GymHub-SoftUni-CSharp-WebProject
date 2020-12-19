@@ -3,6 +3,7 @@ using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.Common;
 using GymHub.Services.ServicesFolder.AzureBlobService;
+using GymHub.Web.Models.InputModels;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -116,6 +117,51 @@ namespace GymHub.Services.ServicesFolder.ProductImageService
             }
 
             return true;
+        }
+
+        public ProductImage GetImageById(string id)
+        {
+            return this.context.ProductsImages.FirstOrDefault(x => x.Id == id);
+        }
+
+        public async Task EditImageAsync(EditProductImageUploadInputModel imageInfo, Product productToEdit)
+        {
+            //Get the image from the database
+            var image = this.GetImageById(imageInfo.ModifiedImage.Id);
+
+            if(image != null)
+            {
+                //If image upload is null, then just remove the image from the database
+                if (imageInfo.ImageUpload != null)
+                {
+                    //Upload image to azure blob storage
+                    var imageUri = await UploadImageAsync(imageInfo.ImageUpload, productToEdit);
+
+                    //Set the image uri in the database
+                    image.Image = imageUri;
+                }
+                else if (imageInfo.ImageUpload == null)
+                {
+                    this.context.ProductsImages.Remove(image);
+                }
+            }
+            //If the image doesn't exist then simply add it to the database
+            else
+            {
+                //Upload image to azure blob storage
+                var imageUri = await UploadImageAsync(imageInfo.ImageUpload, productToEdit);
+
+                //Create a new image and set the image uri
+                var newImage = new ProductImage
+                {
+                    IsMain = false,
+                    Product = productToEdit,
+                    ProductId = productToEdit.Id,
+                    Image = imageUri
+                };
+
+                await this.context.ProductsImages.AddAsync(newImage);
+            }
         }
     }
 }
