@@ -463,7 +463,6 @@ namespace GymHub.Web.Controllers
                 var categoryId = inputModel.CategoriesIds[i];
                 if (this.categoryService.CategoryExists(categoryId) == false)
                 {
-                    //TODO Fix categoriesId model error
                     this.ModelState.AddModelError($"CategoriesIds{i}", "This category doesn't exist");
                 }
             }
@@ -478,7 +477,6 @@ namespace GymHub.Web.Controllers
                 var categoryId = inputModel.CategoriesIds[i];
                 if (this.categoryService.CategoryExists(categoryId) == false)
                 {
-                    //TODO Fix categoriesId model error
                     this.ModelState.AddModelError($"CategoriesIds{i}", "This category doesn't exist");
                 }
             }

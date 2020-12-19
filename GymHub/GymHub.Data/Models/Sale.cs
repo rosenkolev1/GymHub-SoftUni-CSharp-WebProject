@@ -69,6 +69,8 @@ namespace GymHub.Data.Models
 
         public string AdditionalInformation { get; set; }
 
+        public string PaymentIntentId { get; set; }
+
         public bool IsDeleted { get; set; }
         public DateTime? DeletedOn { get; set; }
     }

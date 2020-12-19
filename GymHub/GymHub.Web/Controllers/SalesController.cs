@@ -305,7 +305,8 @@ namespace GymHub.Web.Controllers
                 //Capture the funds
                 if (paymentIntentId != null && paymentMethod == GlobalConstants.DebitOrCreditCard)
                 {
-                    await this.paymentIntentService.CaptureAsync(paymentIntentId);
+                    //this.saleService.AddSaleStatusAsync()
+                    //await this.paymentIntentService.CaptureAsync(paymentIntentId);
                 }
 
                 await this.saleService.CheckoutAsync(saleInfo, currentUserId, saleProductsInfo);
