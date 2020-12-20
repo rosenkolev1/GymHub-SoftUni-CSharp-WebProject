@@ -6,8 +6,6 @@
 
 -Add contact form to send emails to sendgrid
 
--Refactor the view and input models into folders based on the controllers
-
 -For searching sales by admin make datatables use server-side data
 
 -Add cool font-awesome icons for certain buttons. Like the images links/upload switch button or the admin panel button

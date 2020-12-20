@@ -64,5 +64,37 @@ namespace GymHub.Services.ServicesFolder.AzureBlobService
                 await blobClient.DeleteAsync(Azure.Storage.Blobs.Models.DeleteSnapshotsOption.IncludeSnapshots);
             }
         }
+
+        public async Task DeleteAllBlobsAsync(string containerName, List<string> blobUrls)
+        {
+            var blobContainerClient = this.blobServiceClient.GetBlobContainerClient(containerName);
+            var allBlobClients = blobContainerClient.GetBlobs()
+                .Select(x => blobContainerClient.GetBlobClient(x.Name))
+                .ToList();
+
+            foreach (var blobUrl in blobUrls)
+            {
+                var blobClientToDelete = allBlobClients.First(x => x.Uri.AbsoluteUri == blobUrl);
+                await blobClientToDelete.DeleteIfExistsAsync();
+            }
+        }
+
+        public List<string> GetAllBlobUrls(string containerName)
+        {
+            var blobContainerClient = this.blobServiceClient.GetBlobContainerClient(containerName);
+
+            var blobNames = blobContainerClient.GetBlobs()
+                .Select(x => x.Name).ToList();
+
+            var blobUrls = new List<string>();
+
+            foreach (var blobName in blobNames)
+            {
+                var blobClient = blobContainerClient.GetBlobClient(blobName);
+                blobUrls.Add(blobClient.Uri.AbsoluteUri);
+            }
+
+            return blobUrls;
+        }
     }
 }

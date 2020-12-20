@@ -162,5 +162,18 @@ namespace GymHub.Services.ServicesFolder.ProductImageService
                 await this.context.ProductsImages.AddAsync(newImage);
             }
         }
+
+        public List<string> GetAllImagesBlobsUrlsFromDatabase()
+        {
+            return this.context.ProductsImages
+                .Where(x => x.Image.StartsWith(@"https://gymhubstorage.blob.core.windows.net"))
+                .Select(x => x.Image)
+                .ToList();
+        }
+
+        public List<string> GetAllImagesBlobsUrlsFromAzureStorage()
+        {
+            return this.azureBlobService.GetAllBlobUrls(GlobalConstants.ProductsImagesBlobContainer);
+        }
     }
 }

@@ -30,6 +30,7 @@
 - Automapper 
 - SendGrid
 - Azure App Service + Azure SQL Database + Azure Application Insights
+- Hangfire
 ### :hammer: And in the future hopefully also with                
 - Facebook for developers API
 - Twitter for developers API

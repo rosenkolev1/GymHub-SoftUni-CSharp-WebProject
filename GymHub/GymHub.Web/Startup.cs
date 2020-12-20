@@ -33,6 +33,11 @@ using System;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using GymHub.Services.ServicesFolder.AzureBlobService;
+using Hangfire;
+using Hangfire.SqlServer;
+using System.Diagnostics;
+using GymHub.Common;
+using GymHub.Services.CronJobs;
 
 namespace GymHub.Web
 {
@@ -92,6 +97,24 @@ namespace GymHub.Web
 
             services.AddSingleton<IAuthorizationHandler, AuthorizeAsAdminHandler>();
 
+            // Add Hangfire
+            services.AddHangfire(config =>
+            {
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(
+                this.Configuration.GetConnectionString("DefaultConnection"),
+                new SqlServerStorageOptions
+                {
+                    PrepareSchemaIfNecessary = true,
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    UsePageLocksOnDequeue = true,
+                    DisableGlobalLocks = true,
+                });
+            });
+
             // Add sendgrid
             var sendGrid = new SendGridEmailSender(this.Configuration["SendGrid:ApiKey"]);
             services.AddSingleton(sendGrid);
@@ -121,11 +144,14 @@ namespace GymHub.Web
             services.AddTransient<ISaleService, SaleService>();
             services.AddTransient<IPaymentMethodService, Services.ServicesFolder.PaymentMethodService.PaymentMethodService>();
             services.AddTransient<ICountryService, CountryService>();
-            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
+
+            //Add cron job
+            services.AddTransient<DeleteProductsImagesBlobs>();
+            //services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(DeleteProductsImagesBlobs deleteProductsImagesBlobs, IServiceProvider serviceProvider, IApplicationBuilder app, IWebHostEnvironment env)
         {
             //Delete database at startup
             DeleteDatabase(app, false);
@@ -135,6 +161,8 @@ namespace GymHub.Web
 
             //Seed database at startup        
             SeedDatabaseAsync(app, false).GetAwaiter().GetResult();
+
+            //Set up hangfire
 
             if (env.IsDevelopment())
             {
@@ -153,14 +181,23 @@ namespace GymHub.Web
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-
-
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSession();
+
+            //Hangfire
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
+
+            // ...other configuration logic
+            //@"0 */5 * ? * *" THIS IS PER FIVE MINUTES
+
+            //Add jobs
+            RecurringJob.AddOrUpdate(
+                () => deleteProductsImagesBlobs.DeleteUnusedProducstImagesBlobsFromAzureBlobStorageAsyncJob(), @"0 */5 * ? * *");
 
             app.UseEndpoints(endpoints =>
             {

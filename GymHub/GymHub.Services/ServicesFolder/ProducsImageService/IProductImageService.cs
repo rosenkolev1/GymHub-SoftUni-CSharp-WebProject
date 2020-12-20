@@ -24,5 +24,8 @@ namespace GymHub.Services.ServicesFolder.ProductImageService
         public Task<string> UploadImageAsync(IFormFile image, Product product);
         public Task<string> UploadImageAsync(Stream image, string imageFilePath);
         public Task ClearBlobImagesAsync();
+
+        public List<string> GetAllImagesBlobsUrlsFromDatabase();
+        public List<string> GetAllImagesBlobsUrlsFromAzureStorage();
     }
 }
