@@ -14,7 +14,7 @@ namespace GymHub.Web.Models.ViewModels
         [Required]
         public decimal ShippingPrice => TotalPrice < 150 ? 6 : 0;
 
-        public List<Country> Countries { get; set; } 
+        public List<Country> Countries { get; set; }
 
         public List<PaymentMethod> PaymentMethods { get; set; }
     }

@@ -11,12 +11,12 @@ namespace GymHub.Web.Models.InputModels
         }
         public EditReviewInputModel(ProductRatingViewModel productRatingViewModel, string text, string productId, string commentId, bool isParentComment, int commentCounter)
         {
-            this.ProductRatingViewModel = productRatingViewModel;
-            this.Text = text;
-            this.ProductId = productId;
-            this.CommentId = commentId;
-            this.IsParrentComment = isParentComment;
-            this.CommentCounter = commentCounter;
+            ProductRatingViewModel = productRatingViewModel;
+            Text = text;
+            ProductId = productId;
+            CommentId = commentId;
+            IsParrentComment = isParentComment;
+            CommentCounter = commentCounter;
         }
 
         //Used for validation purposes
@@ -24,7 +24,7 @@ namespace GymHub.Web.Models.InputModels
 
         public ProductRatingViewModel ProductRatingViewModel { get; set; }
 
-        public bool HasReviewed => this.ProductRatingViewModel != null;
+        public bool HasReviewed => ProductRatingViewModel != null;
 
         [Required]
         public string Text { get; set; }

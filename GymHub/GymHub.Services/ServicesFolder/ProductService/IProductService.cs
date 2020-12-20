@@ -3,7 +3,6 @@ using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GymHub.Services.ServicesFolder.ProductService

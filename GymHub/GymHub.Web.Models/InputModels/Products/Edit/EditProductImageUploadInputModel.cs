@@ -13,12 +13,12 @@ namespace GymHub.Web.Models.InputModels
     {
         public EditProductImageUploadInputModel()
         {
-            this.IsBeingModified = false;
+            IsBeingModified = false;
         }
 
         public EditProductImageUploadInputModel(bool isBeingModified)
         {
-            this.IsBeingModified = isBeingModified;
+            IsBeingModified = isBeingModified;
         }
 
         [JsonIgnore]

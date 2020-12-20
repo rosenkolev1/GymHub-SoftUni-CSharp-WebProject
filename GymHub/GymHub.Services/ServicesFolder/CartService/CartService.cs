@@ -123,17 +123,6 @@ namespace GymHub.Services.ServicesFolder.CartService
                 }).ToList();
         }
 
-        public List<ProductCheckoutQuantitiesModel> GetQuantitesForProductCheckout(string userId)
-        {
-            return this.context.Carts
-                .Where(x => x.UserId == userId)
-                .Select(x => new ProductCheckoutQuantitiesModel
-                {
-                    Quantity = x.Quantity,
-                    QuantityInStock = x.Product.QuantityInStock
-                }).ToList();
-        }
-
         public bool IsQuantityOfPurchasesValid(string userId, List<BuyProductInputModel> buyProductInputModels)
         {
             var productsIds = buyProductInputModels.Select(x => x.Id).ToList();

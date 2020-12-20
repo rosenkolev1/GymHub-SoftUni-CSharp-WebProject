@@ -7,7 +7,7 @@ namespace GymHub.Web.Models.InputModels
     {
         public LoginUserInputModel()
         {
-            this.RememberMe = true;
+            RememberMe = true;
         }
 
         [MaxLength(GlobalConstants.UsernameLengthMax, ErrorMessage = "Username must be at most 30 characters long.")]

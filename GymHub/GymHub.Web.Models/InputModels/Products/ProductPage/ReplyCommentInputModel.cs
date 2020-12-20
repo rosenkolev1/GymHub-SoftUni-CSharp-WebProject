@@ -10,9 +10,9 @@ namespace GymHub.Web.Models.InputModels
         }
         public ReplyCommentInputModel(string productId, string parentCommentId, int commentCounter)
         {
-            this.ProductId = productId;
-            this.ParentCommentId = parentCommentId;
-            this.CommentCounter = commentCounter;
+            ProductId = productId;
+            ParentCommentId = parentCommentId;
+            CommentCounter = commentCounter;
         }
 
         //Used for validation purposes

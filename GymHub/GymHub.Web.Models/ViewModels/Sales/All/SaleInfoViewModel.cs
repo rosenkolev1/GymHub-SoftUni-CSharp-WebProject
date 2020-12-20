@@ -1,9 +1,5 @@
 ﻿using GymHub.Data.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GymHub.Web.Models.ViewModels
 {
@@ -14,7 +10,7 @@ namespace GymHub.Web.Models.ViewModels
         public PaymentMethod PaymentMethod { get; set; }
 
         public DateTime PurchasedOn { get; set; }
-        
+
         public decimal TotalPayment { get; set; }
 
         public string BillingAccount { get; set; }

@@ -17,7 +17,6 @@ namespace GymHub.Services.ServicesFolder.CartService
         public int GetNumberOfProductsInCart(string userId);
         public Task RemoveProductByIdAsync(string userId, string productId);
         public Task ClearCartAsync(string userId);
-        public List<ProductCheckoutQuantitiesModel> GetQuantitesForProductCheckout(string userId);
         public bool IsQuantityOfPurchasesValid(string userId, List<BuyProductInputModel> buyProductInputModels);
     }
 }

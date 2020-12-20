@@ -11,9 +11,9 @@ namespace GymHub.Web.Models.InputModels
         }
         public AddReviewInputModel(int rating, string text, string productId)
         {
-            this.Rating = rating;
-            this.Text = text;
-            this.ProductId = productId;
+            Rating = rating;
+            Text = text;
+            ProductId = productId;
         }
         [Required]
         [Range(1, 10, ErrorMessage = "Rating should be between 1 and 10.")]

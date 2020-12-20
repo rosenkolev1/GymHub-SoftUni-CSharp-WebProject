@@ -26,7 +26,7 @@ namespace GymHub.Web.Models.InputModels
         [JsonIgnore]
         public IFormFile MainImageUpload { get; set; }
 
-        public List<string> AdditionalImages{ get; set; }
+        public List<string> AdditionalImages { get; set; }
 
         [JsonIgnore]
         public List<IFormFile> AdditionalImagesUploads { get; set; }

@@ -7,20 +7,20 @@ namespace GymHub.Web.Models.ViewModels
     {
         public ProductCommentPartialViewModel(ProductComment comment, ReplyCommentInputModel replyCommentInputModels, ProductRatingViewModel userProductRating, int commentCounter)
         {
-            this.Comment = comment;
-            this.UserProductRating = userProductRating;
-            this.CommentCounter = commentCounter;
-            this.ReplyCommentInputModel = replyCommentInputModels;
+            Comment = comment;
+            UserProductRating = userProductRating;
+            CommentCounter = commentCounter;
+            ReplyCommentInputModel = replyCommentInputModels;
         }
 
         public ProductCommentPartialViewModel(ProductComment comment, ReplyCommentInputModel replyCommentInputModels, ProductRatingViewModel userProductRating, string currentUserId, int commentCounter, int repliesCount = 0)
         {
-            this.Comment = comment;
-            this.UserProductRating = userProductRating;
-            this.RepliesCount = repliesCount;
-            this.CurrentUserId = currentUserId;
-            this.CommentCounter = commentCounter;
-            this.ReplyCommentInputModel = replyCommentInputModels;
+            Comment = comment;
+            UserProductRating = userProductRating;
+            RepliesCount = repliesCount;
+            CurrentUserId = currentUserId;
+            CommentCounter = commentCounter;
+            ReplyCommentInputModel = replyCommentInputModels;
         }
 
 
@@ -29,7 +29,7 @@ namespace GymHub.Web.Models.ViewModels
         public ProductRatingViewModel UserProductRating { get; set; }
         public bool HasReviewed => UserProductRating != null;
         public int RepliesCount { get; set; }
-        public bool BelongsToCurrentUser => this.Comment.UserId == this.CurrentUserId;
+        public bool BelongsToCurrentUser => Comment.UserId == CurrentUserId;
         public string CurrentUserId { get; set; }
         public ReplyCommentInputModel ReplyCommentInputModel { get; set; }
     }

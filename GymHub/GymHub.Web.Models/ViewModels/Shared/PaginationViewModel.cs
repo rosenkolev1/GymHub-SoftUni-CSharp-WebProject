@@ -12,10 +12,12 @@ namespace GymHub.Web.Models.ViewModels
 
         public int CurrentPage { get; set; }
         public int NumberOfPages { get; set; }
-        public int CutoffNumber { get => cutOffNumber;  set 
+        public int CutoffNumber
+        {
+            get => cutOffNumber; set
             {
                 if (value % 2 != 0) value += 1;
-                this.cutOffNumber = value;
+                cutOffNumber = value;
             }
         }
     }
