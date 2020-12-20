@@ -1,7 +1,5 @@
 -Use hangfire to automatically remove the unused blobs from the azure storage every x minutes.
 
--Add refund option for sales
-
 -In Sales/All add search options like searching for only the pending sales and not the declined or completed.
 
 -Add category based searching.
@@ -21,8 +19,6 @@
 -Add functionality for reinstating a comment if you are an admin
 
 -Remove unused models from database in the future maybe
-
--Seperate controllers and views into areas
 
 -Add column (Deleted by whom) or something similar to indicate which admin deleted a comment, product etc...
 

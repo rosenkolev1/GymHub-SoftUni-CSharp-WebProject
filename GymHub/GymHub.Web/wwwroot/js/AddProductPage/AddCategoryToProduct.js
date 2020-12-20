@@ -17,7 +17,7 @@
         }
 
         $.ajax({
-            url: `/Products/LoadCategoryInput?Counter=${categoriesCount+1}`,
+            url: `/Administration/Products/LoadCategoryInput?Counter=${categoriesCount+1}`,
             method: 'get',
             success: LoadCategoryInputSuccess
         })

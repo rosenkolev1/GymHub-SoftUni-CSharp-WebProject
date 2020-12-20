@@ -82,7 +82,7 @@
                     @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
                     {
                         <div class="btn-group product-remove-container">
-                            <form method="post" asp-controller="Products" asp-action="Remove" class="product-remove-form">
+                            <form method="post" asp-controller="Products" asp-area="Administration" asp-action="Remove" class="product-remove-form">
                                 <input type="hidden" name="productId" value="@viewModel.Id" />
                                 <input type="hidden" id="productRemove_errorReturnUrl" name="errorReturnUrl" value="thisShouldBeThePageURL" />
                                 <button type="submit" class="btn btn-danger product-remove-button">
@@ -151,7 +151,7 @@
                     @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
                     {
                         <div class="btn-group product-edit-container">
-                            <form method="get" asp-controller="Products" asp-action="Edit" asp-route-productId="@viewModel.Id" class="product-edit-form">
+                            <form method="get" asp-controller="Products" asp-area="Administration" asp-action="Edit" asp-route-productId="@viewModel.Id" class="product-edit-form">
                                 <input type="hidden" name="productId" value="@viewModel.Id" />
                                 <input type="hidden" id="productEdit_errorReturnUrl" name="errorReturnUrl" value="thisShouldBeThePageURL" />
                                 <button type="submit" class="btn btn-warning product-edit-button">

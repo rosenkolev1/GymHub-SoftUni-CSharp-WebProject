@@ -45,7 +45,7 @@
                 <td class="cart-td-element" id="quantity">
                     <input class="cart-input-quantity" type="number" asp-for="InputModel[i].Quantity" value="@product.Quantity" />
                     <span asp-validation-for="InputModel[i].Quantity" class="alert-danger validation-span-cart" style="background-color:transparent"></span>
-                    <button asp-controller="Carts" asp-action="Remove" asp-route-productId="@product.Id" type="submit" class="cart-input-remove alert-danger">Remove</button>
+                    <button asp-controller="Carts" asp-action="Remove" asp-route-productId="@product.Id" type="button" class="cart-input-remove alert-danger">Remove</button>
                 </td>
                 <td class="cart-td-element">
                     <p class="totalPrice">@((product.Price*product.Quantity).ToString($"${0:f2}"))</p>
@@ -61,7 +61,7 @@
             </tr>
         </tbody>
     </table>
-    <button id="cart-buyButton" class="@(buyButtonInactiveDueToError == false ? "cart-form-buyButton" : "cart-form-buyButton-inactive")">Buy</button>
+    <button id="cart-buyButton" type="submit" class="@(buyButtonInactiveDueToError == false ? "cart-form-buyButton" : "cart-form-buyButton-inactive")">Buy</button>
 </form>
 
 @section Scripts{ 

@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 
 namespace GymHub.Web.Controllers
 {
+    [Authorize]
     public class ProductsCommentsController : Controller
     {
         private readonly IProductService productService;
@@ -44,7 +45,6 @@ namespace GymHub.Web.Controllers
             this.sendGridEmailSender = sendGridEmailSender;
             this.htmlEncoder = htmlEncoder;
         }
-        [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddReview(ComplexModel<AddReviewInputModel, ProductInfoViewModel> complexModel, string pageFragment, string commentsPage, string commentsOrderingOption)
         {
@@ -128,10 +128,9 @@ namespace GymHub.Web.Controllers
 
             await this.productService.AddRatingAsync(newRating);
 
-            return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption}, pageFragment);
+            return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage = 1, commentsOrderingOption}, pageFragment);
         }
 
-        [HttpPost]
         [Authorize]
         public async Task<IActionResult> EditReview(EditReviewInputModel inputModel, string pageFragment, string commentsPage, string commentsOrderingOption)
         {
@@ -222,7 +221,6 @@ namespace GymHub.Web.Controllers
             return this.RedirectToAction("ProductPage", "Products", new { productId, toReplyComment = oldComment.Id, commentsPage, commentsOrderingOption}, pageFragment);
         }
 
-        [HttpPost]
         [Authorize]
         public async Task<IActionResult> ReplyToComment(ReplyCommentInputModel inputModel, string pageFragment, string commentsPage, string commentsOrderingOption)
         {
@@ -305,14 +303,12 @@ namespace GymHub.Web.Controllers
             return this.RedirectToAction("ProductPage", "Products", new { productId, toReplyComment = replyComment.Id, commentsPage = commentsPage, commentsOrderingOption }, pageFragment);
         }
 
-        [Authorize]
         [IgnoreAntiforgeryToken]
         public IActionResult LoadReplyToComment(ReplyCommentInputModel inputModel)
         {
             return this.PartialView("Views/Products/_ProductCommentReplyPartial.cshtml", inputModel);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> RemoveComment(RemoveCommentInputModel removeCommentInputModel, string pageFragment, string productId, string commentsPage, string commentsOrderingOption)
         {
@@ -379,7 +375,6 @@ namespace GymHub.Web.Controllers
             return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage, commentsOrderingOption }, pageFragment);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> LikeComment(string commentId)
         {

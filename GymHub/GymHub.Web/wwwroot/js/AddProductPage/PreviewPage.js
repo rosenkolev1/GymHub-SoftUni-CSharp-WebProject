@@ -75,7 +75,7 @@
 
         $.ajax({
             method: "GET",
-            url: "/Products/LoadAddProductPreview",
+            url: "/Administration/Products/LoadAddProductPreview",
             data: { inputModelJSON: dataObjectJSON },
             success: addPagePreview,
             error: addPageReviewError

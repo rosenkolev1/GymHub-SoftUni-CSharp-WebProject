@@ -6,16 +6,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GymHub.Web.Controllers
+namespace GymHub.Web.Areas.Administration.Controllers
 {
     [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
+    [Area("Administration")]
     public class AdminController : Controller
     {
-
         public IActionResult AdminControls()
         {
             return this.View();
         }
-
     }
 }

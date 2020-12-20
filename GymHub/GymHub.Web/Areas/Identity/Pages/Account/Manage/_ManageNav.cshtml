@@ -4,7 +4,7 @@
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
 <ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link" asp-controller="Sales" asp-action="All" id="profile-purchases-button">Purchases</a></li>
+    <li class="nav-item"><a class="nav-link" asp-controller="Sales" asp-area="" asp-action="All" id="profile-purchases-button">Purchases</a></li>
 </ul>
 <ul class="nav nav-pills flex-column">
     <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>

@@ -78,7 +78,7 @@
                         {
                             @if (sale.PaymentStatus == GlobalConstants.ConfirmedSaleStatus)
                             {
-                                <form hidden asp-action="Refund" asp-controller="Sales" id="refundForm">
+                                <form hidden asp-action="Refund" asp-area="Administration" asp-controller="Sales" id="refundForm">
                                     <input type="hidden" value="@sale.Id" name="saleId" />
                                 </form>
                                 <!-- Button trigger modal -->
@@ -90,7 +90,7 @@
                             }
                             else if (sale.PaymentStatus == GlobalConstants.PendingSaleStatus)
                             {
-                                <a asp-action="ChangeSaleStatus" asp-controller="Sales" asp-route-saleId="@sale.Id" class="alert-info sales-changeStatus-button">Change Status</a>
+                                <a asp-action="ChangeSaleStatus" asp-area="Administration" asp-controller="Sales" asp-route-saleId="@sale.Id" class="alert-info sales-changeStatus-button">Change Status</a>
                             }
                         }
                     </td>

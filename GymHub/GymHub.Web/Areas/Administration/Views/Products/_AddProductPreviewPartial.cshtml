@@ -52,7 +52,7 @@
                             </div>
                         }
                     </div>
-                    <div class="product-price">$ @Model?.Price</div>
+                    <div class="product-price">$ @(Model?.Price.ToString("f2"))</div>
                     <div class="product-stock">In Stock: @Model?.QuantityInStock</div>
                     <hr>
                 </div>

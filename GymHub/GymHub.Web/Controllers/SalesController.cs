@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using GymHub.Common;
-using GymHub.Data.Models;
 using GymHub.Services;
 using GymHub.Services.ServicesFolder.CartService;
 using GymHub.Services.ServicesFolder.CountryService;
 using GymHub.Services.ServicesFolder.PaymentMethodService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Services.ServicesFolder.SaleService;
-using GymHub.Web.AuthorizationPolicies;
 using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
@@ -19,7 +17,6 @@ using Stripe.Checkout;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -335,123 +332,6 @@ namespace GymHub.Web.Controllers
             var saleDetails = this.saleService.GetSaleDetailsViewModel(saleId);
 
             return this.View(saleDetails);
-        }
-
-        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public ActionResult Search()
-        {
-            var saleInfoViewModels = this.saleService.GetSalesForAllUsers();
-
-            return this.View("/Views/Sales/All.cshtml", saleInfoViewModels);
-        }
-
-        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        public IActionResult ChangeSaleStatus(string saleId)
-        {
-            if (this.saleService.SaleExists(saleId) == false)
-            {
-                return this.NotFound();
-            }
-
-            if(this.TempData[GlobalConstants.ErrorsFromPOSTRequest] != null)
-            {
-                ModelStateHelper.MergeModelStates(this.TempData, this.ModelState);
-            }
-
-            var viewModel = this.saleService.GetAllSaleStatuses();
-            var inputModel = new ChangeSaleStatusInputModel { SaleId = saleId };
-
-            if(this.TempData["NewSaleStatusId"] != null)
-            {
-                inputModel.NewSaleStatusId = this.TempData["NewSaleStatusId"].ToString();
-            }
-
-            var complexModel = new ComplexModel<ChangeSaleStatusInputModel, List<SaleStatus>> { ViewModel = viewModel, InputModel = inputModel };
-
-            return this.View(complexModel);
-        }
-
-        [Authorize(Policy = nameof(AuthorizeAsAdminHandler))]
-        [HttpPost]
-        public async Task<IActionResult> ChangeSaleStatus(ComplexModel<ChangeSaleStatusInputModel, List<SaleStatus>> complexModel)
-        {
-            if(this.ModelState.IsValid == false)
-            {
-                //Set up temp data with model state and input model
-                this.TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
-                this.TempData["NewSaleStatusId"] = complexModel.InputModel.NewSaleStatusId;
-
-                return this.RedirectToAction(nameof(ChangeSaleStatus), new { saleId = complexModel.InputModel.SaleId });
-            }
-
-            //Check if status and sale exist
-            if(this.saleService.SaleStatusExists(complexModel.InputModel.NewSaleStatusId) == false)
-            {
-                this.ModelState.AddModelError("InputModel.NewSaleStatusId", "This sale status doesn't exist");
-            }
-
-            if (this.ModelState.IsValid == false)
-            {
-                //Set up temp data with model state and input model
-                this.TempData[GlobalConstants.ErrorsFromPOSTRequest] = ModelStateHelper.SerialiseModelState(this.ModelState);
-                this.TempData["NewSaleStatusId"] = complexModel.InputModel.NewSaleStatusId;
-
-                return this.RedirectToAction(nameof(ChangeSaleStatus), new { saleId = complexModel.InputModel.SaleId });
-            }
-
-            //Capture the payment intent and officially complete the sale and charge the customer if the paymentStatus is confirmed
-            var newSaleStatus = this.saleService.GetSaleStatusById(complexModel.InputModel.NewSaleStatusId);
-            if(newSaleStatus.Name == GlobalConstants.ConfirmedSaleStatus)
-            {
-                var paymentIntentId = this.saleService.GetPaymentIntentId(complexModel.InputModel.SaleId);
-                if (paymentIntentId != null)
-                {
-                    var paymentIntent = await this.paymentIntentService.GetAsync(paymentIntentId);
-                    if(paymentIntent.Status == "requires_capture")
-                    {
-                        await this.paymentIntentService.CaptureAsync(paymentIntentId);
-                    }
-                }
-            }
-            //Set free the payment intent and the funds if the paymentStatus is declined
-            else if(newSaleStatus.Name == GlobalConstants.DeclinedSaleStatus)
-            {
-                var paymentIntentId = this.saleService.GetPaymentIntentId(complexModel.InputModel.SaleId);
-                if (paymentIntentId != null)
-                {
-                    var paymentIntent = await this.paymentIntentService.GetAsync(paymentIntentId);
-                    if (paymentIntent.Status == "requires_capture")
-                    {
-                        await this.paymentIntentService.CancelAsync(paymentIntentId);
-                    }
-                }
-            }
-
-            await this.saleService.ChangeSaleStatusAsync(complexModel.InputModel.SaleId, complexModel.InputModel.NewSaleStatusId);
-
-            //Set up success notification
-            NotificationHelper.SetNotification(this.TempData, NotificationType.Success, $"You have successfully changed sale status");
-
-            return this.RedirectToAction(nameof(Search));
-        }
-
-        [Authorize(Roles = GlobalConstants.AdminRoleName)]
-        [HttpPost]
-        public async Task<IActionResult> Refund(string saleId)
-        {
-            if(this.saleService.SaleExists(saleId) == false)
-            {
-                NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "Sale doesn't exist");
-                return this.RedirectToAction(nameof(All));
-            }
-
-            var paymentIntentId = this.saleService.GetPaymentIntentId(saleId);
-            await this.refundService.CreateAsync(new RefundCreateOptions { PaymentIntent = paymentIntentId });
-            await this.saleService.ChangeSaleStatusAsync(saleId, this.saleService.GetSaleStatus(GlobalConstants.RefundedSaleStatus).Id);
-
-            NotificationHelper.SetNotification(this.TempData, NotificationType.Success, "Sale successfully refunded");
-
-            return this.RedirectToAction(nameof(All));
         }
     }
 }

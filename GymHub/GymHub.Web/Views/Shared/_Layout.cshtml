@@ -60,18 +60,18 @@
                 </a>
             </div>
             <div class="nav-bar-element nav-bar-cart-container">
-                <a class="nav-bar-button nav-bar-cart" asp-controller="Carts" asp-action="All">
+                <a class="nav-bar-button nav-bar-cart" asp-area="" asp-controller="Carts" asp-action="All">
                     <vc:cart-items-number></vc:cart-items-number>
                 </a>
             </div>
             @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 <div class="nav-bar-element">
-                    <a class="nav-bar-button" asp-controller="Admin" asp-action="AdminControls">AdminControls</a>
+                    <a class="nav-bar-button" asp-controller="Admin" asp-area="Administration" asp-action="AdminControls">AdminControls</a>
                 </div>
             }
             <div class="nav-bar-element shop-button">
-                <a class="nav-bar-button" asp-controller="Products" asp-action="All">Shop</a>
+                <a class="nav-bar-button" asp-area="" asp-controller="Products" asp-action="All">Shop</a>
             </div>
         }
     </nav>

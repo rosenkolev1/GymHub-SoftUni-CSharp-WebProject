@@ -134,6 +134,8 @@ namespace GymHub.Web.Controllers
             {
                 //Set notification
                 NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "Quantity of purchase of one or more products exceeds the quantity in stock");
+
+                return this.RedirectToAction(nameof(All));
             }
 
             if (this.ModelState.IsValid == false)
