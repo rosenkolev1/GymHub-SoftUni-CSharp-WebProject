@@ -1,10 +1,12 @@
-- In Sales/All add search options like searching for only the pending sales and not the declined or completed.
-
 -Use hangfire to automatically remove the unused blobs from the azure storage every x minutes.
 
--Make payment be charged only when the admin changes the status of the sale to confirmed. As such cancel the payment when the admin declines it
+-Add refund option for sales
+
+-In Sales/All add search options like searching for only the pending sales and not the declined or completed.
 
 -Add category based searching.
+
+-Add contact form to send emails to sendgrid
 
 -Refactor the view and input models into folders based on the controllers
 
@@ -12,7 +14,7 @@
 
 -Add cool font-awesome icons for certain buttons. Like the images links/upload switch button or the admin panel button
 
-- Use editProductImageInputModel for editing product images with links
+-Make the act of replying to comment and editing a comment behave like SPA with ajax
 
 -Add user profile pages and functionality
 

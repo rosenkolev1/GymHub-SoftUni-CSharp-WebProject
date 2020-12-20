@@ -430,9 +430,28 @@ namespace GymHub.Web.Controllers
             await this.saleService.ChangeSaleStatusAsync(complexModel.InputModel.SaleId, complexModel.InputModel.NewSaleStatusId);
 
             //Set up success notification
-            NotificationHelper.SetNotification(this.TempData, NotificationType.Success, $"You have successfully changed notification status");
+            NotificationHelper.SetNotification(this.TempData, NotificationType.Success, $"You have successfully changed sale status");
 
             return this.RedirectToAction(nameof(Search));
+        }
+
+        [Authorize(Roles = GlobalConstants.AdminRoleName)]
+        [HttpPost]
+        public async Task<IActionResult> Refund(string saleId)
+        {
+            if(this.saleService.SaleExists(saleId) == false)
+            {
+                NotificationHelper.SetNotification(this.TempData, NotificationType.Error, "Sale doesn't exist");
+                return this.RedirectToAction(nameof(All));
+            }
+
+            var paymentIntentId = this.saleService.GetPaymentIntentId(saleId);
+            await this.refundService.CreateAsync(new RefundCreateOptions { PaymentIntent = paymentIntentId });
+            await this.saleService.ChangeSaleStatusAsync(saleId, this.saleService.GetSaleStatus(GlobalConstants.RefundedSaleStatus).Id);
+
+            NotificationHelper.SetNotification(this.TempData, NotificationType.Success, "Sale successfully refunded");
+
+            return this.RedirectToAction(nameof(All));
         }
     }
 }

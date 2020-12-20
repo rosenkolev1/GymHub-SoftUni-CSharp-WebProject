@@ -68,7 +68,7 @@
             {
                 <div class="nav-bar-element">
                     <a class="nav-bar-button" asp-controller="Admin" asp-action="AdminControls">AdminControls</a>
-                </div>             
+                </div>
             }
             <div class="nav-bar-element shop-button">
                 <a class="nav-bar-button" asp-controller="Products" asp-action="All">Shop</a>
@@ -76,7 +76,7 @@
         }
     </nav>
     <main class="main-container">
-        @if(TempData[GlobalConstants.NotificationType] != null)
+        @if (TempData[GlobalConstants.NotificationType] != null)
         {
             var notificationPartialViewModel = new NotificationPartialViewModel
             {
@@ -102,6 +102,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js" asp-append-version="true"></script>
     <script src="~/js/Shared/Notifications.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

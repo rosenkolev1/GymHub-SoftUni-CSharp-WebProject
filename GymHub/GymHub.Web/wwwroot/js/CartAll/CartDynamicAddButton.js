@@ -41,7 +41,7 @@
 
     function enableBuyButtonEvent() {
         let addButtonActive = document.querySelector('.cart-form-buyButton');
-        addButton.removeEventListener('click', disableBuyButtonEvent);
+        if (addButtonActive) addButtonActive.removeEventListener('click', disableBuyButtonEvent);
     }
 
     function disableBuyButtonEvent(e) {

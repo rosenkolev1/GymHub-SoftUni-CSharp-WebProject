@@ -3,6 +3,10 @@
 
 @model ComplexModel<ChangeSaleStatusInputModel, List<SaleStatus>>
 
+@section ImportantLinks{ 
+    <link href="~/css/ChangeSaleStatus.css" rel="stylesheet" />
+}
+
 <div class="input-container">
     <form id="changeSaleStatusForm" asp-controller="Sales" asp-action="ChangeSaleStatus" method="post">
         <input hidden asp-for="InputModel.SaleId" />
@@ -12,7 +16,10 @@
             <option selected value="">Select new sale status</option>
             @foreach (var saleStatus in Model.ViewModel)
             {
-                <option value="@saleStatus.Id">@saleStatus.Name</option>
+                @if (saleStatus.Name != GlobalConstants.RefundedSaleStatus)
+                {
+                    <option value="@saleStatus.Id">@saleStatus.Name</option>
+                }
             }
         </select>
         <span asp-validation-for="InputModel.NewSaleStatusId" class="validation-span"></span>
@@ -49,6 +56,4 @@
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial.cshtml">
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js" asp-append-version="true"></script>
-    @*//<script src="~/js/ChangeSaleStatus/ShowModal.js" asp-append-version="true"></script>*@
 }

@@ -91,6 +91,9 @@
         public const string PendingSaleStatus = "Pending";
         public const string ConfirmedSaleStatus = "Confirmed";
         public const string DeclinedSaleStatus = "Declined";
+        public const string RefundedSaleStatus = "Refunded";
+        public static readonly string[] SaleStatuses = new[] 
+        { GlobalConstants.PendingSaleStatus, GlobalConstants.ConfirmedSaleStatus, GlobalConstants.DeclinedSaleStatus, GlobalConstants.RefundedSaleStatus };
 
         //Allowed products images file types
         public static readonly string[] AllowedExtensions = new[] { "jpg", "png", "gif", "jpeg" };

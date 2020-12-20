@@ -259,6 +259,11 @@ button {
     background-color: #0B8E4C;
 }
 
+#exampleModal, .modal {
+    top: 5vh;
+    z-index: 1000000000;
+}
+
 /*********************************************
     		SHOP PRODUCTS/ALL VIEW SETTINGS
 *********************************************/
@@ -928,14 +933,19 @@ th {
     color: white;
 }
 
-.sales-details-button, .sales-changeStatus-button {
+.sales-all-paymentStatus-refunded {
+    background-color: dodgerblue;
+    color: white;
+}
+
+.sales-details-button, .sales-changeStatus-button, .sales-refund-button {
     display: block;
     margin-top: 6px;
     box-sizing: border-box;
     border-radius: 4px;
     padding: 2px 6px;
     text-align: center;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .sale-details-companyImage{
@@ -964,4 +974,10 @@ th {
 .sales-changeStatus-button{
     background-color: yellow;
     color: black;
+}
+
+.sales-refund-button {
+    background-color: turquoise;
+    color: white;
+    width: 100%;
 }

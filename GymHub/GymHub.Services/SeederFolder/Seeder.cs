@@ -192,12 +192,8 @@ namespace GymHub.Services.SeederFolder
 
         private async Task<bool> SeedSaleStatusesAsync()
         {
-            var saleStatuses = new List<SaleStatus>
-            {
-                new SaleStatus{Id = GlobalConstants.PendingSaleStatus, Name = GlobalConstants.PendingSaleStatus},
-                new SaleStatus{Id = GlobalConstants.ConfirmedSaleStatus, Name = GlobalConstants.ConfirmedSaleStatus},
-                new SaleStatus{Id = GlobalConstants.DeclinedSaleStatus, Name = GlobalConstants.DeclinedSaleStatus}
-            };
+            var saleStatuses = new List<string>(GlobalConstants.SaleStatuses)
+                .Select(x => new SaleStatus { Id = x, Name = x});
 
             foreach (var saleStatus in saleStatuses)
             {
