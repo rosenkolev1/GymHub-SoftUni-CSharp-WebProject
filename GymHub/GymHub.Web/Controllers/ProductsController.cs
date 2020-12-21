@@ -61,7 +61,7 @@ namespace GymHub.Web.Controllers
         }      
 
         [Authorize]
-        public IActionResult All(int productsPage, List<ProductFilterOptionsViewModel> productFilterOptions)
+        public IActionResult All(int productsPage, List<ProductFilterOptionsViewModel> productFilterOptions, string searchString)
         {
             //Set the default filter options if they are null or empty
             if(productFilterOptions == null || productFilterOptions.Count == 0)
@@ -73,8 +73,10 @@ namespace GymHub.Web.Controllers
                 productFilterOptions.AddRange(categoriesProductFilterOptions);
             }
 
-            //Filter the products by categories and search string
+            //Filter the products by categories
             var productsFiltered = this.productService.FilterProducts(productFilterOptions);
+            
+            if(string.IsNullOrWhiteSpace(searchString) == false) productsFiltered = this.productService.FilterProducts(productsFiltered, searchString.Trim());
 
             //Get the count of the filtered products and the pages for these products
             var productsCount = productsFiltered.Count();

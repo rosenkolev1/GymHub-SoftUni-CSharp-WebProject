@@ -406,6 +406,28 @@ button {
     text-decoration: none;
 }
 
+.products-all-search{
+    margin-left: 1vw;
+    max-width: 95vw;
+    display:inline;
+}
+
+.products-all-search-icon {
+    margin-left: 0.4vw;
+    margin-right: 2vw;
+    display: contents;
+    padding: 5px;
+}
+
+.products-all-search-icon:hover {
+    cursor: pointer;
+}
+
+.products-all-search-button{
+    background-color: transparent;
+    border:none;
+    text-align:center;
+}
 /*********************************************
     		CART/ALL VIEW SETTINGS
 *********************************************/

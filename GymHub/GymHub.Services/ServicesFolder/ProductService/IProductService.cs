@@ -31,6 +31,7 @@ namespace GymHub.Services.ServicesFolder.ProductService
         public Task EditAsync(EditProductInputModel inputModel);
         public string GetProductName(string productId);
         public IQueryable<Product> FilterProducts(List<ProductFilterOptionsViewModel> productFilterOptions);
+        public IQueryable<Product> FilterProducts(IQueryable<Product> products, string searchString);
         public List<ProductViewModel> GetProductsForPage(IQueryable<Product> products, int page);
     }
 }

@@ -349,5 +349,16 @@ namespace GymHub.Services.ServicesFolder.ProductService
             return this.GetProductsForPage(filteredProducts, page);
        
         }
+
+        public IQueryable<Product> FilterProducts(IQueryable<Product> products, string searchString)
+        {
+            searchString = searchString.ToLower();
+
+            return products
+                .Where(x => x.Name.Contains(searchString) || x.Model.Contains(searchString) || x.Description.Contains(searchString))
+                .OrderBy(x => x.Name.IndexOf(searchString))
+                .ThenBy(x => x.Model.ToLower().IndexOf(searchString))
+                .ThenBy(x => x.Description.ToLower().IndexOf(searchString));
+        }
     }
 }

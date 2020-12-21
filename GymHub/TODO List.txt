@@ -1,4 +1,4 @@
--Add category based searching.
+-Add search box for products
 
 -Add contact form to send emails to sendgrid
 
