@@ -100,5 +100,11 @@
 
         //Azure blob storage products images container
         public const string ProductsImagesBlobContainer = "products-images";
+
+        //Sales filter options
+        public const string IncludePending = "Include pending";
+        public const string IncludeConfirmed = "Include confirmed";
+        public const string IncludeDeclined = "Include declined";
+        public const string IncludeRefunded = "Include refunded";
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GymHub.Common;
 using GymHub.Data.Models;
+using GymHub.Data.Models.Enums;
 using GymHub.Services;
 using GymHub.Services.ServicesFolder.CartService;
 using GymHub.Services.ServicesFolder.CountryService;
@@ -10,11 +11,14 @@ using GymHub.Services.ServicesFolder.SaleService;
 using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
+using GymHub.Web.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MoreLinq;
 using Stripe;
 using Stripe.Checkout;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GymHub.Web.Areas.Administration.Controllers
@@ -51,11 +55,27 @@ namespace GymHub.Web.Areas.Administration.Controllers
             this.paymentIntentService = paymentIntentService;
         }
 
-        public ActionResult Search()
+        public ActionResult Search(List<SaleFilterOption> SaleFilterOptions)
         {
-            var saleInfoViewModels = this.saleService.GetSalesForAllUsers();
+            SaleFilterOptions =  SaleFilterOptions.DistinctBy(x => x.FilterName).ToList();
 
-            return this.View("/Views/Sales/All.cshtml", saleInfoViewModels);
+            var saleInfoViewModels = this.saleService.GetSalesForAllUsers(SaleFilterOptions);
+
+            if (SaleFilterOptions == null || SaleFilterOptions.Count < 4) SaleFilterOptions = new List<SaleFilterOption>
+            {
+                new SaleFilterOption {FilterName = GlobalConstants.IncludeConfirmed, FilterValue = true },
+                new SaleFilterOption {FilterName = GlobalConstants.IncludePending, FilterValue = true },
+                new SaleFilterOption {FilterName = GlobalConstants.IncludeDeclined, FilterValue = true },
+                new SaleFilterOption {FilterName = GlobalConstants.IncludeRefunded, FilterValue = true },
+            };
+
+            var allSalesInfoViewModels = new AllSalesInfoViewModel
+            {
+                SaleFilterOptions = SaleFilterOptions,
+                SaleInfoViewModels = saleInfoViewModels
+            };
+
+            return this.View("/Views/Sales/All.cshtml", allSalesInfoViewModels);
         }
 
         public IActionResult ChangeSaleStatus(string saleId)

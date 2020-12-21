@@ -12,6 +12,7 @@ using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MoreLinq;
 using Stripe;
 using Stripe.Checkout;
 using System;
@@ -317,13 +318,29 @@ namespace GymHub.Web.Controllers
             }
         }
 
-        public IActionResult All()
+        public IActionResult All(List<SaleFilterOption> saleFilterOptions)
         {
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
 
-            var saleInfoViewModels = this.saleService.GetSalesForUser(currentUserId);
+            var saleInfoViewModels = this.saleService.GetSalesForUser(currentUserId, saleFilterOptions);
 
-            return this.View(saleInfoViewModels);
+            saleFilterOptions = saleFilterOptions.DistinctBy(x => x.FilterName).ToList();
+
+            if (saleFilterOptions == null || saleFilterOptions.Count < 4) saleFilterOptions = new List<SaleFilterOption>
+            {
+                new SaleFilterOption {FilterName = GlobalConstants.IncludeConfirmed, FilterValue = true },
+                new SaleFilterOption {FilterName = GlobalConstants.IncludePending, FilterValue = true },
+                new SaleFilterOption {FilterName = GlobalConstants.IncludeDeclined, FilterValue = true },
+                new SaleFilterOption {FilterName = GlobalConstants.IncludeRefunded, FilterValue = true },
+            };
+
+            var allSalesInfoViewModels = new AllSalesInfoViewModel
+            {
+                SaleFilterOptions = saleFilterOptions,
+                SaleInfoViewModels = saleInfoViewModels
+            };
+
+            return this.View(allSalesInfoViewModels);
         }
 
 

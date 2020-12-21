@@ -2,6 +2,7 @@
 using GymHub.Common;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
+using GymHub.Data.Models.Enums;
 using GymHub.Services.Common;
 using GymHub.Services.ServicesFolder.CartService;
 using GymHub.Services.ServicesFolder.CountryService;
@@ -116,10 +117,29 @@ namespace GymHub.Services.ServicesFolder.SaleService
             await this.context.SaveChangesAsync();
         }
 
-        public List<SaleInfoViewModel> GetSalesForUser(string userId)
+        public List<SaleInfoViewModel> GetSalesForUser(string userId, List<SaleFilterOption> filterOptions)
         {
-            return this.context.Sales
+            if(filterOptions == null || filterOptions.Count == 0)
+            {
+                return this.context.Sales
                 .Where(x => x.UserId == userId)
+                .Select(x => new SaleInfoViewModel
+                {
+                    BillingAccount = x.User.UserName,
+                    ReceivingAccount = x.User.UserName,
+                    PaymentStatus = x.SaleStatus.Name,
+                    Id = x.Id,
+                    PaymentMethod = x.PaymentMethod,
+                    PurchasedOn = x.PurchasedOn,
+                    TotalPayment = x.Products.Sum(x => x.Product.Price * x.Quantity)
+                })
+                .ToList();
+            }
+
+            var salesForUser = this.context.Sales.Where(x => x.UserId == userId);
+            var filteredSales = this.FilterSales(filterOptions, salesForUser);
+
+            return filteredSales
                 .Select(x => new SaleInfoViewModel
                 {
                     BillingAccount = x.User.UserName,
@@ -160,9 +180,69 @@ namespace GymHub.Services.ServicesFolder.SaleService
                 .First();
         }
 
-        public List<SaleInfoViewModel> GetSalesForAllUsers()
+        private IQueryable<Sale> FilterSales(List<SaleFilterOption> saleFilterOptions, IQueryable<Sale> fromSales = null) 
         {
-            return this.context.Sales
+            //Filter the sales and then return the,
+            if (fromSales == null) fromSales = this.context.Sales.AsQueryable<Sale>();
+
+            IQueryable<Sale> filteredSales = fromSales;
+
+            foreach (var filterOption in saleFilterOptions)
+            {
+                var filterValue = filterOption.FilterValue;
+                var filterOptionKey = filterOption.FilterName;
+
+                if (filterValue == true)
+                {
+                    if (filterOptionKey == GlobalConstants.IncludePending)
+                    {
+                        filteredSales = filteredSales
+                            .Where(x => x.SaleStatus.Name != GlobalConstants.PendingSaleStatus);
+                    }
+                    else if (filterOptionKey == GlobalConstants.IncludeConfirmed)
+                    {
+                        filteredSales = filteredSales
+                            .Where(x => x.SaleStatus.Name != GlobalConstants.ConfirmedSaleStatus);
+                    }
+                    else if (filterOptionKey == GlobalConstants.IncludeDeclined)
+                    {
+                        filteredSales = filteredSales
+                            .Where(x => x.SaleStatus.Name != GlobalConstants.DeclinedSaleStatus);
+                    }
+                    //If it is refunded status
+                    else if (filterOptionKey == GlobalConstants.IncludeRefunded)
+                    {
+                        filteredSales = filteredSales
+                            .Where(x => x.SaleStatus.Name != GlobalConstants.RefundedSaleStatus);
+                    }
+                }
+            }
+
+            filteredSales = this.context.Sales.Except(filteredSales);
+            return filteredSales;
+        }
+
+        public List<SaleInfoViewModel> GetSalesForAllUsers(List<SaleFilterOption> SaleFilterOptions)
+        {
+            if(SaleFilterOptions.Count == 0 || SaleFilterOptions == null)
+            {
+                return this.context.Sales
+                .Select(x => new SaleInfoViewModel
+                {
+                    BillingAccount = x.User.UserName,
+                    ReceivingAccount = x.User.UserName,
+                    PaymentStatus = x.SaleStatus.Name,
+                    Id = x.Id,
+                    PaymentMethod = x.PaymentMethod,
+                    PurchasedOn = x.PurchasedOn,
+                    TotalPayment = x.Products.Sum(x => x.Product.Price * x.Quantity)
+                })
+                .ToList();
+            }
+
+            var filteredSales = this.FilterSales(SaleFilterOptions);
+
+            return filteredSales
                 .Select(x => new SaleInfoViewModel
                 {
                     BillingAccount = x.User.UserName,

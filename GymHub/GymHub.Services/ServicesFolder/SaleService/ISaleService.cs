@@ -1,4 +1,5 @@
 ﻿using GymHub.Data.Models;
+using GymHub.Data.Models.Enums;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace GymHub.Services.ServicesFolder.SaleService
     {
         public List<ProductSale> CreateProductSales(List<BuyProductInputModel> inputModels);
         public Task CheckoutAsync(CheckoutInputModel inputModel, string userId, List<CheckoutProductViewModel> purchasedProducts);
-        public List<SaleInfoViewModel> GetSalesForUser(string userId);
+        public List<SaleInfoViewModel> GetSalesForUser(string userId, List<SaleFilterOption> filterOptions);
         public SaleDetailsViewModel GetSaleDetailsViewModel(string saleId);
-        public List<SaleInfoViewModel> GetSalesForAllUsers();
+        public List<SaleInfoViewModel> GetSalesForAllUsers(List<SaleFilterOption> filterOptions);
         public SaleStatus GetSaleStatus(string name);
         public Task AddSaleStatusAsync(SaleStatus saleStatus);
         public bool SaleStatusExists(string id);

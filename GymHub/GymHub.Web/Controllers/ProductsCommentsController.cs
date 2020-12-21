@@ -45,7 +45,8 @@ namespace GymHub.Web.Controllers
             this.sendGridEmailSender = sendGridEmailSender;
             this.htmlEncoder = htmlEncoder;
         }
-        [Authorize]
+
+        [HttpPost]
         public async Task<IActionResult> AddReview(ComplexModel<AddReviewInputModel, ProductInfoViewModel> complexModel, string pageFragment, string commentsPage, string commentsOrderingOption)
         {
             var productId = complexModel.InputModel.ProductId;
@@ -131,7 +132,7 @@ namespace GymHub.Web.Controllers
             return this.RedirectToAction("ProductPage", "Products", new { productId, commentsPage = 1, commentsOrderingOption}, pageFragment);
         }
 
-        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> EditReview(EditReviewInputModel inputModel, string pageFragment, string commentsPage, string commentsOrderingOption)
         {
             var productId = inputModel.ProductId;
@@ -221,7 +222,7 @@ namespace GymHub.Web.Controllers
             return this.RedirectToAction("ProductPage", "Products", new { productId, toReplyComment = oldComment.Id, commentsPage, commentsOrderingOption}, pageFragment);
         }
 
-        [Authorize]
+        [HttpPost]
         public async Task<IActionResult> ReplyToComment(ReplyCommentInputModel inputModel, string pageFragment, string commentsPage, string commentsOrderingOption)
         {
             var productId = inputModel.ProductId;

@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GymHub.Common;
+using GymHub.Data.Models;
+using GymHub.Data.Models.Enums;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GymHub.Services.Common
@@ -9,6 +13,6 @@ namespace GymHub.Services.Common
         {
             if (ignore == true) return source.IgnoreQueryFilters();
             return source.AsQueryable();
-        } 
+        }
     }
 }
