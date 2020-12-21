@@ -8,6 +8,7 @@ using GymHub.Services.ServicesFolder.CountryService;
 using GymHub.Services.ServicesFolder.PaymentMethodService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Services.ServicesFolder.SaleService;
+using GymHub.Web.Controllers.BaseControllers;
 using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
@@ -25,7 +26,7 @@ namespace GymHub.Web.Areas.Administration.Controllers
 {
     [Authorize(Roles = GlobalConstants.AdminRoleName)]
     [Area("Administration")]
-    public class SalesController : Controller
+    public class SalesController : BaseSaleController
     {
         private readonly ISaleService saleService;
         private readonly IProductService productService;
@@ -55,19 +56,13 @@ namespace GymHub.Web.Areas.Administration.Controllers
             this.paymentIntentService = paymentIntentService;
         }
 
-        public ActionResult Search(List<SaleFilterOption> SaleFilterOptions)
+        public ActionResult Search(List<SaleFilterOptionViewModel> SaleFilterOptions)
         {
             SaleFilterOptions =  SaleFilterOptions.DistinctBy(x => x.FilterName).ToList();
 
             var saleInfoViewModels = this.saleService.GetSalesForAllUsers(SaleFilterOptions);
 
-            if (SaleFilterOptions == null || SaleFilterOptions.Count < 4) SaleFilterOptions = new List<SaleFilterOption>
-            {
-                new SaleFilterOption {FilterName = GlobalConstants.IncludeConfirmed, FilterValue = true },
-                new SaleFilterOption {FilterName = GlobalConstants.IncludePending, FilterValue = true },
-                new SaleFilterOption {FilterName = GlobalConstants.IncludeDeclined, FilterValue = true },
-                new SaleFilterOption {FilterName = GlobalConstants.IncludeRefunded, FilterValue = true },
-            };
+            if (SaleFilterOptions == null || SaleFilterOptions.Count < 4) SaleFilterOptions = new List<SaleFilterOptionViewModel>(this.allSaleFilterOptions);
 
             var allSalesInfoViewModels = new AllSalesInfoViewModel
             {

@@ -1,5 +1,3 @@
--In Sales/All add search options like searching for only the pending sales and not the declined or completed.
-
 -Add category based searching.
 
 -Add contact form to send emails to sendgrid

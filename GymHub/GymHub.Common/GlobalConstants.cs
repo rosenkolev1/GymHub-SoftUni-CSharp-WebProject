@@ -1,4 +1,6 @@
-﻿namespace GymHub.Common
+﻿using System.Collections.Generic;
+
+namespace GymHub.Common
 {
     public static class GlobalConstants
     {
@@ -57,7 +59,7 @@
         public const int ProductNameLengthMax = 100;
 
         //Products pagination products per page
-        public const int ProductsPerPage = 1;
+        public const int ProductsPerPage = 8;
         public const int ProductsPagesCutoffNumber = 14;
 
         //Product Comments Pagination comments per page DEFAULT value is 8
@@ -92,7 +94,7 @@
         public const string ConfirmedSaleStatus = "Confirmed";
         public const string DeclinedSaleStatus = "Declined";
         public const string RefundedSaleStatus = "Refunded";
-        public static readonly string[] SaleStatuses = new[] 
+        public static readonly string[] SaleStatuses = new[]
         { GlobalConstants.PendingSaleStatus, GlobalConstants.ConfirmedSaleStatus, GlobalConstants.DeclinedSaleStatus, GlobalConstants.RefundedSaleStatus };
 
         //Allowed products images file types
@@ -101,10 +103,16 @@
         //Azure blob storage products images container
         public const string ProductsImagesBlobContainer = "products-images";
 
+        //filter option
+        public const string Include = "Include ";
+
         //Sales filter options
         public const string IncludePending = "Include pending";
         public const string IncludeConfirmed = "Include confirmed";
         public const string IncludeDeclined = "Include declined";
         public const string IncludeRefunded = "Include refunded";
+
+        //Product filtering options
+        public const string IncludeCategorySplitter = "Include-";
     }
 }

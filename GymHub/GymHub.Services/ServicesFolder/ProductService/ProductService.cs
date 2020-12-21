@@ -3,9 +3,11 @@ using GymHub.Common;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.Services.Common;
+using GymHub.Services.ServicesFolder.CategoryService;
 using GymHub.Services.ServicesFolder.ProductImageService;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
+using GymHub.Web.Models.ViewModels.Products.All;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,12 +21,14 @@ namespace GymHub.Services.ServicesFolder.ProductService
     {
         private readonly IMapper mapper;
         private readonly IProductImageService productImageService;
+        private readonly ICategoryService categoryService;
 
-        public ProductService(ApplicationDbContext context, IMapper mapper, IProductImageService productImageService)
+        public ProductService(ApplicationDbContext context, IMapper mapper, IProductImageService productImageService, ICategoryService categoryService)
             : base(context)
         {
             this.mapper = mapper;
             this.productImageService = productImageService;
+            this.categoryService = categoryService;
         }      
 
         public bool ProductExistsById(string id)
@@ -265,24 +269,57 @@ namespace GymHub.Services.ServicesFolder.ProductService
             return this.context.Products.First(x => x.Id == productId).Model;
         }      
 
-        public List<ProductViewModel> GetProductsFrom(int page)
+        public  IQueryable<Product> FilterProducts(List<ProductFilterOptionsViewModel> productFilterOptions)
         {
-            var listOfViewModelsForCurrentPage = context.Products
-                .Skip((page - 1) * GlobalConstants.ProductsPerPage)
-                .Take(GlobalConstants.ProductsPerPage)
-                .Select(product => new
-                {
-                    product.Id,
-                    product.Name,
-                    product.Description,
-                    product.QuantityInStock,
-                    product.Images.First(x => x.IsMain == true).Image,
-                    product.Model,
-                    product.Price,
-                    product.Warranty,
-                    product.ProductRatings,
-                    ProductSalesCount = product.ProductSales.Count
-                }).ToList();
+            if (productFilterOptions == null || productFilterOptions.Count == 0)
+            {
+                return this.context.Products.AsQueryable<Product>();
+            }
+
+            IQueryable<Product> filteredProducts = this.context.Products.AsQueryable<Product>();
+
+            var allCategories = this.categoryService.GetAllCategories();
+
+            foreach (var filterOption in productFilterOptions)
+            {
+                var filterValue = filterOption.FilterValue;
+                var filterOptionKey = filterOption.FilterName;
+
+                if (filterOptionKey.StartsWith(GlobalConstants.IncludeCategorySplitter))
+                { 
+                    var categoryFilterName = filterOptionKey.Split(GlobalConstants.IncludeCategorySplitter, 2)[1];
+                    var category = allCategories.First(x => x.Name == categoryFilterName);
+
+                    if(filterValue == true)
+                    {
+                        filteredProducts = filteredProducts
+                        .Where(x => x.ProductCategories.Any(y => y.CategoryId == category.Id) == false);
+                    }
+                }
+            }
+
+            filteredProducts = this.context.Products.Except(filteredProducts);
+            return filteredProducts;
+        }
+
+        public List<ProductViewModel> GetProductsForPage(IQueryable<Product> products, int page)
+        {
+            var listOfViewModelsForCurrentPage = products
+                    .Skip((page - 1) * GlobalConstants.ProductsPerPage)
+                    .Take(GlobalConstants.ProductsPerPage)
+                    .Select(product => new
+                    {
+                        product.Id,
+                        product.Name,
+                        product.Description,
+                        product.QuantityInStock,
+                        product.Images.First(x => x.IsMain == true).Image,
+                        product.Model,
+                        product.Price,
+                        product.Warranty,
+                        product.ProductRatings,
+                        ProductSalesCount = product.ProductSales.Count
+                    }).ToList();
 
             var listOfViewModels = listOfViewModelsForCurrentPage
                 .Select(product => new ProductViewModel
@@ -303,12 +340,14 @@ namespace GymHub.Services.ServicesFolder.ProductService
             return listOfViewModels;
         }
 
-        public IQueryable<Product> GetProductsFiltered()
+        public List<ProductViewModel> GetProductsFrom(int page, List<ProductFilterOptionsViewModel> productFilterOptions)
         {
-            var listOfProductsFiltered = this.context.Products
-                .Where(x => true);
 
-            return listOfProductsFiltered;
+
+            var filteredProducts = this.FilterProducts(productFilterOptions);
+
+            return this.GetProductsForPage(filteredProducts, page);
+       
         }
     }
 }

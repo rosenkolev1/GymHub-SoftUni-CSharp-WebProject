@@ -117,40 +117,18 @@ namespace GymHub.Services.ServicesFolder.SaleService
             await this.context.SaveChangesAsync();
         }
 
-        public List<SaleInfoViewModel> GetSalesForUser(string userId, List<SaleFilterOption> filterOptions)
+        public List<SaleInfoViewModel> GetSalesForUser(string userId, List<SaleFilterOptionViewModel> filterOptions)
         {
-            if(filterOptions == null || filterOptions.Count == 0)
+            var salesForUser = this.context.Sales.Where(x => x.UserId == userId);
+
+            if (filterOptions == null || filterOptions.Count == 0)
             {
-                return this.context.Sales
-                .Where(x => x.UserId == userId)
-                .Select(x => new SaleInfoViewModel
-                {
-                    BillingAccount = x.User.UserName,
-                    ReceivingAccount = x.User.UserName,
-                    PaymentStatus = x.SaleStatus.Name,
-                    Id = x.Id,
-                    PaymentMethod = x.PaymentMethod,
-                    PurchasedOn = x.PurchasedOn,
-                    TotalPayment = x.Products.Sum(x => x.Product.Price * x.Quantity)
-                })
-                .ToList();
+                return this.GetSales(salesForUser);
             }
 
-            var salesForUser = this.context.Sales.Where(x => x.UserId == userId);
             var filteredSales = this.FilterSales(filterOptions, salesForUser);
 
-            return filteredSales
-                .Select(x => new SaleInfoViewModel
-                {
-                    BillingAccount = x.User.UserName,
-                    ReceivingAccount = x.User.UserName,
-                    PaymentStatus = x.SaleStatus.Name,
-                    Id = x.Id,
-                    PaymentMethod = x.PaymentMethod,
-                    PurchasedOn = x.PurchasedOn,
-                    TotalPayment = x.Products.Sum(x => x.Product.Price * x.Quantity)
-                })
-                .ToList();
+            return this.GetSales(filteredSales);
         }
 
         public SaleDetailsViewModel GetSaleDetailsViewModel(string saleId)
@@ -180,7 +158,7 @@ namespace GymHub.Services.ServicesFolder.SaleService
                 .First();
         }
 
-        private IQueryable<Sale> FilterSales(List<SaleFilterOption> saleFilterOptions, IQueryable<Sale> fromSales = null) 
+        private IQueryable<Sale> FilterSales(List<SaleFilterOptionViewModel> saleFilterOptions, IQueryable<Sale> fromSales = null) 
         {
             //Filter the sales and then return the,
             if (fromSales == null) fromSales = this.context.Sales.AsQueryable<Sale>();
@@ -222,11 +200,9 @@ namespace GymHub.Services.ServicesFolder.SaleService
             return filteredSales;
         }
 
-        public List<SaleInfoViewModel> GetSalesForAllUsers(List<SaleFilterOption> SaleFilterOptions)
+        private List<SaleInfoViewModel> GetSales(IQueryable<Sale> sales)
         {
-            if(SaleFilterOptions.Count == 0 || SaleFilterOptions == null)
-            {
-                return this.context.Sales
+            return sales
                 .Select(x => new SaleInfoViewModel
                 {
                     BillingAccount = x.User.UserName,
@@ -238,22 +214,18 @@ namespace GymHub.Services.ServicesFolder.SaleService
                     TotalPayment = x.Products.Sum(x => x.Product.Price * x.Quantity)
                 })
                 .ToList();
+        }
+
+        public List<SaleInfoViewModel> GetSalesForAllUsers(List<SaleFilterOptionViewModel> SaleFilterOptions)
+        {
+            if(SaleFilterOptions.Count == 0 || SaleFilterOptions == null)
+            {
+                return this.GetSales(this.context.Sales.AsQueryable<Sale>());
             }
 
             var filteredSales = this.FilterSales(SaleFilterOptions);
 
-            return filteredSales
-                .Select(x => new SaleInfoViewModel
-                {
-                    BillingAccount = x.User.UserName,
-                    ReceivingAccount = x.User.UserName,
-                    PaymentStatus = x.SaleStatus.Name,
-                    Id = x.Id,
-                    PaymentMethod = x.PaymentMethod,
-                    PurchasedOn = x.PurchasedOn,
-                    TotalPayment = x.Products.Sum(x => x.Product.Price * x.Quantity)
-                })
-                .ToList();
+            return this.GetSales(filteredSales);        
         }
 
         public SaleStatus GetSaleStatus(string name)

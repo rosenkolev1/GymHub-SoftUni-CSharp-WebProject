@@ -13,9 +13,11 @@ using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
+using GymHub.Web.Models.ViewModels.Products.All;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -59,10 +61,20 @@ namespace GymHub.Web.Controllers
         }      
 
         [Authorize]
-        public IActionResult All(int productsPage)
+        public IActionResult All(int productsPage, List<ProductFilterOptionsViewModel> productFilterOptions)
         {
+            //Set the default filter options if they are null or empty
+            if(productFilterOptions == null || productFilterOptions.Count == 0)
+            {
+                var categories = this.categoryService.GetAllCategories();
+                var categoriesProductFilterOptions = categories
+                    .Select(x => new ProductFilterOptionsViewModel { FilterName = $"{GlobalConstants.IncludeCategorySplitter}{x.Name}", FilterValue = true });
+
+                productFilterOptions.AddRange(categoriesProductFilterOptions);
+            }
+
             //Filter the products by categories and search string
-            var productsFiltered = this.productService.GetProductsFiltered();
+            var productsFiltered = this.productService.FilterProducts(productFilterOptions);
 
             //Get the count of the filtered products and the pages for these products
             var productsCount = productsFiltered.Count();
@@ -73,11 +85,10 @@ namespace GymHub.Web.Controllers
             //Validate current page
             if (productsPage <= 0 || productsPage > pagesCount) productsPage = 1;
 
-            //Get the products for the current page
-            //TODO: change the name of this function maybe
-            var productsForCurrentPage = this.productService.GetProductsFrom(productsPage);
+            //Get the products for the current page and with the applied filters
+            var productsForCurrentPage = this.productService.GetProductsForPage(productsFiltered, productsPage);
 
-            //This is for debugging purposes for now. It removes unnecessary temp data
+            //Currently for debug purposes. This removes unnecessary temp data
             foreach (var key in TempData.Keys)
             {
                 if(key == GlobalConstants.InputModelFromPOSTRequest || key == GlobalConstants.InputModelFromPOSTRequestType)
@@ -89,7 +100,7 @@ namespace GymHub.Web.Controllers
             //Create pagination model
             var paginationViewModel = new PaginationViewModel
             {
-                CurrentPage = 1,
+                CurrentPage = productsPage,
                 CutoffNumber = GlobalConstants.ProductsPagesCutoffNumber,
                 NumberOfPages = pagesCount
             };
@@ -98,7 +109,8 @@ namespace GymHub.Web.Controllers
             var allProductViewModel = new AllProductsViewModel
             {
                 ProductViewModels = productsForCurrentPage,
-                PaginationViewModel = paginationViewModel
+                PaginationViewModel = paginationViewModel,
+                ProductFilterOptions = productFilterOptions
             };
 
             return this.View(allProductViewModel);

@@ -6,6 +6,7 @@ using GymHub.Services.ServicesFolder.CountryService;
 using GymHub.Services.ServicesFolder.PaymentMethodService;
 using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Services.ServicesFolder.SaleService;
+using GymHub.Web.Controllers.BaseControllers;
 using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models;
 using GymHub.Web.Models.InputModels;
@@ -24,7 +25,7 @@ using System.Threading.Tasks;
 namespace GymHub.Web.Controllers
 {
     [Authorize]
-    public class SalesController : Controller
+    public class SalesController : BaseSaleController
     {
         private readonly ISaleService saleService;
         private readonly IProductService productService;
@@ -318,7 +319,7 @@ namespace GymHub.Web.Controllers
             }
         }
 
-        public IActionResult All(List<SaleFilterOption> saleFilterOptions)
+        public IActionResult All(List<SaleFilterOptionViewModel> saleFilterOptions)
         {
             var currentUserId = this.userService.GetUserId(this.User.Identity.Name);
 
@@ -326,13 +327,7 @@ namespace GymHub.Web.Controllers
 
             saleFilterOptions = saleFilterOptions.DistinctBy(x => x.FilterName).ToList();
 
-            if (saleFilterOptions == null || saleFilterOptions.Count < 4) saleFilterOptions = new List<SaleFilterOption>
-            {
-                new SaleFilterOption {FilterName = GlobalConstants.IncludeConfirmed, FilterValue = true },
-                new SaleFilterOption {FilterName = GlobalConstants.IncludePending, FilterValue = true },
-                new SaleFilterOption {FilterName = GlobalConstants.IncludeDeclined, FilterValue = true },
-                new SaleFilterOption {FilterName = GlobalConstants.IncludeRefunded, FilterValue = true },
-            };
+            if (saleFilterOptions == null || saleFilterOptions.Count < 4) saleFilterOptions = new List<SaleFilterOptionViewModel>(this.allSaleFilterOptions);
 
             var allSalesInfoViewModels = new AllSalesInfoViewModel
             {

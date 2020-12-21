@@ -18,7 +18,7 @@ body {
 }
 
 .body-container {
-    background-color: skyblue;
+    background-color: #edfff9;
 }
 
 p, label, a, h1, input, button, select, th, tr, table, thead, tbody, td {
@@ -30,7 +30,7 @@ p, label, a, h1, input, button, select, th, tr, table, thead, tbody, td {
     top: 0px;
     width: 100vw;
     height: 60px;
-    background-color: #0B8E4C;
+    background-color: #007362;
     display: block;
     z-index: 10000;
 }
@@ -150,17 +150,17 @@ footer {
     bottom: 0px;
     left: 0px;
     width: 100%;
-    background: #0B8E4C;
+    background: #007362;
     z-index: 100;
     flex-shrink: 0;
     margin-top: 10px;
 }
 
-footer p{
-    position: relative;
-    background: #0B8E4C;
-    padding-top: 10px;
-}
+    footer p {
+        position: relative;
+        background: #007362;
+        padding-top: 10px;
+    }
 
 .footer-contacts {
     display: inline-block;
@@ -263,6 +263,12 @@ button {
     border-radius: 3px;
     border-width: 1px;
     background-color: #0B8E4C;
+}
+
+.filter-input-container{
+    border: 1px solid black;
+    padding-left: 10px;
+    font-size: 18px;
 }
 
 #exampleModal, .modal {

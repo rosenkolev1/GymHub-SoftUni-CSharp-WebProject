@@ -1,61 +1,92 @@
 ﻿@model AllProductsViewModel
 
-@{ 
+@{
     var productViewModels = Model.ProductViewModels;
     var paginationViewModel = Model.PaginationViewModel;
 }
 
-@section ImportantLinks{ 
-    <link href="~/css/ProductsAllPagination.css" rel="stylesheet" asp-append-version="true"/>
+@section ImportantLinks{
+    <link href="~/css/ProductsAllPagination.css" rel="stylesheet" asp-append-version="true" />
 }
 
-@for (int i = 0; i < productViewModels.Count; i++)
-{ var product = productViewModels[i];
-    <div class="product-container">    
-        <div class="product-content-container">
-            <div class="product-rating-all">
-                @{
-                    var productRating = product.ProductRatingViewModel;
-                }
-                @for (int y = 0; y < productRating.FullStarsCount; y++)
-                {
-                    <i class="fa fa-star gold"></i>
-                }
-                @if (productRating.HasHalfStar == true)
-                {
-                    <i class="fa fa-star-half-o gold"></i>
-                }
-                @for (int y = 0; y < productRating.EmptyStarsCount; y++)
-                {
-                    <i class="fa fa-star-o gold"></i>
-                }
-                <span> @productRating.AverageRating/10</span>
+<form id="filterForm" style="text-align:right;" asp-action="All" method="get" asp-area="" asp-controller="Products">
+    <input type="hidden" name="productsPage" value="@Model.PaginationViewModel.CurrentPage" />
+    <div style="font-size: 36px;">
+        @for (int i = 0; i < Model.ProductFilterOptions.Count; i++)
+        {
+            var filterOption = Model.ProductFilterOptions[i];
+            var filterOptionValue = Model.ProductFilterOptions[i].FilterValue;
+            var filterOptionName = Model.ProductFilterOptions[i].FilterName;
+            if (filterOptionName.StartsWith(GlobalConstants.IncludeCategorySplitter))
+            {
+                var filterOptionCategoryName = filterOptionName.Split(GlobalConstants.IncludeCategorySplitter, 2)[1];
+                filterOptionName = $"{GlobalConstants.Include} {filterOptionCategoryName}";
+            }
+            <div class="input-container-inline filter-input-container">
+                <input style="vertical-align:middle;" type="checkbox" asp-for="ProductFilterOptions[i].FilterValue">
+                <input type="hidden" asp-for="ProductFilterOptions[i].FilterName" />
+                <label asp-for="ProductFilterOptions[i].FilterValue" class="input-label-inline"> @filterOptionName </label>
             </div>
-            <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-name">@product.Name</a>
-            <hr class="product-headers-line-break"/>
-            <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-name">Model: @product.Model</a>
-            <img class="product-mainImage" src="@product.MainImage">
-            <div class="product-elements-info">
-                <p class="product-element-even"><b>$@product.Price</b><span class="product-element-sales">@product.ProductSalesCount <span style="color:gray">@(product.ProductSalesCount != 1 ? "sales" : "sale")</span></span></p>
-                <p class="product-element-odd product-element-description">@product.ShortDescription</p>
-            </div>
-        </div>
-        <div class="product-buttons-container">
-            <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-button">Info</a>
-            <form class="product-element-form" method="post">
-                <input type="hidden" name="productId" value="@product.Id" />
-                <input type="hidden" name="quantity" value="1" />
-                <button asp-controller="Carts" asp-action="AddToCart" type="submit" class="product-button">Add</button>
-            </form>
-        </div>
+        }
     </div>
+    <button style="margin-top:10px;" form="filterForm">Filter Products</button>
+</form>
+
+@if (productViewModels.Count > 0)
+{
+    @for (int i = 0; i < productViewModels.Count; i++)
+    {
+        var product = productViewModels[i];
+        <div class="product-container">
+            <div class="product-content-container">
+                <div class="product-rating-all">
+                    @{
+                        var productRating = product.ProductRatingViewModel;
+                    }
+                    @for (int y = 0; y < productRating.FullStarsCount; y++)
+                    {
+                        <i class="fa fa-star gold"></i>
+                    }
+                    @if (productRating.HasHalfStar == true)
+                    {
+                        <i class="fa fa-star-half-o gold"></i>
+                    }
+                    @for (int y = 0; y < productRating.EmptyStarsCount; y++)
+                    {
+                        <i class="fa fa-star-o gold"></i>
+                    }
+                    <span> @productRating.AverageRating/10</span>
+                </div>
+                <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-name">@product.Name</a>
+                <hr class="product-headers-line-break" />
+                <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-name">Model: @product.Model</a>
+                <img class="product-mainImage" src="@product.MainImage">
+                <div class="product-elements-info">
+                    <p class="product-element-even"><b>$@product.Price</b><span class="product-element-sales">@product.ProductSalesCount <span style="color:gray">@(product.ProductSalesCount != 1 ? "sales" : "sale")</span></span></p>
+                    <p class="product-element-odd product-element-description">@product.ShortDescription</p>
+                </div>
+            </div>
+            <div class="product-buttons-container">
+                <a asp-controller="Products" asp-action="ProductPage" asp-route-productId="@product.Id" asp-route-commentsPage="1" class="product-button">Info</a>
+                <form class="product-element-form" method="post">
+                    <input type="hidden" name="productId" value="@product.Id" />
+                    <input type="hidden" name="quantity" value="1" />
+                    <button asp-controller="Carts" asp-action="AddToCart" type="submit" class="product-button">Add</button>
+                </form>
+            </div>
+        </div>
+    }
+}
+else 
+{
+    <h3 style="text-align:center;">No products found</h3>
 }
 <div class="products-all-pagination-container">
     <partial name="_PaginationPartial" model="paginationViewModel" />
 </div>
 
-    
-@section Scripts{ 
+
+@section Scripts{
     <script src="~/js/Shared/Pagination.js" asp-append-version="true"></script>
     <script>
         PaginationInit('productsPage');

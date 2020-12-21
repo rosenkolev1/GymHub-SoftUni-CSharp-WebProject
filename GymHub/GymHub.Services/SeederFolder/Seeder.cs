@@ -79,14 +79,14 @@ namespace GymHub.Services.SeederFolder
             //Set up productImageService
             this.productImageService = new ProductImageService(context, this.azureBlobService);
 
+            //Set up categoryService
+            this.categoryService = new CategoryService(context);
+
             //Set up productService
-            this.productService = new ProductService(context, this.mapper, this.productImageService);
+            this.productService = new ProductService(context, this.mapper, this.productImageService, this.categoryService);
 
             //Set up productCommentService
             this.productCommentService = new ProductCommentService(context);
-
-            //Set up categoryService
-            this.categoryService = new CategoryService(context);
 
             //Set up countryService
             this.countryService = new CountryService(context);
