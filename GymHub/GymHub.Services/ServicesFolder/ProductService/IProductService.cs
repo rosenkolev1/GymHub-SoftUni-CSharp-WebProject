@@ -33,5 +33,6 @@ namespace GymHub.Services.ServicesFolder.ProductService
         public IQueryable<Product> FilterProducts(List<ProductFilterOptionsViewModel> productFilterOptions);
         public IQueryable<Product> FilterProducts(IQueryable<Product> products, string searchString);
         public List<ProductViewModel> GetProductsForPage(IQueryable<Product> products, int page);
+        public IQueryable<Product> OrderProducts(IQueryable<Product> products, ProductOrderingOption productOrderingOption);
     }
 }

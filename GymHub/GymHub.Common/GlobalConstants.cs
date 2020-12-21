@@ -114,5 +114,11 @@ namespace GymHub.Common
 
         //Product filtering options
         public const string IncludeCategorySplitter = "Include-";
+
+        //Product ordering options
+        public const string OrderProductByPrice = "Price";
+        public const string OrderProductByRating = "Rating";
+        public const string OrderProductBySales = "Sales";
+        public static List<string> OrderProductsOptions = new List<string> { GlobalConstants.OrderProductByPrice, GlobalConstants.OrderProductByRating, GlobalConstants.OrderProductBySales };
     }
 }

@@ -350,6 +350,36 @@ namespace GymHub.Services.ServicesFolder.ProductService
        
         }
 
+        public IQueryable<Product> OrderProducts(IQueryable<Product> products, ProductOrderingOption productOrderingOption)
+        {
+            var productOrderingOptionName = productOrderingOption.ProductOrderingOptionName;
+            IQueryable<Product> orderedProducts = products;
+
+            if(productOrderingOptionName == GlobalConstants.OrderProductByPrice)
+            {
+                orderedProducts = products
+                    .OrderBy(x => x.Price);
+            }
+            else if(productOrderingOptionName == GlobalConstants.OrderProductByRating)
+            {
+                orderedProducts = products
+                    .OrderBy(x => x.ProductRatings.Average(x => x.Rating));
+            }
+            else if(productOrderingOptionName == GlobalConstants.OrderProductBySales)
+            {
+                orderedProducts = products
+                    .OrderBy(x => x.ProductSales.Count);
+            }
+            else
+            {
+                throw new Exception("Something went wrong");
+            }
+
+            if (productOrderingOption.IsDescendning) orderedProducts = orderedProducts.Reverse();
+
+            return orderedProducts;
+        }
+
         public IQueryable<Product> FilterProducts(IQueryable<Product> products, string searchString)
         {
             searchString = searchString.ToLower();

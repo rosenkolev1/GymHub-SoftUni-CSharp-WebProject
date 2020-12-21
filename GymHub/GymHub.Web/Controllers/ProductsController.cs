@@ -61,7 +61,7 @@ namespace GymHub.Web.Controllers
         }      
 
         [Authorize]
-        public IActionResult All(int productsPage, List<ProductFilterOptionsViewModel> productFilterOptions, string searchString)
+        public IActionResult All(int productsPage, List<ProductFilterOptionsViewModel> productFilterOptions, ProductOrderingOption productOrderingOption, string searchString)
         {
             //Set the default filter options if they are null or empty
             if(productFilterOptions == null || productFilterOptions.Count == 0)
@@ -76,7 +76,11 @@ namespace GymHub.Web.Controllers
             //Filter the products by categories
             var productsFiltered = this.productService.FilterProducts(productFilterOptions);
             
+            //Filter the products by search string
             if(string.IsNullOrWhiteSpace(searchString) == false) productsFiltered = this.productService.FilterProducts(productsFiltered, searchString.Trim());
+
+            //Order the products by ordering options
+            if(string.IsNullOrWhiteSpace(productOrderingOption.ProductOrderingOptionName) == false) productsFiltered = this.productService.OrderProducts(productsFiltered, productOrderingOption);
 
             //Get the count of the filtered products and the pages for these products
             var productsCount = productsFiltered.Count();
@@ -112,7 +116,8 @@ namespace GymHub.Web.Controllers
             {
                 ProductViewModels = productsForCurrentPage,
                 PaginationViewModel = paginationViewModel,
-                ProductFilterOptions = productFilterOptions
+                ProductFilterOptions = productFilterOptions,
+                ProductOrderingOption = new ProductOrderingOption { ProductOrderingOptionName = productOrderingOption.ProductOrderingOptionName, IsDescendning = productOrderingOption.IsDescendning}
             };
 
             return this.View(allProductViewModel);
