@@ -27,6 +27,8 @@ namespace GymHub.Data.Models
         public virtual ICollection<ProductRating> ProductsRatings { get; set; }
         public virtual ICollection<UserImage> Pictures { get; set; }
         public virtual ICollection<ProductCommentLike> ProductsCommentsLikes { get; set; }
+        public virtual ICollection<ContactsChatMessage> ContactsChatMessagesSent { get; set; }
+        public virtual ICollection<ContactsChatMessage> ContactsChatMessagesReceived { get; set; }
 
         //Identity Collections
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }

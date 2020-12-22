@@ -15,6 +15,7 @@ namespace GymHub.Common
         public const string CompanyContactNumber = "(123) 456-789";
         public const string CompanyContactEmail = "rosenandreevkolev1@gmail.com";
         public const string PathToSiteLogo = "/GymHub/GymHub logo.png";
+        public const string SiteAdminProfilePictureLink = @"https://st4.depositphotos.com/4329009/19956/v/450/depositphotos_199564354-stock-illustration-creative-vector-illustration-default-avatar.jpg";
 
         //Errors from POST request temp data
         public const string ErrorsFromPOSTRequest = "ErrorsFromPOSTRequest";

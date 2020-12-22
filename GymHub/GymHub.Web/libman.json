@@ -42,6 +42,14 @@
       "files": [
         "lib/stripe.js"
       ]
+    },
+    {
+      "library": "signalr@2.4.1",
+      "destination": "wwwroot/lib/signalR/",
+      "files": [
+        "jquery.signalR.js",
+        "jquery.signalR.min.js"
+      ]
     }
   ]
 }

@@ -64,6 +64,11 @@
                     <vc:cart-items-number></vc:cart-items-number>
                 </a>
             </div>
+            <div class="nav-bar-element">
+                <a class="nav-bar-button" asp-area="" asp-controller="Home" asp-action="Contacts">
+                    Contacts
+                </a>
+            </div>
             @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
             {
                 <div class="nav-bar-element">
@@ -75,6 +80,7 @@
             </div>
         }
     </nav>
+    @RenderSection("SideNavigationShop", required: false)
     <main class="main-container">
         @if (TempData[GlobalConstants.NotificationType] != null)
         {
@@ -90,14 +96,6 @@
     </main>
     <footer>
         <p class="footer-paragraph">@@Copyright 2020 GymHub</p>
-        @*<div class="container footer-contacts-container">
-                <p class="footer-contacts">Contacts: </p>
-                <div class="container footer-contacts-phoneNumbers-container">
-                    <p class="footer-contacts-phoneNumber">012345678</p>
-                    <p class="footer-contacts-phoneNumber">012345678</p>
-                    <p class="footer-contacts-phoneNumber">012345678</p>
-                </div>
-            </div>*@
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>

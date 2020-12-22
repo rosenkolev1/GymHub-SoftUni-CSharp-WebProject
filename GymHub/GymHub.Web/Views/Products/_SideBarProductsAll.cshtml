@@ -1,0 +1,61 @@
+﻿@model AllProductsViewModel
+
+<div class="products-all-sidebar-container">
+    <form id="filterForm" style="text-align:left;" asp-action="All" method="get" asp-area="" asp-controller="Products">
+        <!-- Section: Sidebar -->
+        <section>
+            <!-- Section: Search Box -->
+            <section class="mb-4">
+
+                <div class="md-form md-outline mt-0 d-flex justify-content-between align-items-center">
+                    <input type="text" asp-for="SearchString" id="search12" class="form-control mb-0" placeholder="Search...">
+                    <button class="products-all-search-button"><i class="fas fa-search products-all-search-icon"></i></button>
+                </div>
+
+            </section>
+            <!-- Section: Search Box -->
+            <!-- Section: Categories -->
+            <section>
+
+                <h5>Categories</h5>
+
+                <input type="hidden" name="productsPage" value="@Model.PaginationViewModel.CurrentPage" />
+                <div style="font-size: 36px;">
+                    @for (int i = 0; i < Model.ProductFilterOptions.Count; i++)
+                    {
+                        var filterOption = Model.ProductFilterOptions[i];
+                        var filterOptionValue = Model.ProductFilterOptions[i].FilterValue;
+                        var filterOptionName = Model.ProductFilterOptions[i].FilterName;
+                        if (filterOptionName.StartsWith(GlobalConstants.IncludeCategorySplitter))
+                        {
+                            var filterOptionCategoryName = filterOptionName.Split(GlobalConstants.IncludeCategorySplitter, 2)[1];
+                            filterOptionName = $"{GlobalConstants.Include} {filterOptionCategoryName}";
+                        }
+                        <div class="input-container filter-input-container products-all-filter-categories-container">
+                            <input style="vertical-align:middle;" type="checkbox" asp-for="ProductFilterOptions[i].FilterValue">
+                            <input type="hidden" asp-for="ProductFilterOptions[i].FilterName" />
+                            <label asp-for="ProductFilterOptions[i].FilterValue" class="input-label-inline"> @filterOptionName </label>
+                        </div>
+                    }
+                </div>
+                <div class="container border-dark product-comments-ordering-container">
+                    <span class="product-comments-ordering-paragraph">Order by: </span>
+                    <select asp-for="ProductOrderingOption.ProductOrderingOptionName" class="product-comments-ordering-select">
+                        @for (int i = 0; i < GlobalConstants.OrderProductsOptions.Count; i++)
+                        {
+                            var orderOption = GlobalConstants.OrderProductsOptions[i];
+                            <option selected=@(Model.ProductOrderingOption.ProductOrderingOptionName == orderOption) value="@GlobalConstants.OrderProductsOptions[i]">@orderOption</option>
+                        }
+                    </select>
+                    <i class="fas fa-arrow-down products-all-order-desc @(Model.ProductOrderingOption.IsDescendning ? "gold" : "")"></i>
+                    <i class="fas fa-arrow-up products-all-order-asc @(!Model.ProductOrderingOption.IsDescendning ? "gold" : "")"></i>
+                    <input type="hidden" class="products-all-input-IsDescending" asp-for="ProductOrderingOption.IsDescendning" />
+                </div>
+
+            </section>
+            <!-- Section: Categories -->
+        </section>
+        <!-- Section: Sidebar -->
+        <button style="margin-top:10px; margin-right: 1vw;" form="filterForm">Apply filters</button>
+    </form>
+</div>

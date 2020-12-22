@@ -18,7 +18,7 @@ body {
 }
 
 .body-container {
-    background-color: #edfff9;
+    background-color: #e3ffea;
 }
 
 p, label, a, h1, input, button, select, th, tr, table, thead, tbody, td {
@@ -417,6 +417,7 @@ button {
     margin-right: 2vw;
     display: contents;
     padding: 5px;
+    font-size: 18px;
 }
 
 .products-all-search-icon:hover {
@@ -428,6 +429,28 @@ button {
     border:none;
     text-align:center;
 }
+
+.products-all-sidebar-container {
+    width: 18vw;
+    float:left;
+    margin-left: 1vw;
+    position: absolute;
+    top: 60px;
+    left:0px;
+    border-right: 2px solid black;
+    height: 100%;
+    padding-top: 15px;
+}
+
+.products-all-filter-categories-container{
+    margin: 5px;
+    text-align:left;
+}
+
+.products-all-order-asc:hover, .products-all-order-desc:hover{
+    cursor: pointer;
+}
+
 /*********************************************
     		CART/ALL VIEW SETTINGS
 *********************************************/
@@ -738,6 +761,7 @@ th {
 
 .product-comments-ordering-container{
     margin-bottom: 20px;
+    margin-top: 10px;
 }
 
 .product-comments-ordering-paragraph {

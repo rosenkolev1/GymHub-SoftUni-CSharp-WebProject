@@ -1,6 +1,4 @@
--Add ordering of products by price, etc...
-
--Add contact form to send emails to sendgrid
+-Add contact form to send message with SignalR to admin
 
 -For searching sales by admin make datatables use server-side data
 
@@ -17,8 +15,6 @@
 -Add column (Deleted by whom) or something similar to indicate which admin deleted a comment, product etc...
 
 -Add email confirmation on register
-
--Add favicon
 
 -Add registered user welcome page.
 

@@ -1,0 +1,86 @@
+﻿@model ChatViewModel
+
+@section ImportantLinks{
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link href="~/css/Contacts.css" rel="stylesheet" asp-append-version="true" />
+}
+
+<div class="container-fluid h-100">
+    <div class="row justify-content-center h-100">
+        <div class="col-md-8 col-xl-6 chat">
+            <div class="card">
+                <div class="card-header msg_head">
+                    <div class="d-flex bd-highlight">
+                        <div class="img_cont">
+                            <img src="@GlobalConstants.SiteAdminProfilePictureLink" class="rounded-circle user_img">
+                            <span class="online_icon"></span>
+                        </div>
+                        <div class="user_info">
+                            <span>Administration</span>
+                            <p>@Model.SentMessagesCount Messages</p>
+                        </div>
+                    </div>
+                    <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
+                </div>
+                <div class="card-body msg_card_body">
+                    <div class="d-flex justify-content-start mb-4">
+                        <div class="img_cont_msg">
+                            <img src="@GlobalConstants.SiteAdminProfilePictureLink" class="rounded-circle user_img_msg">
+                        </div>
+                        <div class="msg_cotainer">
+                            Hi, how are you @this.User.Identity.Name? What would you like to message us about?
+                            <span class="msg_time">@DateTime.UtcNow</span>
+                        </div>
+                    </div>
+
+                    @foreach (var message in Model.Messages)
+                    {
+                        @if(message.BelongToUser == true)
+                        {
+                            string image = "";
+                            if (this.User.IsInRole(GlobalConstants.AdminRoleName)) image = GlobalConstants.SiteAdminProfilePictureLink;
+                            else image = "userImage";
+                        <div class="d-flex justify-content-end mb-4">
+                            <div class="msg_cotainer_send">
+                                @message.Text
+                                <span class="msg_time_send">@message.SendOn</span>
+                            </div>
+                            <div class="img_cont_msg">
+                                <img src="@image" class="rounded-circle user_img_msg">
+                            </div>
+                        </div>
+                        }
+                        else
+                        {
+                        <div class="d-flex justify-content-start mb-4">
+                            <div class="img_cont_msg">
+                                <img src="@GlobalConstants.SiteAdminProfilePictureLink" class="rounded-circle user_img_msg">
+                            </div>
+                            <div class="msg_cotainer">
+                                @message.Text
+                                <span class="msg_time">@message.SendOn</span>
+                            </div>
+                        </div>
+                        }
+                    }
+                </div>
+                <div class="card-footer">
+                    <div class="input-group">
+                        <textarea asp-for="MessageInputModel.Message" class="form-control type_msg" placeholder="Type your message..."></textarea>
+                        <div class="input-group-append">
+                            <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/lib/signalR/jquery.signalR.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js" asp-append-version="true"></script>
+    <script src="~/js/Contacts/SignalRChat.js" asp-append-version="true"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

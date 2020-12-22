@@ -7,46 +7,12 @@
 
 @section ImportantLinks{
     <link href="~/css/ProductsAllPagination.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/SideBar.css" rel="stylesheet" />
 }
 
-
-<form id="filterForm" style="text-align:right;" asp-action="All" method="get" asp-area="" asp-controller="Products">
-    <!-- Search form -->
-    <input class="form-control products-all-search" asp-for="SearchString" type="text" placeholder="Search" aria-label="Search"><button class="products-all-search-button"><i class="fas fa-search products-all-search-icon"></i></button>
-    <input type="hidden" name="productsPage" value="@Model.PaginationViewModel.CurrentPage" />
-    <div style="font-size: 36px;">
-        @for (int i = 0; i < Model.ProductFilterOptions.Count; i++)
-        {
-            var filterOption = Model.ProductFilterOptions[i];
-            var filterOptionValue = Model.ProductFilterOptions[i].FilterValue;
-            var filterOptionName = Model.ProductFilterOptions[i].FilterName;
-            if (filterOptionName.StartsWith(GlobalConstants.IncludeCategorySplitter))
-            {
-                var filterOptionCategoryName = filterOptionName.Split(GlobalConstants.IncludeCategorySplitter, 2)[1];
-                filterOptionName = $"{GlobalConstants.Include} {filterOptionCategoryName}";
-            }
-            <div class="input-container-inline filter-input-container">
-                <input style="vertical-align:middle;" type="checkbox" asp-for="ProductFilterOptions[i].FilterValue">
-                <input type="hidden" asp-for="ProductFilterOptions[i].FilterName" />
-                <label asp-for="ProductFilterOptions[i].FilterValue" class="input-label-inline"> @filterOptionName </label>
-            </div>
-        }
-    </div>
-    <div class="container border-dark product-comments-ordering-container">
-        <span class="product-comments-ordering-paragraph">Order by: </span>
-        <select asp-for="ProductOrderingOption.ProductOrderingOptionName" class="product-comments-ordering-select">
-            @for (int i = 0; i < GlobalConstants.OrderProductsOptions.Count; i++)
-            {
-                var orderOption = GlobalConstants.OrderProductsOptions[i];
-                <option selected=@(Model.ProductOrderingOption.ProductOrderingOptionName == orderOption) value="@GlobalConstants.OrderProductsOptions[i]">@orderOption</option>
-            }
-        </select>
-        <i class="fas fa-arrow-down products-all-order-desc @(Model.ProductOrderingOption.IsDescendning ? "gold" : "")"></i>
-        <i class="fas fa-arrow-up products-all-order-asc @(!Model.ProductOrderingOption.IsDescendning ? "gold" : "")"></i>
-        <input type="hidden" class="products-all-input-IsDescending" asp-for="ProductOrderingOption.IsDescendning" />
-    </div>
-    <button style="margin-top:10px; margin-right: 1vw;" form="filterForm">Apply filters</button>
-</form>
+@section SideNavigationShop{
+    <partial name="_SideBarProductsAll" model="@Model"/>
+}
 
 @if (productViewModels.Count > 0)
 {
@@ -108,4 +74,5 @@ else
         PaginationInit('productsPage');
     </script>
     <script src="~/js/ProductsAll/ControlOrdering.js" asp-append-version="true"></script>
+    <script src="~/js/ProductsAll/SideBar.js" asp-append-version="true"></script>
 }

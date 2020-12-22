@@ -47,6 +47,7 @@ namespace GymHub.Data.Data
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<SaleStatus> SaleStatuses { get; set; }
 
+        public virtual DbSet<ContactsChatMessage> ContactsChatMessages { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if(optionsBuilder.IsConfigured == false)
