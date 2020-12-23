@@ -1,5 +1,3 @@
-# Happy Holidays to anyone reading this in December 2020 - January 2021
-
 # GymHub-SoftUni-CSharp-WebProject
 ## My SoftUni web project written on C# and Asp.Net Core 
 **GymHub** is my ASP.NET Core MVC web application project for **SoftUni ASP.NET Core - октомври 2020г.**
