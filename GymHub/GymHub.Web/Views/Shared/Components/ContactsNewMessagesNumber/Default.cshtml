@@ -1,0 +1,13 @@
+﻿@model int
+
+@{ var numberOfUnseenMessages = Model;}
+
+@if (numberOfUnseenMessages > 0)
+{
+    <span class="fa-stack newMessages-container">
+        <!-- The icon that will wrap the number -->
+        <span class="fa fa-circle gold fa-stack-3x newMessages-circle"></span>
+        <!-- a strong element with the custom content, in this case a number -->
+        <strong class="fa-stack-1x newMessages-number">@(numberOfUnseenMessages > 10 ? $"10+" : numberOfUnseenMessages)</strong>
+    </span>
+}

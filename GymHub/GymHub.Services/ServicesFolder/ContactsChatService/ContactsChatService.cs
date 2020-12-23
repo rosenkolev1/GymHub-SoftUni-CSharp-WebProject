@@ -111,7 +111,7 @@ namespace GymHub.Services.ServicesFolder.ContactsChatService
             await this.context.SaveChangesAsync();
         }
 
-        public int GetNumberOfUnseenForReceiver(User sender, User receiver)
+        public int GetNumberOfUnseenForReceiver(User receiver, User sender)
         {
             return this.context.ContactsChatMessages
                 .Where(x => x.Sender == sender && x.Receiver == receiver && x.HasBeenSeen == false).Count();
@@ -125,6 +125,13 @@ namespace GymHub.Services.ServicesFolder.ContactsChatService
                 .Where(x => x.Sender.Roles.Select(y => y.RoleId).Contains(adminRoleId) == false)
                 .Select(x => x.Sender)
                 .FirstOrDefault();
+        }
+
+        public int GetNumberOfUnseenForReceiver(User receiver)
+        {
+            return this.context.ContactsChatMessages
+                .Where(x => x.Receiver == receiver && x.HasBeenSeen == false)
+                .Count();
         }
     }
 }

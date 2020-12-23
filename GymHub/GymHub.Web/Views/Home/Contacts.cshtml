@@ -46,7 +46,7 @@
                     </div>
                     <div class="user_info">
                         @{ 
-                            var unreadMessagesCount = contactsChatService.GetNumberOfUnseenForReceiver(user, Model.CurrentUser); 
+                            var unreadMessagesCount = contactsChatService.GetNumberOfUnseenForReceiver(Model.CurrentUser, user); 
                          }
                         <span>@user.UserName</span>
                         <div>

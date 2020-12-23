@@ -1,0 +1,18 @@
+﻿.newMessages-number {
+    /*color: paleturquoise;*/
+    font-size: 1em;
+    color: #721c24;
+}
+
+.newMessages-circle {
+    top: 0px;
+    right: 327px;
+    font-size: 2em;
+    color: #f8d7da;
+}
+
+.newMessages-container {
+    position: relative;
+    /*top: -50%;
+    right: 27%;*/
+}

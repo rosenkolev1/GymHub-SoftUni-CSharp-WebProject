@@ -1,4 +1,4 @@
--Add view component similar to the cart which shows the number of unseen replies for a user in the corner of the button
+-Add view component similar to the cart which shows the number of unseen replies for a user in the corner of the button. VIA view component of course.
 
 -Add contact form to send message with SignalR to admin
 

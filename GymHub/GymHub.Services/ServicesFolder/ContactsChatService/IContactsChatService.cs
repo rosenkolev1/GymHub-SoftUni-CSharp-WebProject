@@ -25,6 +25,8 @@ namespace GymHub.Services.ServicesFolder.ContactsChatService
 
         public int GetNumberOfUnseenForReceiver(User sender, User receiver);
 
+        public int GetNumberOfUnseenForReceiver(User receiver);
+
         public User GetRandomUserWhoHasMessagedAdmin();
     }
 }
