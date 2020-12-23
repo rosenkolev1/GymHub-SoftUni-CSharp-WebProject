@@ -128,3 +128,6 @@
 ![ReceiveMessageWhileScroledUpInTheChat.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ReceiveMessageWhileScroledUpInTheChat.PNG)
 
 License This project is licensed under the MIT License - see the LICENSE.md file for details
+
+## - Database Diagram
+![DatabaseDiagram.png](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Database%20diagram/DatabaseDiagram.png)
