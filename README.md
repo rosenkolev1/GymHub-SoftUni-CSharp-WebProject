@@ -11,20 +11,21 @@
 - The other use for Hangfire is to delete the unused pictures from Azure blob storage every 5 minutes(which is definitely overkill and it is for the sake of demo and for testing). The need to do that arises from the fact that via playing around with editing the products you can end up with unused images in the blob storage. So to free up space and not clog the storage(impossible to do with an web app on such a small scale but anyway...), and also to get some practice with hangfire, I decided to periodically garbage collect the pictures.
 - SignalR is used for the contacts chat page to ensure two way communication between client and server.
 - Sendgrid is used to send comment removal justification from the admin to the user when they remove their comment.
-- Automapper fuking sucks. I have that shit. For me it never works and it takes me much more time to configure automapper to work correctly than map the fuking object myself. So fuck Automapper. I used it still for a little bit but yeah...
+- Automapper fuking sucks. I hate that shit. For me it never works and it takes me much more time to configure automapper to work correctly than map the fuking object myself. So fuck Automapper. I used it still for a little bit but yeah...
 - Partial views are used a fuckton for many different things.
 - View components are used 3 times. To notify the user of their current products count in the cart, to notify them of their unseed messages, to change their profile icon based on their gender.
 - Also I wrote my own custom pagination which, dare I say, works pretty wonderfully. You insert one script, use one partial view and in another script tag just call one function with a parameter which defines the name for the queryParam which indicates the current page. For example in the productPage the queryParam was commentsPage(I believe anyway, not 100% sure) and for the Shop page it was productsPage(again, I believe, but not 100% sure).
 - For the productPage especially I wrote a metric fuk ton of javascript. Which reminded me why I somewhat despise that language.
 <hr/>
-###Link to the site 
-https://gymhubweb.azurewebsites.net
-###Admin: 
-Username: adminRosen
-Password: adminRosen
 
+## Link to the site 
+- https://gymhubweb.azurewebsites.net
+## Admin account: 
+- Username: adminRosen
+- Password: adminRosen
+<hr/>
 
-### :hammer: Built With
+## :hammer: Built With
 
 - Visual Studio Enterprise
 - .NET 5.0           
@@ -35,12 +36,13 @@ Password: adminRosen
 - ASP.NET CORE MVC and Razor Pages
 - SQL Server and Microsoft SQL Server Management Studio
 - Custom database seeder 
+- Custom pagination(that I am actually quite proud of)
 - Bootstrap 3.0/4.0 depending on the page
 - Javascript (A LOT OF FUKING JAVASCRIPT)
 - AJAX real-time Requests
 - JQuery and any kind of jQuery plugins such as DataTables and jquery animations
 - Lots of boostrap themes and templates
-- Stripe Checkout API
+- Stripe Checkout and PaymentIntents API
 - Mapbox for maps
 - Azure blob storage
 - Automapper 
@@ -49,11 +51,11 @@ Password: adminRosen
 - Hangfire
 - SignalR
 
-<h3>Interface</h3>
+<h2>Interface</h2>
 <hr/>
 
-#### Normal User
-![HomePage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/HomePage.PNG)
+### - Normal User
+![HomePage.png](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/HomePage.png)
 
 ![LoginPage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/LoginPage.PNG)
 
@@ -73,11 +75,11 @@ Password: adminRosen
 
 ![ProductPage(Adding a review).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage(Adding%20a%20review).PNG)
 
-![ProductPage(Removing another person's comment as admin, and also example of my own hand written pagination).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage(Removing%20another%20person's%20comment%20as%20admin,%20and%20also%20example%20of%20my%20own%20hand%20written pagination).PNG)
+![ProductPage(Removing another person's comment as admin, and also example of my own hand written pagination).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage(Removing%20another%20person's%20comment%20as%20admin%2C%20and%20also%20example%20of%20my%20own%20hand%20written%20pagination).PNG)
 
 ![Cart.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Cart.PNG)
 
-![CheckoutPage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/CheckoutPage.PNG)
+![CheckoutPage.png](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/CheckoutPage.png)
 
 ![StripePaymentPage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/StripePaymentPage.PNG)
 
@@ -85,21 +87,21 @@ Password: adminRosen
 
 ![AllMySales(regular user).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AllMySales(regular%20user).PNG)
 
-![SaleDetails.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/SaleDetails.PNG)
+![SaleDetails.png](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/SaleDetails.png)
 
-#### Admin User
+### - Admin User
 
 ![AdminControls.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AdminControls.PNG)
 
-TODO: Add hangfire dashboard
+![HangfireDashboard.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/HangfireDashboard.PNG)
 
-![AddProduct2.1.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AddProduct2.1.PNG)
+![AddProduct2.1.png](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AddProduct2.1.png)
 
-![AddProduct2.2.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AddProduct2.2.PNG)
+![AddProduct2.2.png](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AddProduct2.2.png)
 
-![EditProduct2.1.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/EditProduct2.1.PNG)
+![EditProduct2.1.png](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/EditProduct2.1.png)
 
-![EditProduct2.2.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/EditProduct2.2.PNG)
+![EditProduct2.2.png](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/EditProduct2.2.png)
 
 ![CategoriesAll.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/CategoriesAll.PNG)
 
@@ -115,7 +117,7 @@ TODO: Add hangfire dashboard
 
 ![RefundModal.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/RefundModal.PNG)
 
-### Contacts
+### - Contacts
 
 ![Contacts(Normal User).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Contacts(Normal%20User).PNG)
 
@@ -126,3 +128,6 @@ TODO: Add hangfire dashboard
 ![ReceiveMessageWhileScroledUpInTheChat.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ReceiveMessageWhileScroledUpInTheChat.PNG)
 
 License This project is licensed under the MIT License - see the LICENSE.md file for details
+
+## - Database Diagram
+![DatabaseDiagram.png](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Database%20diagram/DatabaseDiagram.png)
