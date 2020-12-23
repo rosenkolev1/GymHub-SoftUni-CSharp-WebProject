@@ -17,9 +17,9 @@
 - Also I wrote my own custom pagination which, dare I say, works pretty wonderfully. You insert one script, use one partial view and in another script tag just call one function with a parameter which defines the name for the queryParam which indicates the current page. For example in the productPage the queryParam was commentsPage(I believe anyway, not 100% sure) and for the Shop page it was productsPage(again, I believe, but not 100% sure).
 - For the productPage especially I wrote a metric fuk ton of javascript. Which reminded me why I somewhat despise that language.
 <hr/>
-###Link to the site 
+### Link to the site 
 https://gymhubweb.azurewebsites.net
-###Admin: 
+### Admin: 
 Username: adminRosen
 Password: adminRosen
 
