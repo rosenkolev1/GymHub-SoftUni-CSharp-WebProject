@@ -10,12 +10,12 @@
     overflow: visible
 }
 
-    /*.carousel-inner > .carousel-item {
+    .carousel-inner > .carousel-item {
         -webkit-transition: 0s !important;
         -o-transition: 0s !important;
         transition: 0s !important;
     }
-*/
+
 .carousel-image {
     height: 60vh !important;
     width: 60vw !important;

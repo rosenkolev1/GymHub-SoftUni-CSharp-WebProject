@@ -93,16 +93,20 @@
                     {
                         var something = $"Hi, how are you {this.User.Identity.Name}? What would you like to message us about?";
                         var adminSender = "Administrator";
-            <partial name="_ContactsChatMessagePartial" model="new MessageViewModel { SentOn = null, BelongsToSender = false, Text = something, SenderName = adminSender, SenderIsAdmin = true }" />}
+                    <partial name="_ContactsChatMessagePartial" model="new MessageViewModel { SentOn = null, BelongsToSender = false, Text = something, SenderName = adminSender, SenderIsAdmin = true }" />}
                     @{ var hasReachedNewMessages = false;}
                     @foreach (var message in Model.Messages)
                     {
                         if (hasReachedNewMessages == false && message.HasBeenSeenByReceiver == false && message.SenderId == Model.TargetUserId)
                         {
                             hasReachedNewMessages = true;
-                            <p style="font-size:10px; text-align:center;" class="alert-danger">New messages</p>
+                            <p style="font-size:10px; text-align:center;" class="alert-danger newMessages">New messages</p>
                         }
                         <partial name="_ContactsChatMessagePartial" model="message" />
+                    }
+                    @if (hasReachedNewMessages)
+                    {
+                        <p style="font-size:10px; text-align:center;" class="alert-danger endOfNewMessages">End of new messages</p>
                     }
                 </div>
                 <div class="card-footer">

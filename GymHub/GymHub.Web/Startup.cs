@@ -40,6 +40,9 @@ using GymHub.Common;
 using GymHub.Services.CronJobs;
 using GymHub.Web.Hubs;
 using GymHub.Services.ServicesFolder.ContactsChatService;
+using Microsoft.Extensions.Azure;
+using Azure.Storage.Queues;
+using Azure.Core.Extensions;
 
 namespace GymHub.Web
 {
@@ -122,7 +125,7 @@ namespace GymHub.Web
             services.AddSingleton(sendGrid);
 
             //Add Azure blob storage
-            services.AddSingleton(x => new BlobServiceClient(this.Configuration["AzureBlobStorage:ConnectionString"]));
+            services.AddSingleton(x => new BlobServiceClient(this.Configuration["ConnectionStrings:AzureBlobConnectionString"]));
             services.AddTransient<IAzureBlobService, AzureBlobService>();
 
             //Configure stripe services Stripe
@@ -154,6 +157,11 @@ namespace GymHub.Web
             //Add cron job
             services.AddTransient<DeleteProductsImagesBlobs>();
             services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
+            services.AddAzureClients(builder =>
+            {
+                builder.AddBlobServiceClient(Configuration["ConnectionStrings:gymhubstorage:blob"], preferMsi: true);
+                builder.AddQueueServiceClient(Configuration["ConnectionStrings:gymhubstorage:queue"], preferMsi: true);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -256,6 +264,31 @@ namespace GymHub.Web
                     var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                     dbContext.Database.EnsureDeleted();
                 }
+            }
+        }
+    }
+    internal static class StartupExtensions
+    {
+        public static IAzureClientBuilder<BlobServiceClient, BlobClientOptions> AddBlobServiceClient(this AzureClientFactoryBuilder builder, string serviceUriOrConnectionString, bool preferMsi)
+        {
+            if (preferMsi && Uri.TryCreate(serviceUriOrConnectionString, UriKind.Absolute, out Uri serviceUri))
+            {
+                return builder.AddBlobServiceClient(serviceUri);
+            }
+            else
+            {
+                return builder.AddBlobServiceClient(serviceUriOrConnectionString);
+            }
+        }
+        public static IAzureClientBuilder<QueueServiceClient, QueueClientOptions> AddQueueServiceClient(this AzureClientFactoryBuilder builder, string serviceUriOrConnectionString, bool preferMsi)
+        {
+            if (preferMsi && Uri.TryCreate(serviceUriOrConnectionString, UriKind.Absolute, out Uri serviceUri))
+            {
+                return builder.AddQueueServiceClient(serviceUri);
+            }
+            else
+            {
+                return builder.AddQueueServiceClient(serviceUriOrConnectionString);
             }
         }
     }

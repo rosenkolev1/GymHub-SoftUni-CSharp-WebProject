@@ -4,9 +4,21 @@
       "type": "appInsights",
       "connectionId": "APPINSIGHTS_CONNECTIONSTRING"
     },
+    "storage1": {
+      "type": "storage",
+      "connectionId": "AzureBlobConnectionString"
+    },
+    "signalr1": {
+      "type": "signalr",
+      "connectionId": "Azure__SignalR__ConnectionString"
+    },
     "mssql1": {
       "type": "mssql",
       "connectionId": "DefaultConnection"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "HangfireConnection"
     }
   }
 }
