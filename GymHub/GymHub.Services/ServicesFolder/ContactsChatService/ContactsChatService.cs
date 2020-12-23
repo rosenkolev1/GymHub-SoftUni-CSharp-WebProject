@@ -23,27 +23,34 @@ namespace GymHub.Services.ServicesFolder.ContactsChatService
             this.userService = userService;
         }
 
-        public async Task AddMessages(MessageInputModel inputModel)
+        public async Task<ContactsChatMessage> AddMessages(MessageInputModel inputModel)
         {
             var newMessage = new ContactsChatMessage
             {
-                Sender = inputModel.Sender,
+                SenderId = inputModel.SenderId,
+                ReceiverId = inputModel.ReceiverId,
                 SentOn = inputModel.SentOn,
-                Receiver = inputModel.Receiver,
-                Text = inputModel.Message
+                Text = inputModel.Message,
+                HasBeenSeen = false
             };
 
             await this.context.ContactsChatMessages.AddAsync(newMessage);
             await this.context.SaveChangesAsync();
+
+            return newMessage;
         }
 
         //TODO: REMOVE CurrentUserId and TargetUserId from the chat view model if they are not needed
         public ChatViewModel GetChatInfo(User currentUser, User targetUser)
         {
-            var targetUserName = targetUser.UserName;
+            var targetUserName = targetUser?.UserName;
             var adminRoleId = this.context.Roles.First(x => x.Name == GlobalConstants.AdminRoleName).Id;
 
-            var messages = this.context.ContactsChatMessages
+            var messages = new List<MessageViewModel>();
+
+            if(targetUser != null)
+            {
+                messages = this.context.ContactsChatMessages
                 .Where(x =>
                 (x.Sender.UserName == currentUser.UserName && x.Receiver.UserName == targetUserName) || (x.Sender.UserName == targetUserName && x.Receiver.UserName == currentUser.UserName))
                 .Select(x => new MessageViewModel
@@ -52,10 +59,13 @@ namespace GymHub.Services.ServicesFolder.ContactsChatService
                     BelongsToSender = x.Sender.UserName == currentUser.UserName,
                     Text = x.Text,
                     SenderName = x.Sender.UserName,
-                    SenderIsAdmin = x.Sender.Roles.Select(y => y.RoleId).Contains(adminRoleId)
+                    SenderIsAdmin = x.Sender.Roles.Select(y => y.RoleId).Contains(adminRoleId),
+                    HasBeenSeenByReceiver = x.HasBeenSeen,
+                    SenderId = x.SenderId
                 })
                 .OrderBy(x => x.SentOn)
                 .ToList();
+            }
 
             var chatViewModel = new ChatViewModel
             {
@@ -63,7 +73,7 @@ namespace GymHub.Services.ServicesFolder.ContactsChatService
                 CurrentUserId = currentUser.Id,
                 Messages = messages,
                 MessageInputModel = new MessageInputModel(),
-                TargetUserId = targetUser.Id,
+                TargetUserId = targetUser?.Id,
                 TargetUser = targetUser,
                 CurrentUser = currentUser
             };
@@ -76,6 +86,45 @@ namespace GymHub.Services.ServicesFolder.ContactsChatService
             return this.context.Users
                 .Where(x => x != adminUser && x.ContactsChatMessagesSent.Any(y => y.ReceiverId == adminUser.Id))
                 .ToList();
+        }
+
+        public ContactsChatMessage GetMessageById(string messageId)
+        {
+            return this.context.ContactsChatMessages
+                .FirstOrDefault(x => x.Id == messageId);
+        }
+
+        public async Task MarkAsSeenAsync(ContactsChatMessage message)
+        {
+            message.HasBeenSeen = true;
+            await this.context.SaveChangesAsync();
+        }
+
+        public async Task MarkAllForReceiverAsSeenAsync(User sender, User receiver)
+        {
+            foreach (var message in this.context.ContactsChatMessages
+                .Where(x => x.Sender == sender && x.Receiver == receiver && x.HasBeenSeen == false))
+            {
+                message.HasBeenSeen = true;
+            }
+
+            await this.context.SaveChangesAsync();
+        }
+
+        public int GetNumberOfUnseenForReceiver(User sender, User receiver)
+        {
+            return this.context.ContactsChatMessages
+                .Where(x => x.Sender == sender && x.Receiver == receiver && x.HasBeenSeen == false).Count();
+        }
+
+        public User GetRandomUserWhoHasMessagedAdmin()
+        {
+            var adminRoleId = this.context.Roles.First(x => x.Name == GlobalConstants.AdminRoleName).Id;
+
+            return this.context.ContactsChatMessages
+                .Where(x => x.Sender.Roles.Select(y => y.RoleId).Contains(adminRoleId) == false)
+                .Select(x => x.Sender)
+                .FirstOrDefault();
         }
     }
 }

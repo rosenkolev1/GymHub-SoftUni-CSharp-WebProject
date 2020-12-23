@@ -294,3 +294,12 @@
     margin-bottom: 1.5rem !important;
 }
 
+.unseen-messages{
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.unseen-messages, .unseen-messages-count {
+    background-color: orangered;
+}
+

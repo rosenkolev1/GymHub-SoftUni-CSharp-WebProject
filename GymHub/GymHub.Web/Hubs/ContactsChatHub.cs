@@ -31,11 +31,11 @@ namespace GymHub.Web.Hubs
                 SentOn = DateTime.UtcNow,
                 SenderId = sender.Id,
                 ReceiverId = receiverId,
-                Sender = sender,
-                Receiver = receiver
             };
 
-            await this.contactsChatService.AddMessages(messageInputModel);
+            var newMessage = await this.contactsChatService.AddMessages(messageInputModel);
+
+            messageInputModel.MessageId = newMessage.Id;
 
             await this.Clients.All.SendAsync("NewMessage", messageInputModel);
         }

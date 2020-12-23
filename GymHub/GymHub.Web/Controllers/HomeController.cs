@@ -9,6 +9,7 @@ using GymHub.Web.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,7 +52,7 @@ namespace GymHub.Web.Controllers
             return this.View();
         }
 
-        public IActionResult Contacts(string targetUserId, string userSearch)
+        public async Task<IActionResult> Contacts(string targetUserId, string userSearch)
         {
             var currentUserIsAdmin = this.User.IsInRole(GlobalConstants.AdminRoleName) == true;
             User targetUser = null;
@@ -62,9 +63,8 @@ namespace GymHub.Web.Controllers
                 targetUser = this.userService.GetUser(targetUserId);
             }
 
-            if (targetUser == null && currentUserIsAdmin) targetUser = this.userService.GetUserByUsername("rosenkolev1");
+            if (targetUser == null && currentUserIsAdmin) targetUser = this.contactsChatService.GetRandomUserWhoHasMessagedAdmin();
 
-            var targetUserName = targetUser?.UserName;
             var currentUser = this.userService.GetUserByUsername(this.User.Identity.Name);
 
             var chatViewModel = this.contactsChatService.GetChatInfo(currentUser, targetUser);
@@ -74,7 +74,7 @@ namespace GymHub.Web.Controllers
                 chatViewModel.AllUsers = this.contactsChatService.GetUsersForAdmin(currentUser)
                     .OrderByDescending(x => x == targetUser).ToList();
 
-                if(string.IsNullOrWhiteSpace(userSearch) == false)
+                if (string.IsNullOrWhiteSpace(userSearch) == false)
                 {
                     chatViewModel.AllUsers = chatViewModel.AllUsers
                     .OrderByDescending(x => x.UserName.Contains(userSearch) || x.FirstName.Contains(userSearch) || x.LastName.Contains(userSearch))
@@ -83,6 +83,9 @@ namespace GymHub.Web.Controllers
                     chatViewModel.UserSearch = userSearch;
                 }
             }
+
+            //Mark all the messages from the target user as read
+            await this.contactsChatService.MarkAllForReceiverAsSeenAsync(targetUser, currentUser);
 
             return this.View(chatViewModel);
         }
@@ -98,10 +101,20 @@ namespace GymHub.Web.Controllers
             return this.PartialView("/Views/Home/_ContactsChatMessagePartial.cshtml", messageViewModel);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Contacts(string id)
-        //{
-        //    return this.Redirect(nameof(Contacts));
-        //}
+        [HttpPost]
+        public async Task<IActionResult> MarkAsSeen(string messageId)
+        {
+            var message = this.contactsChatService.GetMessageById(messageId);
+
+            //TODO add validation here and consequently to the javascript as well
+            if (message == null)
+            {
+                return this.NoContent();
+            }
+
+            await this.contactsChatService.MarkAsSeenAsync(message);
+
+            return this.Json("Success");
+        }
     }
 }

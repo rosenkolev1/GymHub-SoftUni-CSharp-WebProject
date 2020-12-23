@@ -34,5 +34,8 @@ namespace GymHub.Data.Models
         [Required]
         public string ReceiverId { get; set; }
         public virtual User Receiver { get; set; }
+
+        [Required]
+        public bool HasBeenSeen { get; set; }
     }
 }

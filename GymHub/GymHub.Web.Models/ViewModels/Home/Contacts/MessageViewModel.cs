@@ -19,5 +19,7 @@ namespace GymHub.Web.Models.ViewModels
         public string SenderName { get; set; }
 
         public string SenderId { get; set; }
+        
+        public bool HasBeenSeenByReceiver { get; set; }
     }
 }

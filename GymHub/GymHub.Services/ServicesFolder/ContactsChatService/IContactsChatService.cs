@@ -13,8 +13,18 @@ namespace GymHub.Services.ServicesFolder.ContactsChatService
     {
         public ChatViewModel GetChatInfo(User currentUser, User targetUser);
 
-        public Task AddMessages(MessageInputModel inputModel);
+        public Task<ContactsChatMessage> AddMessages(MessageInputModel inputModel);
 
         public List<User> GetUsersForAdmin(User adminUser);
+
+        public ContactsChatMessage GetMessageById(string messageId);
+
+        public Task MarkAsSeenAsync(ContactsChatMessage message);
+
+        public Task MarkAllForReceiverAsSeenAsync(User sender, User receiver);
+
+        public int GetNumberOfUnseenForReceiver(User sender, User receiver);
+
+        public User GetRandomUserWhoHasMessagedAdmin();
     }
 }

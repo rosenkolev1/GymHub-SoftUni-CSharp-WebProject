@@ -1,4 +1,8 @@
-﻿@model ChatViewModel
+﻿@using GymHub.Services.ServicesFolder.ContactsChatService
+
+@model ChatViewModel
+
+@inject IContactsChatService contactsChatService
 
 @section ImportantLinks{
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
@@ -6,6 +10,10 @@
 }
 
 @{ var currentUserIsAdmin = this.User.IsInRole(GlobalConstants.AdminRoleName); }
+
+<form id="anitforgeryToken-form">
+
+</form>
 
 <h3 style="text-align:center;">Try our live support chat feature. You can (almost) instantly message our support personal and hopefully get an answer in the near future</h3>
 
@@ -24,50 +32,78 @@
             </div>
         </div>
         <div class="card-body contacts_body">
+        @if (Model.AllUsers?.Count > 0)
+        {
             <ui class="contacts">
-                @foreach (var user in Model.AllUsers)
-                {
-<li class="switch-between-users @(user == Model.TargetUser ? "active-switch" : "")">
-    <input type="hidden" class="switch-user-id" value="@user.Id" />
-    <div class="d-flex bd-highlight">
-        <div class="img_cont">
-            <img src="something" class="rounded-circle user_img">
-            <span class="online_icon offline"></span>
-        </div>
-        <div class="user_info">
-            <span>@user.UserName Unread: @Model.UnreadMessagesCount</span>
-        </div>
-    </div>
-</li>                }
+            @foreach (var user in Model.AllUsers)
+            {
+            <li class="switch-between-users @(user == Model.TargetUser ? "active-switch" : "")">
+                <input type="hidden" class="switch-user-id" value="@user.Id" />
+                <div class="d-flex bd-highlight">
+                    <div class="img_cont">
+                        <img src="something" class="rounded-circle user_img">
+                        <span class="online_icon offline"></span>
+                    </div>
+                    <div class="user_info">
+                        @{ 
+                            var unreadMessagesCount = contactsChatService.GetNumberOfUnseenForReceiver(user, Model.CurrentUser); 
+                         }
+                        <span>@user.UserName</span>
+                        <div>
+                            <span class="unseen-messages">Unread: <span class="unseen-messages-count unseen-messages-count-@user.Id">@unreadMessagesCount</span></span>
+                        </div>
+                    </div>
+                </div>
+            </li>               
+            }
             </ui>
+        }
+        else
+        {
+            <h4>Nobody has messaged you yet</h4>
+        }
         </div>
         <div class="card-footer"></div>
     </div>
 </div>}
         <div class="col-md-8 col-xl-6 chat">
             <div class="card">
-                <div class="card-header msg_head">
-                    <div class="d-flex bd-highlight">
-                        <div class="img_cont">
-                            <img src="@(currentUserIsAdmin == false ? GlobalConstants.SiteAdminProfilePictureLink : "some image")" class="rounded-circle user_img">
-                            <span class="online_icon"></span>
+                @if (Model.TargetUser != null)
+                {
+                    <div class="card-header msg_head">
+                        <div class="d-flex bd-highlight">
+                            <div class="img_cont">
+                                <img src="@(currentUserIsAdmin == false ? GlobalConstants.SiteAdminProfilePictureLink : "some image")" class="rounded-circle user_img">
+                                <span class="online_icon"></span>
+                            </div>
+                            <div class="user_info">
+                                <span>@(currentUserIsAdmin == false ? "Administration" : Model.TargetUser.UserName)</span>
+                                <p class="messages-count">@Model.MessagesCount Messages</p>
+                            </div>
                         </div>
-                        <div class="user_info">
-                            <span>@(currentUserIsAdmin == false ? "Administration" : Model.TargetUser.UserName)</span>
-                            <p class="messages-count">@Model.MessagesCount Messages</p>
-                        </div>
+                        <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
                     </div>
-                    <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
-                </div>
+                }
+                else
+                {
+                    <h3>Nobody selected</h3>
+                }
                 <div class="card-body msg_card_body">
                     @if (currentUserIsAdmin == false)
                     {
                         var something = $"Hi, how are you {this.User.Identity.Name}? What would you like to message us about?";
                         var adminSender = "Administrator";
-        <partial name="_ContactsChatMessagePartial" model="new MessageViewModel { SentOn = null, BelongsToSender = false, Text = something, SenderName = adminSender, SenderIsAdmin = true }" />}
+            <partial name="_ContactsChatMessagePartial" model="new MessageViewModel { SentOn = null, BelongsToSender = false, Text = something, SenderName = adminSender, SenderIsAdmin = true }" />}
+                    @{ var hasReachedNewMessages = false;}
                     @foreach (var message in Model.Messages)
                     {
-        <partial name="_ContactsChatMessagePartial" model="message" />}
+                        if (hasReachedNewMessages == false && message.HasBeenSeenByReceiver == false && message.SenderId == Model.TargetUserId)
+                        {
+                            hasReachedNewMessages = true;
+                            <p style="font-size:10px; text-align:center;" class="alert-danger">New messages</p>
+                        }
+                        <partial name="_ContactsChatMessagePartial" model="message" />
+                    }
                 </div>
                 <div class="card-footer">
                     <div class="input-group">

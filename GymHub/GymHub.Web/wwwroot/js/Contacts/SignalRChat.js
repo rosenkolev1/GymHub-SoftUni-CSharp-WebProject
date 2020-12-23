@@ -42,8 +42,9 @@
         let belongsToSender = currentUserId == senderId;
         let messageText = messageInputModel.message;
         let sentOn = messageInputModel.sentOn;
+        let messageId = messageInputModel.messageId;
 
-        if (receiverId == senderEl.value || receiverId == receiverEl.value) {
+        if ((receiverId == senderEl.value && senderId == receiverEl.value) || (receiverId == receiverEl.value && senderId == senderEl.value)) {
             $.ajax({
                 url: "/Home/LoadMessage",
                 data: { BelongsToSender: belongsToSender, Text: messageText, SentOn: sentOn, SenderId: senderId },
@@ -57,6 +58,29 @@
                     messagesList.insertAdjacentHTML('beforeend', messageHtml);
                 }
             })
+
+            //Mark the message as seen
+            let anitforgeryTokenValue = document.querySelector('the selector for the antiforgery goes here').value;
+
+            $.ajax({
+                url: "/Home/MarkAsSeen",
+                data: { messageId: messageId, antiForgeryToken: anitforgeryTokenValue },
+                method: "post",
+                success: (success) => {
+                    if (success === "Success") {
+
+                    }
+                    else {
+                        throw "Some error occured here";
+                    }
+                }
+            })
+        }
+        else {
+            //Add to the unseen count from the view
+            let unseenMessagesCountSpan = document.querySelector(`.unseen-messages-count-${senderId}`);
+
+            unseenMessagesCountSpan.textContent = parseInt(unseenMessagesCountSpan.textContent) + 1;
         }
 
     }
