@@ -153,7 +153,7 @@ namespace GymHub.Web.Controllers
                 await this.cartService.SetCheckoutCartAsync(currentUserId, inputModel);
             }
 
-            return this.RedirectToAction("Checkout", "Sales");
+            return this.RedirectToAction("Checkout", "Sales", new { area = ""});
         }
 
         [HttpPost]

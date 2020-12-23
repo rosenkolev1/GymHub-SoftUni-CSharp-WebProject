@@ -11,7 +11,7 @@
     if (Model.SenderIsAdmin) image = GlobalConstants.SiteAdminProfilePictureLink;
     else image = "userImage";
     <div class="d-flex justify-content-end message-container">
-        <div class="msg_cotainer_send">
+        <div class="msg_cotainer_send" style="overflow-wrap: anywhere;">
             @message.Text
             @if (Model.SentOn != null)
             {
@@ -31,7 +31,7 @@ else
         <div class="img_cont_msg">
             <img src="@image" class="rounded-circle user_img_msg">
         </div>
-        <div class="msg_cotainer">
+        <div class="msg_cotainer" style="overflow-wrap: anywhere;">
             @message.Text
             @if (Model.SentOn != null)
             {

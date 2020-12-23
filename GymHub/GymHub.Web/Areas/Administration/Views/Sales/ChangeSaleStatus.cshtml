@@ -11,7 +11,7 @@
     <form id="changeSaleStatusForm" asp-controller="Sales" asp-action="ChangeSaleStatus" method="post">
         <input hidden asp-for="InputModel.SaleId" />
         <span asp-validation-for="InputModel.SaleId" class="validation-span"></span>
-        <label asp-for="InputModel.NewSaleStatusId" class="input-label">Category Name</label>
+        <label asp-for="InputModel.NewSaleStatusId" class="input-label">Sale status</label>
         <select asp-for="InputModel.NewSaleStatusId">
             <option selected value="">Select new sale status</option>
             @foreach (var saleStatus in Model.ViewModel)

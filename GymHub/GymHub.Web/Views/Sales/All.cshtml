@@ -100,7 +100,7 @@
                         <a asp-action="Details" asp-controller="Sales" asp-route-saleId="@sale.Id" class="alert-info sales-details-button">Details</a>
                         @if (this.User.IsInRole(GlobalConstants.AdminRoleName))
                         {
-                            @if (sale.PaymentStatus == GlobalConstants.ConfirmedSaleStatus)
+                            @if (sale.PaymentStatus == GlobalConstants.ConfirmedSaleStatus && sale.PaymentMethod.Name == GlobalConstants.PaymentMethodDebitOrCreditCard)
                             {
                                 <form hidden asp-action="Refund" asp-area="Administration" asp-controller="Sales" id="refundForm">
                                     <input type="hidden" value="@sale.Id" name="saleId" />
