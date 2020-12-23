@@ -24,7 +24,6 @@
         messageTextarea.value = null;
 
         if (messageText == false) {
-            //TODO: Add validation error
             return;
         }
 
@@ -60,11 +59,11 @@
             })
 
             //Mark the message as seen
-            let anitforgeryTokenValue = document.querySelector('the selector for the antiforgery goes here').value;
+            let anitforgeryTokenValue = document.querySelector('#antiforgeryToken-form').querySelector('[name=__RequestVerificationToken]').value;
 
             $.ajax({
                 url: "/Home/MarkAsSeen",
-                data: { messageId: messageId, antiForgeryToken: anitforgeryTokenValue },
+                data: { messageId: messageId, __RequestVerificationToken: anitforgeryTokenValue },
                 method: "post",
                 success: (success) => {
                     if (success === "Success") {
@@ -73,6 +72,9 @@
                     else {
                         throw "Some error occured here";
                     }
+                },
+                error: () => {
+                    throw "An error occured here";
                 }
             })
         }

@@ -149,7 +149,6 @@ namespace GymHub.Services
 
         public User GetAdminUser()
         {
-            //TODO edit the database a bit with the whole roles thing
             var adminRole = this.roleService.GetRole(GlobalConstants.AdminRoleName);
             var adminRoleId = adminRole.Id;
 

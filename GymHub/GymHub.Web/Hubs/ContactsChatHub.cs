@@ -23,7 +23,10 @@ namespace GymHub.Web.Hubs
             var sender = this.userService.GetUserByUsername(this.Context.User.Identity.Name);
             var receiver = this.userService.GetUser(receiverId);
 
-            //TODO: Add validation
+            if(sender == null || receiver == null)
+            {
+                throw new Exception("The sender or the receiver doesn't exist");
+            }
 
             var messageInputModel = new MessageInputModel
             {
@@ -33,11 +36,18 @@ namespace GymHub.Web.Hubs
                 ReceiverId = receiverId,
             };
 
-            var newMessage = await this.contactsChatService.AddMessages(messageInputModel);
+            try
+            {
+                var newMessage = await this.contactsChatService.AddMessages(messageInputModel);
 
-            messageInputModel.MessageId = newMessage.Id;
+                messageInputModel.MessageId = newMessage.Id;
 
-            await this.Clients.All.SendAsync("NewMessage", messageInputModel);
+                await this.Clients.All.SendAsync("NewMessage", messageInputModel);
+            }
+            catch
+            {
+                throw new Exception("Something went wrong with the method internally");
+            }
         }
     }
 }

@@ -106,10 +106,9 @@ namespace GymHub.Web.Controllers
         {
             var message = this.contactsChatService.GetMessageById(messageId);
 
-            //TODO add validation here and consequently to the javascript as well
             if (message == null)
             {
-                return this.NoContent();
+                return this.Error();
             }
 
             await this.contactsChatService.MarkAsSeenAsync(message);

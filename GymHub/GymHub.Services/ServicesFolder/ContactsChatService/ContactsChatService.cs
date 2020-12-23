@@ -39,8 +39,6 @@ namespace GymHub.Services.ServicesFolder.ContactsChatService
 
             return newMessage;
         }
-
-        //TODO: REMOVE CurrentUserId and TargetUserId from the chat view model if they are not needed
         public ChatViewModel GetChatInfo(User currentUser, User targetUser)
         {
             var targetUserName = targetUser?.UserName;

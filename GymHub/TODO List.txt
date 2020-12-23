@@ -1,3 +1,5 @@
+-Add validations for the contacts chat
+
 -Add hangfire random products select for front page
 
 -Add seeder for some stuff if needed. And pretty much try to upload the server and the seeded db to azure to see if everything works there as expected. I SURE HOPE IT DOES.
