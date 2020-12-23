@@ -17,14 +17,15 @@
 - Also I wrote my own custom pagination which, dare I say, works pretty wonderfully. You insert one script, use one partial view and in another script tag just call one function with a parameter which defines the name for the queryParam which indicates the current page. For example in the productPage the queryParam was commentsPage(I believe anyway, not 100% sure) and for the Shop page it was productsPage(again, I believe, but not 100% sure).
 - For the productPage especially I wrote a metric fuk ton of javascript. Which reminded me why I somewhat despise that language.
 <hr/>
-### Link to the site 
-https://gymhubweb.azurewebsites.net
-### Admin: 
-Username: adminRosen
-Password: adminRosen
 
+## Link to the site 
+- https://gymhubweb.azurewebsites.net
+## Admin account: 
+- Username: adminRosen
+- Password: adminRosen
+<hr/>
 
-### :hammer: Built With
+## :hammer: Built With
 
 - Visual Studio Enterprise
 - .NET 5.0           
@@ -35,12 +36,13 @@ Password: adminRosen
 - ASP.NET CORE MVC and Razor Pages
 - SQL Server and Microsoft SQL Server Management Studio
 - Custom database seeder 
+- Custom pagination(that I am actually quite proud of)
 - Bootstrap 3.0/4.0 depending on the page
 - Javascript (A LOT OF FUKING JAVASCRIPT)
 - AJAX real-time Requests
 - JQuery and any kind of jQuery plugins such as DataTables and jquery animations
 - Lots of boostrap themes and templates
-- Stripe Checkout API
+- Stripe Checkout and PaymentIntents API
 - Mapbox for maps
 - Azure blob storage
 - Automapper 
@@ -49,10 +51,10 @@ Password: adminRosen
 - Hangfire
 - SignalR
 
-<h3>Interface</h3>
+<h2>Interface</h2>
 <hr/>
 
-#### Normal User
+### - Normal User
 ![HomePage.png](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/HomePage.png)
 
 ![LoginPage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/LoginPage.PNG)
@@ -87,7 +89,7 @@ Password: adminRosen
 
 ![SaleDetails.png](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/SaleDetails.png)
 
-#### Admin User
+### - Admin User
 
 ![AdminControls.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AdminControls.PNG)
 
@@ -115,7 +117,7 @@ Password: adminRosen
 
 ![RefundModal.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/RefundModal.PNG)
 
-### Contacts
+### - Contacts
 
 ![Contacts(Normal User).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Contacts(Normal%20User).PNG)
 
