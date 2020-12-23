@@ -63,17 +63,17 @@ Password: adminRosen
 
 ![ShopPage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ShopPage.PNG)
 
-![ShopPage(Sorted by rating ascending).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ShopPage(Sorted by rating ascending).PNG)
+![ShopPage(Sorted by rating ascending).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ShopPage(Sorted%20by%20rating%20ascending).PNG)
 
-![ShopPage(Sorted by price descending and filtered by categories).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ShopPage(Sorted by price descending and filtered by categories).PNG)
+![ShopPage(Sorted by price descending and filtered by categories).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ShopPage(Sorted%20by%20price%20descending%20and%20filtered%20by%20categories).PNG)
 
 ![ProductPage1.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage1.PNG)
 
 ![ProductPage2.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage2.PNG)
 
-![ProductPage(Adding a review).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage(Adding a review).PNG)
+![ProductPage(Adding a review).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage(Adding%20a%20review).PNG)
 
-![ProductPage(Removing another person's comment as admin, and also example of my own hand written pagination).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage(Removing another person's comment as admin, and also example of my own hand written pagination).PNG)
+![ProductPage(Removing another person's comment as admin, and also example of my own hand written pagination).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage(Removing%20another%20person's%20comment%20as%20admin,%20and%20also%20example%20of%20my%20own%20hand%20written pagination).PNG)
 
 ![Cart.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Cart.PNG)
 
@@ -83,7 +83,7 @@ Password: adminRosen
 
 ![AfterPurchase.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AfterPurchase.PNG)
 
-![AllMySales(regular user).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AllMySales(regular user).PNG)
+![AllMySales(regular user).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AllMySales(regular%20user).PNG)
 
 ![SaleDetails.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/SaleDetails.PNG)
 
@@ -103,11 +103,11 @@ TODO: Add hangfire dashboard
 
 ![CategoriesAll.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/CategoriesAll.PNG)
 
-![Create-Edit Category.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Create-Edit Category.PNG)
+![Create-Edit Category.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Create-Edit%20Category.PNG)
 
 ![AllMySales(admin).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AllMySales(admin).PNG)
 
-![AllSales(Admin only).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AllSales(Admin only).PNG)
+![AllSales(Admin only).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AllSales(Admin%20only).PNG)
 
 ![ChangeSaleStatus(Admin).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ChangeSaleStatus(Admin).PNG)
 
@@ -117,7 +117,7 @@ TODO: Add hangfire dashboard
 
 ### Contacts
 
-![Contacts(Normal User).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Contacts(Normal User).PNG)
+![Contacts(Normal User).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Contacts(Normal%20User).PNG)
 
 ![Contacts(Admin).1.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Contacts(Admin).1.PNG)
 
