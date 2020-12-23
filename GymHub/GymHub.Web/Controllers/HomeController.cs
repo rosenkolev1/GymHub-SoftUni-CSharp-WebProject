@@ -1,12 +1,16 @@
 ﻿using GymHub.Common;
+using GymHub.Data.Models;
 using GymHub.Services;
 using GymHub.Services.Messaging;
+using GymHub.Services.ServicesFolder.ContactsChatService;
 using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GymHub.Web.Controllers
@@ -16,12 +20,17 @@ namespace GymHub.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly SendGridEmailSender sendGridEmailSender;
         private readonly IUserService userService;
+        private readonly IContactsChatService contactsChatService;
+        private readonly UserManager<User> userManager;
 
-        public HomeController(ILogger<HomeController> logger, SendGridEmailSender sendGridEmailSender, IUserService userService)
+        public HomeController(ILogger<HomeController> logger, SendGridEmailSender sendGridEmailSender, IUserService userService, IContactsChatService contactsChatService,
+            UserManager<User> userManager)
         {
             _logger = logger;
             this.sendGridEmailSender = sendGridEmailSender;
             this.userService = userService;
+            this.contactsChatService = contactsChatService;
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
@@ -42,17 +51,57 @@ namespace GymHub.Web.Controllers
             return this.View();
         }
 
-        public IActionResult Contacts()
+        public IActionResult Contacts(string targetUserId, string userSearch)
         {
+            var currentUserIsAdmin = this.User.IsInRole(GlobalConstants.AdminRoleName) == true;
+            User targetUser = null;
 
+            if (currentUserIsAdmin == false) targetUser = this.userService.GetAdminUser();
+            else
+            {
+                targetUser = this.userService.GetUser(targetUserId);
+            }
 
-            return this.View();
+            if (targetUser == null && currentUserIsAdmin) targetUser = this.userService.GetUserByUsername("rosenkolev1");
+
+            var targetUserName = targetUser?.UserName;
+            var currentUser = this.userService.GetUserByUsername(this.User.Identity.Name);
+
+            var chatViewModel = this.contactsChatService.GetChatInfo(currentUser, targetUser);
+
+            if (currentUserIsAdmin)
+            {
+                chatViewModel.AllUsers = this.contactsChatService.GetUsersForAdmin(currentUser)
+                    .OrderByDescending(x => x == targetUser).ToList();
+
+                if(string.IsNullOrWhiteSpace(userSearch) == false)
+                {
+                    chatViewModel.AllUsers = chatViewModel.AllUsers
+                    .OrderByDescending(x => x.UserName.Contains(userSearch) || x.FirstName.Contains(userSearch) || x.LastName.Contains(userSearch))
+                    .ToList();
+
+                    chatViewModel.UserSearch = userSearch;
+                }
+            }
+
+            return this.View(chatViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Contacts(string id)
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> LoadMessage(MessageViewModel messageViewModel)
         {
-            return this.Redirect(nameof(Contacts));
+            var sender = this.userService.GetUser(messageViewModel.SenderId);
+            messageViewModel.SenderName = sender.UserName;
+            messageViewModel.SenderIsAdmin = await this.userManager.IsInRoleAsync(sender, GlobalConstants.AdminRoleName);
+
+            return this.PartialView("/Views/Home/_ContactsChatMessagePartial.cshtml", messageViewModel);
         }
+
+        //[HttpPost]
+        //public async Task<IActionResult> Contacts(string id)
+        //{
+        //    return this.Redirect(nameof(Contacts));
+        //}
     }
 }

@@ -1,0 +1,43 @@
+﻿@model MessageViewModel
+
+@{
+    var message = Model;
+
+}
+@if (Model.BelongsToSender)
+{
+
+    string image = "";
+    if (Model.SenderIsAdmin) image = GlobalConstants.SiteAdminProfilePictureLink;
+    else image = "userImage";
+    <div class="d-flex justify-content-end message-container">
+        <div class="msg_cotainer_send">
+            @message.Text
+            @if (Model.SentOn != null)
+            {
+                <span class="msg_time_send">@message.SenderName | @message.SentOn </span>
+            }
+        </div>
+        <div class="img_cont_msg">
+            <img src="@image" class="rounded-circle user_img_msg">
+        </div>
+    </div>
+}
+else
+{
+    string image = "";
+    if (Model.SenderIsAdmin) image = GlobalConstants.SiteAdminProfilePictureLink;
+    <div class="d-flex justify-content-start message-container">
+        <div class="img_cont_msg">
+            <img src="@image" class="rounded-circle user_img_msg">
+        </div>
+        <div class="msg_cotainer">
+            @message.Text
+            @if (Model.SentOn != null)
+            {
+                <span class="msg_time">@message.SenderName | @message.SentOn </span>
+            }
+        </div>
+
+    </div>
+}

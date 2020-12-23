@@ -50,6 +50,16 @@
         "jquery.signalR.js",
         "jquery.signalR.min.js"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "signalr.js@2.4.1",
+      "destination": "wwwroot/lib/signalr.js/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "microsoft-signalr@5.0.1",
+      "destination": "wwwroot/lib/microsoft-signalr/"
     }
   ]
 }

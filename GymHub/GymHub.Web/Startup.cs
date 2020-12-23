@@ -38,6 +38,8 @@ using Hangfire.SqlServer;
 using System.Diagnostics;
 using GymHub.Common;
 using GymHub.Services.CronJobs;
+using GymHub.Web.Hubs;
+using GymHub.Services.ServicesFolder.ContactsChatService;
 
 namespace GymHub.Web
 {
@@ -129,6 +131,9 @@ namespace GymHub.Web
             services.AddTransient<PaymentIntentService>();
             services.AddTransient<RefundService>();
 
+            //Add signalR
+            services.AddSignalR();
+
             //Add Automapper
             services.AddAutoMapper(typeof(UserProfile));
 
@@ -144,6 +149,7 @@ namespace GymHub.Web
             services.AddTransient<ISaleService, SaleService>();
             services.AddTransient<IPaymentMethodService, Services.ServicesFolder.PaymentMethodService.PaymentMethodService>();
             services.AddTransient<ICountryService, CountryService>();
+            services.AddTransient<IContactsChatService, ContactsChatService>();
 
             //Add cron job
             services.AddTransient<DeleteProductsImagesBlobs>();
@@ -208,6 +214,7 @@ namespace GymHub.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHub<ContactsChatHub>("/contactsChat");
             });
         }
 

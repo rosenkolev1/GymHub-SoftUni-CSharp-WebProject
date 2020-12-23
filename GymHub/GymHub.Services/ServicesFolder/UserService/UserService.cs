@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GymHub.Common;
 using GymHub.Data.Data;
 using GymHub.Data.Models;
 using GymHub.DTOs;
@@ -8,6 +9,7 @@ using GymHub.Services.ServicesFolder.RoleService;
 using GymHub.Web.Models.InputModels;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -143,6 +145,17 @@ namespace GymHub.Services
         {
             return this.context.Users
                 .FirstOrDefault(x => x.UserName == username);
+        }
+
+        public User GetAdminUser()
+        {
+            //TODO edit the database a bit with the whole roles thing
+            var adminRole = this.roleService.GetRole(GlobalConstants.AdminRoleName);
+            var adminRoleId = adminRole.Id;
+
+            return this.context.Users
+                .Where(x => x.Roles.Select(y => y.RoleId).Contains(adminRoleId))
+                .First();
         }
     }
 }

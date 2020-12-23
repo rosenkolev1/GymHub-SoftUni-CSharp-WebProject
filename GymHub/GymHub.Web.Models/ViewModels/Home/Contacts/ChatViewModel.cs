@@ -1,4 +1,5 @@
-﻿using GymHub.Web.Models.InputModels;
+﻿using GymHub.Data.Models;
+using GymHub.Web.Models.InputModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,20 @@ namespace GymHub.Web.Models.ViewModels
 
         public MessageInputModel MessageInputModel { get; set; }
 
-        public int SentMessagesCount { get; set; }
+        public int MessagesCount { get; set; }
+
+        public string CurrentUserId { get; set; }
+
+        public string TargetUserId { get; set; }
+
+        public User CurrentUser { get; set; }
+
+        public User TargetUser { get; set; }
+
+        public List<User> AllUsers { get; set; } 
+
+        public string UserSearch { get; set; }
+
+        public string UnreadMessagesCount { get; set; }
     }
 }

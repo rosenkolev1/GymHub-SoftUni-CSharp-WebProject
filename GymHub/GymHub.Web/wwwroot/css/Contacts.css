@@ -191,20 +191,21 @@
     position: relative;
 }
 
-.msg_time {
+.msg_time, .msg_time_send {
     position: absolute;
-    left: 0;
-    bottom: -15px;
     color: rgba(255,255,255,0.5);
     font-size: 10px;
+    white-space:nowrap;
+}
+
+.msg_time {
+    left: 0;
+    bottom: -15px;
 }
 
 .msg_time_send {
-    position: absolute;
     right: 0;
     bottom: -15px;
-    color: rgba(255,255,255,0.5);
-    font-size: 10px;
 }
 
 .msg_head {
@@ -258,3 +259,38 @@
         margin-bottom: 15px !important;
     }
 }
+
+/*MY OWN CSS*/
+
+.sender-name, .sender-name-send {
+    color: rgba(255,255,255,0.5);
+    font-size: 10px;
+    position: absolute;
+    top: -15px;
+}
+
+.sender-name-send {
+    right: 0;
+}
+
+.sender-name {
+    left: 0;
+}
+
+.switch-between-users-inactive:hover, .switch-between-users:hover{
+    cursor: pointer;
+}
+
+.active-switch {
+    background-color: darkblue;
+    border-radius: 15px;
+    padding: 0px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    padding-left: 3px !important;
+}
+
+.message-container {
+    margin-bottom: 1.5rem !important;
+}
+

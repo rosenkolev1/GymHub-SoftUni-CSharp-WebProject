@@ -1,6 +1,7 @@
 ﻿using GymHub.Data.Models;
 using GymHub.DTOs;
 using GymHub.Web.Models.InputModels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GymHub.Services
@@ -20,5 +21,6 @@ namespace GymHub.Services
         public string GetEmail(string userId);
         public User GetUser(string userId);
         public User GetUserByUsername(string username);
+        public User GetAdminUser();
     }
 }
