@@ -204,7 +204,10 @@ namespace GymHub.Web
 
             //Hangfire
             app.UseHangfireServer();
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new HangfireDashboardAuthorizationFilter() }
+            });
 
             // ...other configuration logic
             //@"0 */5 * ? * *" THIS IS PER FIVE MINUTES
