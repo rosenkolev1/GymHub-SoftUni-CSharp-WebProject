@@ -1,6 +1,6 @@
--Add view component similar to the cart which shows the number of unseen replies for a user in the corner of the button. VIA view component of course.
+-Add hangfire random products select for front page
 
--Add contact form to send message with SignalR to admin
+-Add seeder for some stuff if needed. And pretty much try to upload the server and the seeded db to azure to see if everything works there as expected. I SURE HOPE IT DOES.
 
 -For searching sales by admin make datatables use server-side data
 
