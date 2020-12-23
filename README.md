@@ -52,5 +52,77 @@ Password: adminRosen
 <h3>Interface</h3>
 <hr/>
 
-![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+#### Normal User
+![HomePage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/HomePage.PNG)
+
+![LoginPage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/LoginPage.PNG)
+
+![RegisterPage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/RegisterPage.PNG)
+
+![IdentityProfile.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/IdentityProfile.PNG)
+
+![ShopPage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ShopPage.PNG)
+
+![ShopPage(Sorted by rating ascending).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ShopPage(Sorted by rating ascending).PNG)
+
+![ShopPage(Sorted by price descending and filtered by categories).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ShopPage(Sorted by price descending and filtered by categories).PNG)
+
+![ProductPage1.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage1.PNG)
+
+![ProductPage2.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage2.PNG)
+
+![ProductPage(Adding a review).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage(Adding a review).PNG)
+
+![ProductPage(Removing another person's comment as admin, and also example of my own hand written pagination).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ProductPage(Removing another person's comment as admin, and also example of my own hand written pagination).PNG)
+
+![Cart.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Cart.PNG)
+
+![CheckoutPage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/CheckoutPage.PNG)
+
+![StripePaymentPage.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/StripePaymentPage.PNG)
+
+![AfterPurchase.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AfterPurchase.PNG)
+
+![AllMySales(regular user).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AllMySales(regular user).PNG)
+
+![SaleDetails.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/SaleDetails.PNG)
+
+#### Admin User
+
+![AdminControls.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AdminControls.PNG)
+
+TODO: Add hangfire dashboard
+
+![AddProduct2.1.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AddProduct2.1.PNG)
+
+![AddProduct2.2.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AddProduct2.2.PNG)
+
+![EditProduct2.1.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/EditProduct2.1.PNG)
+
+![EditProduct2.2.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/EditProduct2.2.PNG)
+
+![CategoriesAll.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/CategoriesAll.PNG)
+
+![Create-Edit Category.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Create-Edit Category.PNG)
+
+![AllMySales(admin).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AllMySales(admin).PNG)
+
+![AllSales(Admin only).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/AllSales(Admin only).PNG)
+
+![ChangeSaleStatus(Admin).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ChangeSaleStatus(Admin).PNG)
+
+![ChangeSaleStatusModal.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ChangeSaleStatusModal.PNG)
+
+![RefundModal.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/RefundModal.PNG)
+
+### Contacts
+
+![Contacts(Normal User).PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Contacts(Normal User).PNG)
+
+![Contacts(Admin).1.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Contacts(Admin).1.PNG)
+
+![Contacts(Admin).2.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/Contacts(Admin).2.PNG)
+
+![ReceiveMessageWhileScroledUpInTheChat.PNG](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/ReceiveMessageWhileScroledUpInTheChat.PNG)
+
 License This project is licensed under the MIT License - see the LICENSE.md file for details
