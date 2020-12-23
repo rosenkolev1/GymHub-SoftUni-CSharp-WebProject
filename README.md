@@ -2,6 +2,8 @@
 ## My SoftUni web project written on C# and Asp.Net Core 
 **GymHub** is my ASP.NET Core MVC web application project for **SoftUni ASP.NET Core - октомври 2020г.**
 
+![GymHub logo.jpg](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/GymHub%20logo.jpg)
+
 ## :pencil: Description
 **GymHub** is a basic shoppings website which sells all kinds of gym equipment. It has products with categories and a product cart.
             It also has user reviews, comments and ratings for each product. There are also popup notifications for certain actions.
