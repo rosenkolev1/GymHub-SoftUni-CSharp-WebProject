@@ -1,5 +1,5 @@
 ﻿function NotificationsInit() {
-    var button = document.querySelector("#notificationMessage");
+    let button = document.querySelector("#notificationMessage");
     if (button != null) {
         button.addEventListener("click", fadeOutNotification, false);
 
@@ -13,6 +13,19 @@
                 .fadeOut(1000);
         }
     }
+
+    $('.carousel').carousel()
+
+    let carouselNext = document.querySelector('.carousel-control-next');
+    let carouselPrev = document.querySelector('.carousel-control-prev');
+
+    carouselNext.addEventListener('click', e => {
+        let something = "";
+    })
+
+    carouselPrev.addEventListener('click', e => {
+        let something = "";
+    })
 };
 
 

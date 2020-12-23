@@ -157,7 +157,7 @@ namespace GymHub.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(DeleteProductsImagesBlobs deleteProductsImagesBlobs, IServiceProvider serviceProvider, IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(DeleteProductsImagesBlobs deleteProductsImagesBlobs, IProductService productService, IServiceProvider serviceProvider, IApplicationBuilder app, IWebHostEnvironment env)
         {
             //Delete database at startup
             DeleteDatabase(app, false);
@@ -204,6 +204,11 @@ namespace GymHub.Web
             //Add jobs
             RecurringJob.AddOrUpdate(
                 () => deleteProductsImagesBlobs.DeleteUnusedProducstImagesBlobsFromAzureBlobStorageAsyncJob(), @"0 */5 * ? * *");
+
+            productService.UpdateProductCarouselItems(2);
+
+            RecurringJob.AddOrUpdate(
+                () => productService.UpdateProductCarouselItems(2), Cron.Minutely);
 
             app.UseEndpoints(endpoints =>
             {

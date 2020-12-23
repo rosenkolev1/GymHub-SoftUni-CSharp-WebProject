@@ -22,6 +22,9 @@ namespace GymHub.Services.ServicesFolder.ProductService
         private readonly IMapper mapper;
         private readonly IProductImageService productImageService;
         private readonly ICategoryService categoryService;
+        private static List<string> excludedProductCarouselIds;
+        private static List<ProductCarouselViewModel> randomlySelectedCarouselItems;
+
 
         public ProductService(ApplicationDbContext context, IMapper mapper, IProductImageService productImageService, ICategoryService categoryService)
             : base(context)
@@ -389,6 +392,75 @@ namespace GymHub.Services.ServicesFolder.ProductService
                 .OrderBy(x => x.Name.IndexOf(searchString))
                 .ThenBy(x => x.Model.ToLower().IndexOf(searchString))
                 .ThenBy(x => x.Description.ToLower().IndexOf(searchString));
+        }
+
+        public async Task UpdateProductCarouselItems(int itemsCount)
+        {
+            if(excludedProductCarouselIds == null)
+            {
+                excludedProductCarouselIds = new List<string>();
+            }
+            if (randomlySelectedCarouselItems == null)
+            {
+                randomlySelectedCarouselItems = new List<ProductCarouselViewModel>();
+            }
+
+            var productsToChooseFrom = this.context.Products
+                .Where(x => excludedProductCarouselIds.Contains(x.Id) == false)
+                .Select(x => new ProductCarouselViewModel 
+                { 
+                    ProductId = x.Id,
+                    Image = x.Images.First(y => y.IsMain == true).Image,
+                    Model = x.Model,
+                    Name = x.Name,
+                    Description = x.Description
+                })
+                .ToList();
+
+            if (productsToChooseFrom.Count < itemsCount)
+            {
+                excludedProductCarouselIds.Clear();
+                productsToChooseFrom = this.context.Products
+                .Select(x => new ProductCarouselViewModel
+                {
+                    ProductId = x.Id,
+                    Image = x.Images.First(y => y.IsMain == true).Image,
+                    Model = x.Model,
+                    Name = x.Name,
+                    Description = x.Description
+                })
+                .ToList();
+            }
+
+            foreach (var product in productsToChooseFrom)
+            {
+                product.ShortDescription = this.GetShordDescription(product.Description, 40);
+            }
+
+            randomlySelectedCarouselItems = new List<ProductCarouselViewModel>();
+
+            var random = new Random();
+            var alreadySelectedRandom = new List<int>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var randomNumber = random.Next(productsToChooseFrom.Count);
+
+                while (alreadySelectedRandom.Contains(randomNumber))
+                {
+                    randomNumber = random.Next(productsToChooseFrom.Count);
+                }
+
+                randomlySelectedCarouselItems.Add(productsToChooseFrom[randomNumber]);
+                alreadySelectedRandom.Add(randomNumber);
+                excludedProductCarouselIds.Add(productsToChooseFrom[randomNumber].ProductId);
+            }
+            ;
+        }
+
+        public List<ProductCarouselViewModel> GetCarouselItems()
+        {
+            return randomlySelectedCarouselItems;
         }
     }
 }

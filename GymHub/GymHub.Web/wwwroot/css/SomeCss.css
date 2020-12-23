@@ -92,6 +92,7 @@ p, label, a, h1, input, button, select, th, tr, table, thead, tbody, td {
 
 main {
     display: block;
+    max-width: 100vw;
 }
 
 .main-container {
@@ -122,6 +123,7 @@ main {
     text-align: center;
     font-size: 30px;
     color: #0B8E8E;
+    margin-bottom: 50vh;
 }
 
 .main-home-sales-paragraph {

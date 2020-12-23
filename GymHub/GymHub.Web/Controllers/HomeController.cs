@@ -3,6 +3,7 @@ using GymHub.Data.Models;
 using GymHub.Services;
 using GymHub.Services.Messaging;
 using GymHub.Services.ServicesFolder.ContactsChatService;
+using GymHub.Services.ServicesFolder.ProductService;
 using GymHub.Web.Helpers.NotificationHelpers;
 using GymHub.Web.Models.InputModels;
 using GymHub.Web.Models.ViewModels;
@@ -23,22 +24,24 @@ namespace GymHub.Web.Controllers
         private readonly IUserService userService;
         private readonly IContactsChatService contactsChatService;
         private readonly UserManager<User> userManager;
+        private readonly IProductService productService;
 
         public HomeController(ILogger<HomeController> logger, SendGridEmailSender sendGridEmailSender, IUserService userService, IContactsChatService contactsChatService,
-            UserManager<User> userManager)
+            UserManager<User> userManager, IProductService productService)
         {
             _logger = logger;
             this.sendGridEmailSender = sendGridEmailSender;
             this.userService = userService;
             this.contactsChatService = contactsChatService;
             this.userManager = userManager;
+            this.productService = productService;
         }
 
         public IActionResult Index()
         {
+            var productCarouselItems = this.productService.GetCarouselItems();
 
-
-            return View();
+            return View(productCarouselItems);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

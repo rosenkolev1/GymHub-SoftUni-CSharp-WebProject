@@ -34,5 +34,9 @@ namespace GymHub.Services.ServicesFolder.ProductService
         public IQueryable<Product> FilterProducts(IQueryable<Product> products, string searchString);
         public List<ProductViewModel> GetProductsForPage(IQueryable<Product> products, int page);
         public IQueryable<Product> OrderProducts(IQueryable<Product> products, ProductOrderingOption productOrderingOption);
+
+        //Manage carousel items in home page with hangfire
+        public Task UpdateProductCarouselItems(int itemsCount);
+        public List<ProductCarouselViewModel> GetCarouselItems();
     }
 }
