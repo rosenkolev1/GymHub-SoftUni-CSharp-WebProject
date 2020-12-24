@@ -23,8 +23,7 @@
 ## Link to the site 
 - https://gymhubweb.azurewebsites.net
 ## Admin account: 
-- Username: adminRosen
-- Password: adminRosen
+
 <hr/>
 
 ## :hammer: Built With
