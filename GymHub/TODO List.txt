@@ -1,3 +1,9 @@
+-Add user authority check to hangfire dashboard
+
+-Make signalR chat foolproof by sending message only to the sender and the receiver instead of to all of the clients. Because checking in the client side is not valid(even tho a casual user has no way of getting another user's Id anyway, but for the sake of completeness)
+
+-Code cleanup before the 29th
+
 -Add seeder for some stuff if needed. And pretty much try to upload the server and the seeded db to azure to see if everything works there as expected. I SURE HOPE IT DOES.
 
 -For searching sales by admin make datatables use server-side data

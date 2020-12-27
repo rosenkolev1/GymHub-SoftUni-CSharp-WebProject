@@ -1,4 +1,5 @@
-﻿using Hangfire.Dashboard;
+﻿using GymHub.Common;
+using Hangfire.Dashboard;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace GymHub.Web.AuthorizationPolicies
             var httpContext = context.GetHttpContext();
 
             // Allow all authenticated users to see the Dashboard (potentially dangerous).
-            return httpContext.User.Identity.IsAuthenticated;
+            return httpContext.User.IsInRole(GlobalConstants.AdminRoleName);
         }
     }
 }

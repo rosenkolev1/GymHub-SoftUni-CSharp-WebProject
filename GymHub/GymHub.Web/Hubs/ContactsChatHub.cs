@@ -42,7 +42,10 @@ namespace GymHub.Web.Hubs
 
                 messageInputModel.MessageId = newMessage.Id;
 
-                await this.Clients.All.SendAsync("NewMessage", messageInputModel);
+                await this.Clients.Caller.SendAsync("NewMessage", messageInputModel);
+
+                var receiverClientProxy = this.Clients.User(receiverId);
+                await receiverClientProxy.SendAsync("NewMessage", messageInputModel);
             }
             catch
             {
