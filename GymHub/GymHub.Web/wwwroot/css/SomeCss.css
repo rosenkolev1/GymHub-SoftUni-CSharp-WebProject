@@ -201,6 +201,7 @@ footer {
     z-index: 100000000;
     width: 100vw;
     height: 6vh;
+    left: 0px;
 }
 
 #DataTable_length {
