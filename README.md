@@ -1,6 +1,6 @@
 # GymHub-SoftUni-CSharp-WebProject
 ## My SoftUni web project written on C# and Asp.Net Core 
-**GymHub** is my ASP.NET Core MVC web application project for **SoftUni ASP.NET Core - октомври 2020г.**
+**GymHub** is my ASP.NET Core MVC web application project for **SoftUni ASP.NET Core - October 2020.**
 
 ![GymHub logo.jpg](https://github.com/rosenkolev1/GymHub-SoftUni-CSharp-WebProject/blob/main/GymHubUserInterface/GymHub%20logo.jpg)
 
